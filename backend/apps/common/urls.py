@@ -6,6 +6,6 @@ from . import views
 app_name = 'common'
 
 urlpatterns = [
-    path('contact/', views.contact, name='contact'),  # Formulario de contacto
-    path('about/', views.about, name='about'),  # Información sobre el sitio
+    # path('contact/', views.contact, name='contact'),  # Formulario de contacto
+    # path('about/', views.about, name='about'),  # Información sobre el sitio
 ]

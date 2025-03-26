@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'apps.blog',
-    'apps.blog.serializers'
     'apps.common',
     'apps.pagos',
     'apps.usuarios',
