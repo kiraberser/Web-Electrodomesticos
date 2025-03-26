@@ -1,12 +1,13 @@
 # Node.js / Next.js
-.frontend/node_modules/
-.frontend/.next/
-.frontend/out/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
 
-.frontend/.env
-.frontend/package-lock.json
-.frontend/package.json
+frontend/.env
+frontend/package-lock.json
+frontend/package.json
 
+node_modules/
 
 # Archivos de producción
 /build
