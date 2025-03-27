@@ -1,49 +1,50 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.utils.text import slugify
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+
 from .models import Blog
 from .serializers import BlogSerializer
 
-@api_view(['GET'])
-def index(request):
-    """Lista todos los posts"""
-    posts = Blog.objects.all()
-    serializer = BlogSerializer(posts, many=True)
-    return Response(serializer.data)
+class PostViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar operaciones CRUD de Posts
+    Soporta: listar, crear, recuperar, actualizar y eliminar posts
+    """
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    lookup_field = 'slug'
 
-@api_view(['GET'])
-def detail(request, slug):
-    """Obtiene un post por slug"""
-    post = get_object_or_404(Blog, slug=slug)
-    serializer = BlogSerializer(post)
-    return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        # Personaliza la lógica de creación
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        # Asegura que se genere un slug único
+        title = serializer.validated_data.get('title')
+        serializer.validated_data['slug'] = slugify(title)
+        
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def create_post(request):
-    """Crea un nuevo post (solo usuarios autenticados)"""
-    serializer = BlogSerializer(data=request.data)
-    if serializer.is_valid():
-        post = serializer.save()
-        post.slug = slugify(post.title)  # Genera el slug
-        post.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def edit_post(request, slug):
-    """Edita un post existente (solo usuarios autenticados)"""
-    post = get_object_or_404(Blog, slug=slug)
-    serializer = BlogSerializer(post, data=request.data, partial=True)
-    if serializer.is_valid():
-        post = serializer.save()
-        post.slug = slugify(post.title)  # Asegura que el slug se actualice si cambia el título
-        post.save()
+    def update(self, request, *args, **kwargs):
+        # Personaliza la lógica de actualización para regenerar el slug
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        
+        # Si el título cambia, actualiza el slug
+        if 'title' in request.data:
+            request.data['slug'] = slugify(request.data['title'])
+        
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        
         return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'], url_path='create')
+    def custom_create(self, request):
+        # Método alternativo para manejar /create/
+        return self.create(request)

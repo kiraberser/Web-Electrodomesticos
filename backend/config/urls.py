@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/v1/pagos/', include('apps.pagos.urls')),  # Rutas para la app pagos
     path('api/v1/pedidos/', include('apps.pedidos.urls')),  # Rutas para la app pedidos
     path('api/v1/productos/', include('apps.productos.urls')),  # Rutas para la app productos
+    path('api/v1/user/', include('apps.usuarios.urls'))
 ]
