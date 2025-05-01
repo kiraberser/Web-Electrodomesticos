@@ -1,10 +1,10 @@
-import Footer from "@/components/ui/Footer"
-import HeroSection from "@/components/ui/Hero"
-import Navbar from "@/components/ui/Navbar"
+import { HeroSection } from '@/components/ui'
+
 
 
 
 const App = () => {
+
     return (
         <div >
             <HeroSection/>        

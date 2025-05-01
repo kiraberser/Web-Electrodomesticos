@@ -5,11 +5,13 @@ import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 const axios = require('axios').default;
 
+const TOKEN = process.env.NEXT_PUBLIC_API_KEY
+
 // Configurar axios globalmente
 const instance = axios.create({
     baseURL: 'http://127.0.0.1:8000',
     headers: {
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NDc3MjExLCJpYXQiOjE3NDQ0NzM2MTEsImp0aSI6IjAxMjlkMTQwNTE3MDQyNjY5NzEzNWZjMGUzOGYzMDA1IiwidXNlcl9pZCI6M30.W2p2rA1_YmpNKyIdPUQW2LmAY1vHZxOBRFtdHOAz3yU`,
+        'Authorization': `Bearer ${TOKEN}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
@@ -27,6 +29,7 @@ type BlogPost = {
 }
 
 const BlogPost = () => {
+    console.log(TOKEN)
     const params = useParams()
     const [post, setPost] = useState<BlogPost | null>(null)
     const [error, setError] = useState<string | null>(null)

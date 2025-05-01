@@ -1,9 +1,12 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
-import Navbar from '@/components/ui/Navbar'
-import Footer from '@/components/ui/Footer'
 
-const inter = Inter({ 
+import Head from 'next/head'
+import Script from 'next/script'
+
+import { Inter } from 'next/font/google'
+import { Navbar, Footer } from '@/components/ui'
+
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
 })
@@ -15,10 +18,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={inter.variable}>
+      <Head>
+        <Script src="/path/or/uri/to/tinymce.min.js" referrerPolicy="origin"></Script>
+      </Head>
       <body className={`${inter.className} min-h-screen`}>
-      <Navbar/>
+        <Navbar />
         {children}
-      <Footer/>
+        <Footer />
       </body>
     </html>
   )

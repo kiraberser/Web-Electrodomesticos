@@ -4,11 +4,14 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 const axios = require('axios').default;
 
+const TOKEN = process.env.NEXT_PUBLIC_API_KEY
+
+
 // Configurar axios globalmente
 const instance = axios.create({
     baseURL: 'http://127.0.0.1:8000',
     headers: {
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NDc3MjExLCJpYXQiOjE3NDQ0NzM2MTEsImp0aSI6IjAxMjlkMTQwNTE3MDQyNjY5NzEzNWZjMGUzOGYzMDA1IiwidXNlcl9pZCI6M30.W2p2rA1_YmpNKyIdPUQW2LmAY1vHZxOBRFtdHOAz3yU`,
+        'Authorization': `Bearer ${TOKEN}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
@@ -27,12 +30,14 @@ const Blog = () => {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
 
+    console.log(TOKEN)
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
                 const response = await instance.get('/api/v1/blog/posts/')
                 setData(response.data)
-                localStorage.setItem('blogToken', instance.defaults.headers.common['Authorization'])
+                //localStorage.setItem('blogToken', instance.defaults.headers.common['Authorization'])
                 setError(null)
             } catch (error: any) {
                 console.error('Error fetching posts:', error)
@@ -57,6 +62,10 @@ const Blog = () => {
             hour: '2-digit',
             minute: '2-digit'
         })
+    }
+
+    const stripHtml = (html: string) => {
+        return html.replace(/<[^>]*>/g, '');
     }
 
     if (loading) {
@@ -105,7 +114,7 @@ const Blog = () => {
                                     {post.title}
                                 </h2>
                                 <p className="mt-3 text-gray-600 line-clamp-3">
-                                    {post.description}
+                                    {stripHtml(post.description)}
                                 </p>
                                 <div className="mt-4 flex items-center text-blue-600 group-hover:text-blue-800 transition-colors duration-300">
                                     Leer más
