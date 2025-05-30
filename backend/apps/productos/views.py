@@ -1,12 +1,11 @@
 from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Marca, Categoria, Refaccion, Proveedor, Inventario
+from .models import Marca, Categoria, Refaccion, Proveedor
 from .serializers import (
     MarcaSerializer, 
     CategoriaSerializer, 
     RefaccionSerializer, 
     ProveedorSerializer, 
-    InventarioSerializer
 )
 
 class MarcaViewSet(viewsets.ModelViewSet):
@@ -57,30 +56,3 @@ class ProveedorViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['nombre', 'contacto', 'correo_electronico']
     ordering_fields = ['nombre']
-
-class InventarioViewSet(viewsets.ModelViewSet):
-    queryset = Inventario.objects.select_related('refaccion', 'proveedor').all()
-    serializer_class = InventarioSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [
-        DjangoFilterBackend, 
-        filters.SearchFilter, 
-        filters.OrderingFilter
-    ]
-    filterset_fields = ['refaccion', 'proveedor', 'tipo_movimiento']
-    search_fields = ['observaciones']
-    ordering_fields = ['fecha']
-
-    def perform_create(self, serializer):
-        """
-        Actualiza las existencias de la refacción al crear un movimiento de inventario
-        """
-        movimiento = serializer.save()
-        refaccion = movimiento.refaccion
-        
-        if movimiento.tipo_movimiento == Inventario.TipoMovimientoChoices.ENTRADA:
-            refaccion.existencias += movimiento.cantidad
-        else:
-            refaccion.existencias -= movimiento.cantidad
-        
-        refaccion.save()

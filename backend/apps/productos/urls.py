@@ -4,8 +4,7 @@ from .views import (
     MarcaViewSet, 
     CategoriaViewSet, 
     RefaccionViewSet, 
-    ProveedorViewSet, 
-    InventarioViewSet
+    ProveedorViewSet
 )
 
 # Crear un router para manejar automáticamente las URLs de los ViewSets
@@ -14,7 +13,6 @@ router.register(r'marcas', MarcaViewSet)
 router.register(r'categorias', CategoriaViewSet)
 router.register(r'refacciones', RefaccionViewSet)
 router.register(r'proveedores', ProveedorViewSet)
-router.register(r'inventario', InventarioViewSet)
 
 urlpatterns = [
     # Las URLs base que manejan los ViewSets

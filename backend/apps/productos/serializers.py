@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Marca, Categoria, Refaccion, Proveedor, Inventario
+from .models import Marca, Categoria, Refaccion, Proveedor
 
 class MarcaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,16 +28,3 @@ class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proveedor
         fields = ['id', 'nombre', 'contacto', 'telefono', 'correo_electronico', 'direccion']
-
-class InventarioSerializer(serializers.ModelSerializer):
-    refaccion_nombre = serializers.ReadOnlyField(source='refaccion.nombre')
-    proveedor_nombre = serializers.ReadOnlyField(source='proveedor.nombre', allow_null=True)
-
-    class Meta:
-        model = Inventario
-        fields = [
-            'id', 'refaccion', 'refaccion_nombre', 
-            'proveedor', 'proveedor_nombre',
-            'cantidad', 'tipo_movimiento', 
-            'fecha', 'observaciones'
-        ]
