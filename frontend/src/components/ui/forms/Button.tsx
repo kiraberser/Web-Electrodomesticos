@@ -1,15 +1,9 @@
-
-const Button = ({
-  children,
-  ...props
-}: {
-  children: string | React.ReactNode;
-  [key: string]: any;
-}) => {
+export default function Button() {
   return (
-    <button {...props}>
-      {children}
-    </button>
+    <div className="form-control mt-6">
+      <button type="submit" className="btn btn-primary w-full">
+        Registrarse
+      </button>
+    </div>
   );
-};
-export default Button;
+}

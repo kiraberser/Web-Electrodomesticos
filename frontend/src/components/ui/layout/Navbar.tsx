@@ -67,7 +67,7 @@ const Navbar = () => {
                                 Iniciar Sesión
                             </Link>
                             <Link 
-                                href="/registro" 
+                                href="/cuenta/registro" 
                                 className="rounded-md bg-[#E38E49] px-4 py-2 text-sm font-medium text-white hover:bg-[#E39A10] transition-colors duration-200"
                             >
                                 Registrarse
