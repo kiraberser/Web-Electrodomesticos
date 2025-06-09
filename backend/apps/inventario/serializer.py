@@ -1,4 +1,7 @@
+from rest_framework import serializers
+
 from .models import Inventario
+
 
 class InventarioSerializer(serializers.ModelSerializer):
     refaccion_nombre = serializers.ReadOnlyField(source='refaccion.nombre')
