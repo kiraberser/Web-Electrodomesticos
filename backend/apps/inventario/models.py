@@ -1,13 +1,14 @@
 from django.db import models
 from apps.productos.models import Refaccion, Proveedor
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
 class Inventario(models.Model):
     """Registro de movimientos de inventario"""
     class TipoMovimientoChoices(models.TextChoices):                                            
-        ENTRADA = 'ENT', ('Entrada')
-        SALIDA = 'SAL', ('Salida')
+        ENTRADA = 'ENT', _('Entrada')
+        SALIDA = 'SAL', _('Salida')
 
     refaccion = models.ForeignKey(Refaccion, on_delete=models.CASCADE, related_name='movimientos')
     proveedor = models.ForeignKey(Proveedor, on_delete=models.SET_NULL, null=True, blank=True)
@@ -26,3 +27,5 @@ class Inventario(models.Model):
         verbose_name = "Movimiento de Inventario"
         verbose_name_plural = "Movimientos de Inventario"
         ordering = ['-fecha']
+        
+    
