@@ -35,7 +35,8 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost'
+    'localhost',
+    '127.0.0.1'
 ]
 
 # Application definition
@@ -172,7 +173,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SAMESITE = 'NONE'
 CSRF_COOKIE_SECURE = True
 
-SESSION_COOKIE_SCURE = True
+SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'None'
 
 CORS_ALLOW_ALL_ORIGINS = False
