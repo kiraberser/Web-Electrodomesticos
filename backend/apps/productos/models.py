@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Marca(models.Model):
     """Modelo para registrar marcas de electrodomésticos"""
@@ -75,3 +77,14 @@ class Proveedor(models.Model):
 
     class Meta:
         verbose_name_plural = "Proveedores"
+
+@receiver(post_save, sender=Refaccion)
+def crear_movimiento_inventario(sender, instance, created, **kwargs):
+    if created and instance.existencias > 0:
+        from apps.inventario.models import Inventario
+        Inventario.objects.create(
+            refaccion=instance,
+            cantidad=instance.existencias,
+            tipo_movimiento=Inventario.TipoMovimientoChoices.ENTRADA,
+            observaciones="Alta inicial de refacción"
+        )
