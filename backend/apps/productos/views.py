@@ -37,18 +37,7 @@ class RefaccionViewSet(viewsets.ModelViewSet):
     search_fields = ['nombre', 'codigo_parte', 'compatibilidad']
     ordering_fields = ['precio', 'fecha_ingreso', 'existencias']
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        min_precio = self.request.query_params.get('min_precio')
-        max_precio = self.request.query_params.get('max_precio')
-        
-        if min_precio:
-            queryset = queryset.filter(precio__gte=min_precio)
-        if max_precio:
-            queryset = queryset.filter(precio__lte=max_precio)
-        
-        return queryset
-
+    
 class ProveedorViewSet(viewsets.ModelViewSet):
     queryset = Proveedor.objects.all()
     serializer_class = ProveedorSerializer
