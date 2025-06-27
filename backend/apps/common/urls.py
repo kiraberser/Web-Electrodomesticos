@@ -8,12 +8,4 @@ router.register(r'newsletters', NewsletterViewSet, basename='newsletter')
 
 urlpatterns = [
     path('', include(router.urls)),
-    
-    # Contact routes
-    path('contacts/', ContactViewSet.as_view({'get': 'list'}), name='contact-list'),
-    path('contacts/submit/', ContactViewSet.as_view({'post': 'create'}), name='contact-submit'),
-    
-    # Newsletter routes
-    path('newsletters/', NewsletterViewSet.as_view({'get': 'list'}), name='newsletter-list'),
-    path('newsletters/subscribe/', NewsletterViewSet.as_view({'post': 'create'}), name='newsletter-subscribe'),
 ]
