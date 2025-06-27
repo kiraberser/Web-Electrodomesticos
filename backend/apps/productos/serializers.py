@@ -21,7 +21,7 @@ class RefaccionSerializer(serializers.ModelSerializer):
             'id', 'codigo_parte', 'nombre', 'descripcion', 
             'marca', 'marca_nombre', 'categoria', 'categoria_nombre',
             'precio', 'existencias', 'estado', 'compatibilidad',
-            'fecha_ingreso', 'ultima_actualizacion'
+            'fecha_ingreso', 'ultima_actualizacion', 'proveedor'
         ]
 
 class ProveedorSerializer(serializers.ModelSerializer):

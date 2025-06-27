@@ -11,7 +11,7 @@ from .serializers import (
 class MarcaViewSet(viewsets.ModelViewSet):
     queryset = Marca.objects.all()
     serializer_class = MarcaSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['nombre', 'pais_origen']
     ordering_fields = ['nombre']
@@ -19,7 +19,7 @@ class MarcaViewSet(viewsets.ModelViewSet):
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['nombre']
     ordering_fields = ['nombre']
@@ -27,7 +27,7 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 class RefaccionViewSet(viewsets.ModelViewSet):
     queryset = Refaccion.objects.select_related('marca', 'categoria').all()
     serializer_class = RefaccionSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [
         DjangoFilterBackend, 
         filters.SearchFilter, 
@@ -52,7 +52,7 @@ class RefaccionViewSet(viewsets.ModelViewSet):
 class ProveedorViewSet(viewsets.ModelViewSet):
     queryset = Proveedor.objects.all()
     serializer_class = ProveedorSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['nombre', 'contacto', 'correo_electronico']
     ordering_fields = ['nombre']

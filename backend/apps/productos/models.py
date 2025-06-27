@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 class Marca(models.Model):
     """Modelo para registrar marcas de electrodomésticos"""
+    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, unique=True)
     pais_origen = models.CharField(max_length=100, blank=True, null=True)
 
@@ -17,6 +18,7 @@ class Marca(models.Model):
 
 class Categoria(models.Model):
     """Categorías de electrodomésticos"""
+    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, unique=True)
     descripcion = models.TextField(blank=True)
 
@@ -33,7 +35,9 @@ class Refaccion(models.Model):
         USADO_BUEN_ESTADO = 'UBS', _('Usado - Buen Estado')
         REACONDICIONADO = 'REC', _('Reacondicionado')
 
+    id = models.AutoField(primary_key=True)
     codigo_parte = models.CharField(max_length=50, unique=True)
+    proveedor = models.ForeignKey('Proveedor', on_delete=models.PROTECT, related_name='refacciones', null=True, blank=True)
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT, related_name='refacciones')
@@ -66,6 +70,7 @@ class Refaccion(models.Model):
 
 class Proveedor(models.Model):
     """Modelo para gestionar proveedores de refacciones"""
+    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=200)
     contacto = models.CharField(max_length=100)
     telefono = models.CharField(max_length=20)
@@ -83,8 +88,10 @@ def crear_movimiento_inventario(sender, instance, created, **kwargs):
     if created and instance.existencias > 0:
         from apps.inventario.models import Inventario
         Inventario.objects.create(
-            refaccion=instance,
             cantidad=instance.existencias,
+            precio_unitario=instance.precio,
+            marca=instance.marca,
+            categoria=instance.categoria,
             tipo_movimiento=Inventario.TipoMovimientoChoices.ENTRADA,
-            observaciones="Alta inicial de refacción"
+            refaccion=instance
         )
