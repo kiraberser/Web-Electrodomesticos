@@ -34,11 +34,13 @@ class PostViewSet(viewsets.ModelViewSet):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         
-        # Si el título cambia, actualiza el slug
-        if 'title' in request.data:
-            request.data['slug'] = slugify(request.data['title'])
+        data = request.data.copy()
         
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        # Si el título cambia, actualiza el slug
+        if 'title' in data:
+            data['slug'] = slugify(data['title'])
+
+        serializer = self.get_serializer(instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         
