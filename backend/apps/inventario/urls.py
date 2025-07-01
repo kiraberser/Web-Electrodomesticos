@@ -3,7 +3,7 @@ from .views import InventarioViewSet
 
 urlpatterns = [
     path('', include([
-        path('total/', InventarioViewSet.as_view({'get': 'list', 'post': 'create'}), name='inventario-list'),
-        path('producto/<int:pk>/', InventarioViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='inventario-detail'),
+        path('refacciones/', InventarioViewSet.as_view({'get': 'list'}), name='inventario-list'),
+        path('refaccion/<int:pk>/', InventarioViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='inventario-detail'),
     ])),
 ]

@@ -7,14 +7,14 @@ from .serializer import InventarioSerializer
 
 # Create your views here.
 class InventarioViewSet(viewsets.ModelViewSet):
-    queryset = Inventario.objects.select_related('refaccion', 'proveedor').all()
+    queryset = Inventario.objects.all()
     serializer_class = InventarioSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [
         filters.SearchFilter, 
         filters.OrderingFilter
     ]
-    filterset_fields = ['refaccion', 'proveedor', 'tipo_movimiento']
+    filterset_fields = ['refaccion', 'tipo_movimiento']
     search_fields = ['observaciones']
     ordering_fields = ['fecha']
 
