@@ -12,4 +12,7 @@ urlpatterns = [
     path('api/v1/productos/', include('apps.productos.urls')),  # Rutas para la app productos
     path('api/v1/user/', include('apps.usuarios.urls')),  # Rutas para la app usuarios
     path('api/v1/inventario/', include('apps.inventario.urls')),  # Rutas para la app inventario
+    path('api/v1/bodega/', include('apps.bodega.urls')),  # Rutas para la app bodega
+    path('api/v1/ventas/', include('apps.ventas.urls')),  # R
+    path('api/v1/servicios/', include('apps.servicios.urls')),  # Rutas para la app servicios
 ]
