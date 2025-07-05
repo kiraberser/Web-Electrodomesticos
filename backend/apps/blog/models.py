@@ -31,7 +31,7 @@ class Blog(models.Model):
         on_delete=models.CASCADE, 
         default=1
     )
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, unique_for_date='created_at')
     category = models.CharField(max_length=50, choices=Category.choices, default=Category.OTROS)
 
     def save(self, *args, **kwargs):
@@ -44,3 +44,25 @@ class Blog(models.Model):
 
     def __str__(self):  # Método mágico __str__
         return self.title
+
+class Comment(models.Model):
+    blog = models.ForeignKey(Blog, 
+                            on_delete=models.CASCADE, 
+                            related_name='comments')
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    active = models.BooleanField(default=True)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['-created_at']),
+        ]
+
+    def __str__(self):
+        return f'Comment by {self.author} on {self.blog.title}'
