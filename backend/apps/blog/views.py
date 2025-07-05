@@ -3,9 +3,32 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.utils.text import slugify
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Blog
 from .serializers import BlogSerializer
+
+class CustomPagination(PageNumberPagination):
+    """
+    Clase de paginación personalizada para los posts del blog
+    """
+    page_size = 5
+
+class BlogListView(generics.ListAPIView):
+    """
+    Vista para listar todos los posts del blog
+    Soporta paginación y filtrado por título
+    """
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    pagination_class = CustomPagination
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        title = self.request.query_params.get('title', None)
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+        return queryset
 
 class PostViewSet(viewsets.ModelViewSet):
     """
@@ -15,6 +38,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
     lookup_field = 'slug'
+    permission_classes = [IsAuthenticated | IsAdminUser]
 
     def create(self, request, *args, **kwargs):
         # Personaliza la lógica de creación
