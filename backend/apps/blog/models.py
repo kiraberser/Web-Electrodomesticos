@@ -3,8 +3,9 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django.conf import settings
 
-class Blog(models.Model):
-    class Category(models.TextChoices):
+from taggit.managers import TaggableManager
+
+class Category(models.TextChoices):
         MOTOR = "Motor", "Motor"
         MINISPLIT = "Minisplit", "Minisplit"
         LAVADORA = "Lavadora", "Lavadora"
@@ -22,6 +23,7 @@ class Blog(models.Model):
         ASPIRADORA = "Aspiradora", "Aspiradora"
         OTROS = "Otros", "Otros"
 
+class Blog(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='images/', blank=True, null=True)
@@ -33,6 +35,7 @@ class Blog(models.Model):
     )
     slug = models.SlugField(unique=True, blank=True, unique_for_date='created_at')
     category = models.CharField(max_length=50, choices=Category.choices, default=Category.OTROS)
+    tags = TaggableManager()
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -40,13 +43,13 @@ class Blog(models.Model):
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
-        return reverse('blogdetail', kwargs={'slug': self.slug})
+        return reverse('postdetail', kwargs={'slug': self.slug})
 
     def __str__(self):  # Método mágico __str__
         return self.title
 
 class Comment(models.Model):
-    blog = models.ForeignKey(Blog, 
+    post = models.ForeignKey(Blog, 
                             on_delete=models.CASCADE, 
                             related_name='comments')
     author = models.ForeignKey(

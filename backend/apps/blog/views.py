@@ -3,25 +3,20 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.utils.text import slugify
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 
-from .models import Blog
-from .serializers import BlogSerializer
+from .models import Blog, Comment
+from .serializers import PostSerializer, CommentSerializer
 
-class CustomPagination(PageNumberPagination):
-    """
-    Clase de paginación personalizada para los posts del blog
-    """
-    page_size = 5
 
-class BlogListView(generics.ListAPIView):
+
+class PostListView(generics.ListAPIView):
     """
     Vista para listar todos los posts del blog
     Soporta paginación y filtrado por título
     """
     queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-    pagination_class = CustomPagination
+    serializer_class = PostSerializer
+
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -36,9 +31,9 @@ class PostViewSet(viewsets.ModelViewSet):
     Soporta: listar, crear, recuperar, actualizar y eliminar posts
     """
     queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
+    serializer_class = PostSerializer
     lookup_field = 'slug'
-    permission_classes = [IsAuthenticated | IsAdminUser]
+
 
     def create(self, request, *args, **kwargs):
         # Personaliza la lógica de creación
@@ -74,3 +69,15 @@ class PostViewSet(viewsets.ModelViewSet):
     def custom_create(self, request):
         # Método alternativo para manejar /create/
         return self.create(request)
+    
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id'
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [permissions.AllowAny]
+        return super().get_permissions()
