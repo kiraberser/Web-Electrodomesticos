@@ -1,21 +1,15 @@
-from rest_framework import serializers
-from .models import Contact, Newsletter
+
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-class ContactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contact
-        fields = ['id', 'name', 'email', 'message', 'created_at']
-        read_only_fields = ['created_at']
+from django.core.mail import send_mail
+from django.conf import settings
 
-class NewsletterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Newsletter
-        fields = ['id', 'email', 'created_at']
-        read_only_fields = ['created_at']
+from .models import Contact, Newsletter
 
+
+from .serializers import ContactSerializer, NewsletterSerializer
 # ViewSets
 class ContactViewSet(viewsets.ModelViewSet):
     """
@@ -51,6 +45,7 @@ class NewsletterViewSet(viewsets.ModelViewSet):
     """
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
+    sent = False
 
     def create(self, request, *args, **kwargs):
         """
@@ -63,6 +58,18 @@ class NewsletterViewSet(viewsets.ModelViewSet):
                 'message': 'Este email ya está suscrito a la newsletter'
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        # Enviar correo de confirmación
+        send_mail(
+            subject='Confirmación de suscripción a la Newsletter',
+            message='Gracias por suscribirte a nuestra newsletter. Te mantendremos informado con las últimas novedades.',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+        # Crear la suscripción
+        request.data['email'] = email.lower()  # Normalizar el email a minúsculas
+        request.data['is_active'] = True  # Asegurarse de que la suscripción esté activa
+        
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
