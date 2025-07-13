@@ -8,14 +8,6 @@ const axios = require('axios').default;
 const TOKEN = process.env.NEXT_PUBLIC_API_KEY
 
 // Configurar axios globalmente
-const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
-    headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-});
 
 type BlogPost = {
     title: string,
@@ -36,9 +28,10 @@ const BlogPost = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        console.log('Fetching post with slug:', params)
         const fetchPost = async () => {
             try {
-                const response = await instance.get(`/api/v1/blog/posts/${params.slug}/`)
+                const response = await axios.get(`http://localhost:8000/api/v1/blog/post/${params.slug}/`)
                 setPost(response.data)
                 setError(null)
             } catch (error: any) {
