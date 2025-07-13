@@ -6,16 +6,7 @@ const axios = require('axios').default;
 
 const TOKEN = process.env.NEXT_PUBLIC_API_KEY
 
-
 // Configurar axios globalmente
-const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
-    headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-});
 
 type GetBlog = {
     title: string,
@@ -35,9 +26,10 @@ const Blog = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await instance.get('/api/v1/blog/posts/')
-                setData(response.data)
-                //localStorage.setItem('blogToken', instance.defaults.headers.common['Authorization'])
+                const response = await axios.get('http://localhost:8000/api/v1/blog/posts/')
+
+                setData(response.data.results)
+
                 setError(null)
             } catch (error: any) {
                 console.error('Error fetching posts:', error)
