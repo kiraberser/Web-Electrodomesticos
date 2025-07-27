@@ -1,2 +1,1 @@
-export { default as Toasts } from './Toasts'
-export { default as Progress } from './Progress' 
+export {Badge} from './Badge';

@@ -1,16 +1,25 @@
-import { HeroSection } from '@/components/ui'
-import { Carousel } from '@/components/features/home'
-import { FeaturesGrid } from '@/components/features/home'
+import React from 'react';
+import HeroSection from '@/components/ui/layout/Hero';
+import FeaturedProducts from '@/components/product/FeaturedProducts';
+import Categories from '@/components/product/Categories';
 
-const App = () => {
+//Falta import Features, Testimonials, Brands
 
-    return (
-        <div className='bg-[#D4EBF8]'>
-            <Carousel/>
-            <FeaturesGrid/>
-            <HeroSection/>
-        </div>
-    )
-}
+import Features from '../components/Features';
+import Testimonials from '../components/Testimonials';
+import Brands from '../components/Brands';
 
-export default App
+const HomePage = () => {
+  return (
+    <div className="min-h-screen">
+      <HeroSection />
+      <Categories />
+      <FeaturedProducts />
+      <Features />
+      <Testimonials />
+      <Brands />
+    </div>
+  );
+};
+
+export default HomePage;

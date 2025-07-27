@@ -1,0 +1,102 @@
+export const blogPosts = [
+    {
+      id: 1,
+      title: "Cómo elegir el refrigerador perfecto para tu hogar",
+      slug: "como-elegir-refrigerador-perfecto",
+      excerpt: "Descubre los factores clave que debes considerar al comprar un nuevo refrigerador, desde el tamaño hasta la eficiencia energética.",
+      content: "...",
+      author: "María González",
+      date: "2024-01-15",
+      category: "Electrodomésticos",
+      image: "https://images.unsplash.com/photo-1571175351268-804d80f93dd5?w=600&h=400&fit=crop",
+      tags: ["refrigerador", "cocina", "hogar", "guía"],
+      views: 1250,
+      comments: 18,
+      featured: true
+    },
+    {
+      id: 2,
+      title: "Consejos para ahorrar energía con tu lavadora",
+      slug: "consejos-ahorrar-energia-lavadora",
+      excerpt: "Aprende técnicas efectivas para reducir el consumo de energía de tu lavadora y ahorrar en tu factura eléctrica.",
+      content: "...",
+      author: "Carlos Mendoza",
+      date: "2024-01-12",
+      category: "Ahorro de Energía",
+      image: "https://images.unsplash.com/photo-1604335399105-a0c585fd81a0?w=600&h=400&fit=crop",
+      tags: ["lavadora", "ahorro", "energía", "sostenibilidad"],
+      views: 890,
+      comments: 12,
+      featured: false
+    },
+    {
+      id: 3,
+      title: "Las mejores marcas de microondas en 2024",
+      slug: "mejores-marcas-microondas-2024",
+      excerpt: "Comparamos las principales marcas de microondas disponibles en el mercado mexicano este año.",
+      content: "...",
+      author: "Ana Rodríguez",
+      date: "2024-01-10",
+      category: "Comparativas",
+      image: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&h=400&fit=crop",
+      tags: ["microondas", "comparativa", "marcas", "2024"],
+      views: 1420,
+      comments: 25,
+      featured: true
+    },
+    {
+      id: 4,
+      title: "Mantenimiento preventivo de aires acondicionados",
+      slug: "mantenimiento-preventivo-aires-acondicionados",
+      excerpt: "Guía completa sobre cómo mantener tu aire acondicionado en óptimas condiciones durante todo el año.",
+      content: "...",
+      author: "Luis Hernández",
+      date: "2024-01-08",
+      category: "Mantenimiento",
+      image: "https://images.unsplash.com/photo-1631201222066-8e5d3e5a7d6c?w=600&h=400&fit=crop",
+      tags: ["aire acondicionado", "mantenimiento", "tips", "verano"],
+      views: 756,
+      comments: 9,
+      featured: false
+    },
+    {
+      id: 5,
+      title: "Cocinas inteligentes: El futuro está aquí",
+      slug: "cocinas-inteligentes-futuro",
+      excerpt: "Explora las últimas innovaciones en electrodomésticos inteligentes que están revolucionando nuestras cocinas.",
+      content: "...",
+      author: "Diana Torres",
+      date: "2024-01-05",
+      category: "Tecnología",
+      image: "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=600&h=400&fit=crop",
+      tags: ["cocina", "inteligente", "tecnología", "futuro"],
+      views: 2100,
+      comments: 34,
+      featured: true
+    },
+    {
+      id: 6,
+      title: "Guía de compra: Televisores 4K y 8K",
+      slug: "guia-compra-televisores-4k-8k",
+      excerpt: "Todo lo que necesitas saber antes de comprar un televisor de nueva generación con resolución 4K o 8K.",
+      content: "...",
+      author: "Roberto Silva",
+      date: "2024-01-03",
+      category: "Entretenimiento",
+      image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&h=400&fit=crop",
+      tags: ["televisor", "4K", "8K", "guía de compra"],
+      views: 1680,
+      comments: 22,
+      featured: false
+    }
+  ];
+
+export const categories = [
+    { id: 'all', name: 'Todos', count: blogPosts.length },
+    { id: 'Electrodomésticos', name: 'Electrodomésticos', count: 2 },
+    { id: 'Ahorro de Energía', name: 'Ahorro de Energía', count: 1 },
+    { id: 'Comparativas', name: 'Comparativas', count: 1 },
+    { id: 'Mantenimiento', name: 'Mantenimiento', count: 1 },
+    { id: 'Tecnología', name: 'Tecnología', count: 1 },
+    { id: 'Entretenimiento', name: 'Entretenimiento', count: 1 }
+  ];

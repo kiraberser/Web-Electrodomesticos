@@ -1,88 +1,132 @@
-'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
+import { Button } from '../forms/Button';
+import { ArrowRight, Star, Shield, Truck } from 'lucide-react';
 
-export const HeroSection = () => {
+
+const HeroSection = () => {
+
+  if (!true) {
     return (
-        <div className="bg-[#D4EBF8] pb-6 sm:pb-8 lg:pb-12 min-h-screen">
-            <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
-                <section className="flex flex-col justify-between gap-6 sm:gap-10 md:gap-16 lg:flex-row">
-                    <div className="flex flex-col justify-center sm:text-center lg:py-12 lg:text-left xl:w-5/12 xl:py-24">
-                        <p className="mb-4 font-semibold text-[#E38E49] md:mb-6  md:text-lg xl:text-xl">Servicio profesional garantizado</p>
-
-                        <h1 className="mb-8 text-4xl font-bold text-[#0A3981] sm:text-5xl md:mb-12 md:text-6xl">Reparaciones y repuestos para tus electrodomésticos</h1>
-
-                        <p className="mb-8 leading-relaxed text-[#1F509A] md:mb-12 lg:w-4/5 xl:text-lg">Soluciones rápidas y confiables para la reparación de tus electrodomésticos con repuestos originales y técnicos certificados. Garantía en todos nuestros servicios.</p>
-
-                        <div className="flex flex-col gap-2.5 sm:flex-row sm:justify-center lg:justify-start">
-                            <Link 
-                                href="/servicios" 
-                                className="inline-block rounded-lg bg-[#E38E49] px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-[#1F509A] transition duration-300 hover:bg-[#d47a32] focus-visible:ring active:bg-[#c46e2b] md:text-base"
-                            >
-                                Solicitar servicio
-                            </Link>
-
-                            <Link 
-                                href="/productos" 
-                                className="inline-block rounded-lg bg-[#1F509A] px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-[#0A3981] transition duration-300 hover:bg-[#174584] focus-visible:ring active:text-white md:text-base"
-                            >
-                                Ver repuestos
-                            </Link>
-                        </div>
-                        <div className="mt-6 flex items-center gap-2">
-                            <div className="flex items-center gap-2">
-                                <div className="flex text-[#E38E49]">
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <span className="text-lg font-bold text-[#0A3981]">4.9</span>
-                                    <span className="text-sm text-gray-600">/5</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Image
-                                    src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-                                    alt="Google"
-                                    width={70}
-                                    height={20}
-                                    className="h-5 w-auto"
-                                />
-                                <span className="text-sm font-medium text-[#1F509A]">
-                                    <span className="font-semibold text-xl">15+</span> reseñas
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative h-48 overflow-hidden rounded-lg bg-white shadow-lg lg:h-auto xl:w-5/12 m-5">
-                        <Image
-                            src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            alt="Técnico reparando electrodoméstico"
-                            fill
-                            className="object-cover object-center"
-                            priority
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#D4EBF8]/20 to-transparent"></div>
-                    </div>
-                </section>
+      <section className="relative bg-gradient-to-br from-blue-50 to-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center">
+            <div className="animate-pulse text-center">
+              <div className="h-12 bg-gray-200 rounded mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded mb-6"></div>
+              <div className="h-10 bg-gray-200 rounded w-48 mx-auto"></div>
             </div>
+          </div>
         </div>
-    )
-}
+      </section>
+    );
+  }
 
-export default HeroSection
+  return (
+    <section className="relative bg-gradient-to-br from-blue-50 to-white py-20">
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Content */}
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                Electrodomésticos de Calidad
+              </h1>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Encuentra los mejores electrodomésticos para tu hogar con la mejor garantía y servicio técnico
+              </p>
+            </div>
+
+            {/* Features */}
+            <div className="flex flex-wrap gap-6">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Star className="w-4 h-4 text-green-600" />
+                </div>
+                <span className="text-sm font-medium text-gray-700">Calidad Garantizada</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-blue-600" />
+                </div>
+                <span className="text-sm font-medium text-gray-700">3 años de garantía</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                  <Truck className="w-4 h-4 text-orange-600" />
+                </div>
+                <span className="text-sm font-medium text-gray-700">Envío gratuito</span>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                size="lg"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105"
+              >
+                Ver Catálogo
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-blue-500 text-blue-500 hover:bg-blue-50 px-8 py-3 transition-all duration-300"
+              >
+                Más información
+              </Button>
+            </div>
+
+            {/* Stats */}
+            <div className="flex divide-x divide-gray-200 pt-6">
+              <div className="pr-6">
+                <div className="text-2xl font-bold text-gray-900">500+</div>
+                <div className="text-sm text-gray-600">Productos</div>
+              </div>
+              <div className="px-6">
+                <div className="text-2xl font-bold text-gray-900">20+</div>
+                <div className="text-sm text-gray-600">Años de experiencia</div>
+              </div>
+              <div className="pl-6">
+                <div className="text-2xl font-bold text-gray-900">10k+</div>
+                <div className="text-sm text-gray-600">Clientes satisfechos</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Image */}
+          <div className="relative">
+            <div className="relative z-10">
+              <img
+                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop"
+                alt="Electrodomésticos de calidad"
+                className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+              />
+              {/* Floating elements */}
+              <div className="absolute -top-4 -right-4 bg-orange-500 text-white p-4 rounded-lg shadow-lg">
+                <div className="text-2xl font-bold">25%</div>
+                <div className="text-sm">Descuento</div>
+              </div>
+              <div className="absolute -bottom-4 -left-4 bg-white p-4 rounded-lg shadow-lg">
+                <div className="flex items-center space-x-2">
+                  <div className="flex -space-x-2">
+                    <div className="w-8 h-8 bg-blue-400 rounded-full border-2 border-white"></div>
+                    <div className="w-8 h-8 bg-green-400 rounded-full border-2 border-white"></div>
+                    <div className="w-8 h-8 bg-purple-400 rounded-full border-2 border-white"></div>
+                  </div>
+                  <div className="text-sm">
+                    <div className="font-medium">1000+</div>
+                    <div className="text-gray-500">Reseñas</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-200 to-orange-200 rounded-2xl transform rotate-6 scale-105 opacity-20 -z-10"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default HeroSection;

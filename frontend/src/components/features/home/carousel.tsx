@@ -22,7 +22,7 @@ export const Carousel = () => {
   const prevSlide = () => setCurrent((current - 1 + slides.length) % slides.length)
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl shadow-md bg-[#D4EBF8] m-10">
+    <div className="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl shadow-md bg-[#D4EBF8] m-10 ">
       {/* Slides */}
       <div className="bg-[#D4EBF8] flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${current * 100}%)` }}>
         {slides.map((slide) => (

@@ -1,79 +1,170 @@
-'use client'
+
+import { Button } from '../forms/Button';
+import { Separator } from '../display/Separator';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
+import { company  } from '@/data/company';
+import { categories  } from '@/data/category';
 
 const Footer = () => {
-    const year = new Date().getFullYear()
 
-    return (
-        <footer className="bg-white pt-10 text-[#1F509A]">
-            <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-[#0A3981]/20">
-                    {/* Logo y descripción */}
-                    <div>
-                        <h3 className="text-2xl font-bold text-[#0A3981] mb-3">Refaccionaria Vega</h3>
-                        <p className="text-sm leading-relaxed">
-                            Repuestos y reparaciones confiables para tus electrodomésticos. Garantía, calidad y atención personalizada.
-                        </p>
-                        <div className="flex mt-4 gap-3">
-                            <a href="#" className="hover:text-[#E38E49] transition-colors">
-                                <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="..." /></svg>
-                            </a>
-                            <a href="#" className="hover:text-[#E38E49] transition-colors">
-                                <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="..." /></svg>
-                            </a>
-                            <a href="#" className="hover:text-[#E38E49] transition-colors">
-                                <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="..." /></svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Enlaces rápidos */}
-                    <div>
-                        <h4 className="font-semibold mb-3 text-[#0A3981]">Navegación</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><a href="/" className="hover:text-[#E38E49]">Inicio</a></li>
-                            <li><a href="/servicios" className="hover:text-[#E38E49]">Servicios</a></li>
-                            <li><a href="/productos" className="hover:text-[#E38E49]">Repuestos</a></li>
-                            <li><a href="/about-us" className="hover:text-[#E38E49]">Sobre nosotros</a></li>
-                        </ul>
-                    </div>
-
-                    {/* Horarios */}
-                    <div>
-                        <h4 className="font-semibold mb-3 text-[#0A3981]">Horarios</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li>Lunes a Viernes: 9am - 6pm</li>
-                            <li>Sábado: 10am - 3pm</li>
-                            <li>Domingo: Cerrado</li>
-                        </ul>
-                    </div>
-
-                    {/* Contacto */}
-                    <div>
-                        <h4 className="font-semibold mb-3 text-[#0A3981]">Contáctanos</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li>📍 Veracruz, México</li>
-                            <li>📞 +52 229 123 4567</li>
-                            <li>📧 contacto@refaccionariavega.mx</li>
-                            <li>
-                                <a
-                                    href="https://wa.me/522291234567"
-                                    target="_blank"
-                                    className="inline-block mt-2 bg-[#E38E49] text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-[#d47a32] transition"
-                                >
-                                    Escríbenos por WhatsApp
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                {/* Créditos */}
-                <div className="text-center py-6 text-xs text-[#0A3981]">
-                    © {year} Refaccionaria Vega. Todos los derechos reservados.
-                </div>
+  return (
+    <footer className="bg-gray-900 text-white">
+      {/* Newsletter Section */}
+      <div className="bg-blue-600 py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h3 className="text-2xl font-bold mb-4">
+              Suscríbete a nuestro newsletter
+            </h3>
+            <p className="text-blue-100 mb-6">
+              Recibe las mejores ofertas y novedades directamente en tu correo
+            </p>
+            <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
+              <input
+                type="email"
+                placeholder="Tu correo electrónico"
+                className="flex-1 px-4 py-3 rounded-lg bg-white border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+              <Button className="bg-orange-500 hover:bg-orange-600 px-6 py-3">
+                Suscribirse
+              </Button>
             </div>
-        </footer>
-    )
-}
+          </div>
+        </div>
+      </div>
 
-export default Footer
+      {/* Main Footer */}
+      <div className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            {/* Company Info */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">E</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">{company?.name || 'ElectroMart'}</h3>
+                  <p className="text-sm text-gray-400">{company?.tagline || 'Tu hogar, nuestra pasión'}</p>
+                </div>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                {company?.description || 'Más de 20 años ofreciendo los mejores electrodomésticos con la mejor calidad y servicio.'}
+              </p>
+              <div className="flex space-x-4">
+                <Facebook className="w-5 h-5 text-gray-400 hover:text-blue-500 cursor-pointer transition-colors" />
+                <Instagram className="w-5 h-5 text-gray-400 hover:text-pink-500 cursor-pointer transition-colors" />
+                <Twitter className="w-5 h-5 text-gray-400 hover:text-blue-400 cursor-pointer transition-colors" />
+                <Youtube className="w-5 h-5 text-gray-400 hover:text-red-500 cursor-pointer transition-colors" />
+              </div>
+            </div>
+
+            {/* Categories */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Categorías</h4>
+              <ul className="space-y-2">
+                {categories.slice(0, 6).map((category) => (
+                  <li key={category.id}>
+                    <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+                      {category.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Services */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Servicios</h4>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Entrega e instalación
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Servicio técnico
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Garantía extendida
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Financiamiento
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Devoluciones
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Soporte 24/7
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Contact Info */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Contacto</h4>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center space-x-3">
+                  <Phone className="w-4 h-4 text-blue-500" />
+                  <span className="text-gray-400">{company?.phone || '+52 55 1234 5678'}</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Mail className="w-4 h-4 text-blue-500" />
+                  <span className="text-gray-400">{company?.email || 'info@electromart.com'}</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <MapPin className="w-4 h-4 text-blue-500 mt-1" />
+                  <span className="text-gray-400">{company?.address || 'Av. Insurgentes Sur 123, Ciudad de México'}</span>
+                </div>
+              </div>
+              <div className="mt-4 p-4 bg-gray-800 rounded-lg">
+                <h5 className="font-semibold text-sm mb-2">Horarios de atención</h5>
+                <div className="text-xs text-gray-400 space-y-1">
+                  <div>Lun - Vie: 9:00 AM - 7:00 PM</div>
+                  <div>Sábado: 9:00 AM - 5:00 PM</div>
+                  <div>Domingo: 10:00 AM - 4:00 PM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Separator className="bg-gray-700" />
+
+      {/* Bottom Footer */}
+      <div className="py-6">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-sm">
+              © 2024 {company?.name || 'ElectroMart'}. Todos los derechos reservados.
+            </p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Términos y condiciones
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Política de privacidad
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Aviso legal
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
