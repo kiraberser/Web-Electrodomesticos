@@ -37,6 +37,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1'
+    
 ]
 
 # Application definition
@@ -180,6 +181,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # o el puerto donde corre tu frontend
+
 ]
 
 CORS_ALLOW_CREDENTIALS = True
