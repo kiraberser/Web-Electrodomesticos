@@ -1,7 +1,8 @@
-
 import { Button } from '../forms/Button';
 import { ArrowRight, Star, Shield, Truck } from 'lucide-react';
+import Image from 'next/image';
 
+import ElectrodomesticosHero from '/public/images/hero/ElectrodomesticosHero.png'
 
 const HeroSection = () => {
 
@@ -29,10 +30,10 @@ const HeroSection = () => {
           <div className="space-y-6">
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                Electrodomésticos de Calidad
+                Refacciones en Electrodomésticos
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Encuentra los mejores electrodomésticos para tu hogar con la mejor garantía y servicio técnico
+                Encuentra las mejores refacciones para tu hogar con la mejor garantía y servicio técnico
               </p>
             </div>
 
@@ -48,13 +49,13 @@ const HeroSection = () => {
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                   <Shield className="w-4 h-4 text-blue-600" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">3 años de garantía</span>
+                <span className="text-sm font-medium text-gray-700">Protección contra defectos</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
                   <Truck className="w-4 h-4 text-orange-600" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Envío gratuito</span>
+                <span className="text-sm font-medium text-gray-700">Envíos a todo el país</span>
               </div>
             </div>
 
@@ -80,14 +81,14 @@ const HeroSection = () => {
             <div className="flex divide-x divide-gray-200 pt-6">
               <div className="pr-6">
                 <div className="text-2xl font-bold text-gray-900">500+</div>
-                <div className="text-sm text-gray-600">Productos</div>
+                <div className="text-sm text-gray-600">Refacciones</div>
               </div>
               <div className="px-6">
                 <div className="text-2xl font-bold text-gray-900">20+</div>
                 <div className="text-sm text-gray-600">Años de experiencia</div>
               </div>
               <div className="pl-6">
-                <div className="text-2xl font-bold text-gray-900">10k+</div>
+                <div className="text-2xl font-bold text-gray-900">5k+</div>
                 <div className="text-sm text-gray-600">Clientes satisfechos</div>
               </div>
             </div>
@@ -96,8 +97,8 @@ const HeroSection = () => {
           {/* Image */}
           <div className="relative">
             <div className="relative z-10">
-              <img
-                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop"
+              <Image
+                src={ElectrodomesticosHero}
                 alt="Electrodomésticos de calidad"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
               />

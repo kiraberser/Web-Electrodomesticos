@@ -2,12 +2,13 @@ import React from 'react';
 import HeroSection from '@/components/ui/layout/Hero';
 import FeaturedProducts from '@/components/product/FeaturedProducts';
 import Categories from '@/components/product/Categories';
+import Features from '@/components/features/home/Features';
+import Brands from '@/components/product/Brands';
+import { Reviews } from '@/components/features/reviews/Reviews';
 
 //Falta import Features, Testimonials, Brands
 
-import Features from '../components/Features';
-import Testimonials from '../components/Testimonials';
-import Brands from '../components/Brands';
+
 
 const HomePage = () => {
   return (
@@ -16,7 +17,7 @@ const HomePage = () => {
       <Categories />
       <FeaturedProducts />
       <Features />
-      <Testimonials />
+      <Reviews/>
       <Brands />
     </div>
   );

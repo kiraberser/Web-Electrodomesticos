@@ -1,12 +1,15 @@
+import Image from 'next/image';
+
+import Logo from '@/../public/assets/Logo.png'
 
 import { Button } from '../forms/Button';
 import { Separator } from '../display/Separator';
 import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
-import { company  } from '@/data/company';
-import { categories  } from '@/data/category';
+import { company } from '@/data/company';
+import { categories } from '@/data/category';
+import Link from 'next/link';
 
 const Footer = () => {
-
   return (
     <footer className="bg-gray-900 text-white">
       {/* Newsletter Section */}
@@ -40,9 +43,12 @@ const Footer = () => {
             {/* Company Info */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">E</span>
-                </div>
+                <Image
+                  src={Logo}
+                  alt={'Logo Refaccionaria Vega'}
+                  width={50}
+                  height={50}
+                />
                 <div>
                   <h3 className="text-xl font-bold">{company?.name || 'ElectroMart'}</h3>
                   <p className="text-sm text-gray-400">{company?.tagline || 'Tu hogar, nuestra pasión'}</p>
@@ -65,9 +71,9 @@ const Footer = () => {
               <ul className="space-y-2">
                 {categories.slice(0, 6).map((category) => (
                   <li key={category.id}>
-                    <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+                    <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
                       {category.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -78,34 +84,31 @@ const Footer = () => {
               <h4 className="text-lg font-semibold mb-4">Servicios</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
                     Entrega e instalación
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
                     Servicio técnico
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
                     Garantía extendida
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Financiamiento
-                  </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
                     Devoluciones
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Soporte 24/7
-                  </a>
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Soporte
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -150,15 +153,15 @@ const Footer = () => {
               © 2024 {company?.name || 'ElectroMart'}. Todos los derechos reservados.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+              <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
                 Términos y condiciones
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
                 Política de privacidad
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
                 Aviso legal
-              </a>
+              </Link>
             </div>
           </div>
         </div>

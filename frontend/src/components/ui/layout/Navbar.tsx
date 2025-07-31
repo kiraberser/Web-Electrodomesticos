@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, ShoppingCart, Menu, X, User, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -9,16 +9,17 @@ import { Badge } from '../feedback/Badge';
 import { useCart } from '@/context/CartContext';
 import CartDrawer from '@/components/cart/CartDrawer';
 import AccountModal from '../display/AccountModa';
+import Logo from '../../../../public/assets/logo.png'
+
 
 import { categories } from '@/data/category';
+import Image from 'next/image';
+
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isAccountOpen, setIsAccountOpen] = useState(false);
-    type Company = { name: string; phone: string; tagline: string };
-    const [company, setCompany] = useState<Company | null>(null);
-    const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const { getTotalItems } = useCart();
 
@@ -35,17 +36,12 @@ const Header = () => {
         redirect(`/productos?category=${encodeURIComponent(categoryName)}`);
     };
 
-    if (loading) {
-        return (
-            <header className="bg-white shadow-sm border-b">
-                <div className="bg-blue-600 text-white text-sm py-2">
-                    <div className="container mx-auto px-4 flex justify-center">
-                        <div className="animate-pulse">Cargando...</div>
-                    </div>
-                </div>
-            </header>
-        );
-    }
+    const company = {
+        name: 'Refaccionaria Vega',
+        tagline: 'Reparamos lo que no se ve, pero es necesario',
+        description: 'Más de 20 años ofreciendo los mejores refacciones y servicios en electrodomésticos con la mejor calidad y servicio.',
+        phone: '+232 32 16694'
+    };
 
     return (
         <>
@@ -59,7 +55,7 @@ const Header = () => {
                                 <span>{company?.phone || '+52 55 1234 5678'}</span>
                             </div>
                             <span>|</span>
-                            <span>Envío gratis en compras mayores a $500</span>
+                            <span>Envío gratis en compras mayores a $800</span>
                         </div>
                         <div className="flex items-center space-x-4">
                             <Link href="/blog" className="hover:text-blue-200 transition-colors">
@@ -78,12 +74,15 @@ const Header = () => {
                     <div className="flex items-center justify-between">
                         {/* Logo */}
                         <Link href="/" className="flex items-center space-x-2">
-                            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-xl">E</span>
-                            </div>
+                            <Image
+                                src={Logo}
+                                alt={'Logo Refaccionaria Vega'}
+                                width={50}
+                                height={50}
+                            />
                             <div>
-                                <h1 className="text-xl font-bold text-gray-800">{company?.name || 'ElectroMart'}</h1>
-                                <p className="text-xs text-gray-500">{company?.tagline || 'Tu hogar, nuestra pasión'}</p>
+                                <h1 className="text-xl font-bold text-gray-800">{company?.name }</h1>
+                                <p className="text-xs text-gray-500">{company?.tagline}</p>
                             </div>
                         </Link>
 
