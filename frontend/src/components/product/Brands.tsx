@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
 import { brands_data as brands } from '@/data/brands';
+import Image from 'next/image';
 
 const Brands = () => {
     return (
@@ -22,13 +23,17 @@ const Brands = () => {
                     {brands.map((brand, index) => (
                         <div
                             key={index}
-                            className="group hover:scale-110 transition-transform duration-300 cursor-pointer"
+                            className="relative group hover:scale-110 transition-transform duration-300 cursor-pointer"
                         >
-                            <div className="bg-gray-50 rounded-lg p-6 h-24 flex items-center justify-center hover:bg-gray-100 transition-colors">
-                                <img
+                            <div className="bg-gray-50 rounded-lg p-6 h-24 flex justify-center hover:bg-gray-100 transition-colors">
+                                <Image
                                     src={brand.logo}
                                     alt={brand.name}
-                                    className="max-h-12 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                                    fill
+                                    quality={100}
+                                    objectFit='contain'
+                                    style={{objectFit: 'contain'}}
+                                    className=" grayscale fgroup-hover:grayscale-0 transition-all duration-300"
                                 />
                             </div>
                         </div>
