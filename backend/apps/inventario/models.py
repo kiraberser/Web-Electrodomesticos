@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from apps.productos.models import Refaccion, Marca, Categoria
 
-
 class Inventario(models.Model):
     """Registro de movimientos de inventario"""
 
