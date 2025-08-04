@@ -1,7 +1,8 @@
 import './globals.css'
 
-import Head from 'next/head'
 import Script from 'next/script'
+import { cookies } from 'next/headers'
+
 
 import { Inter } from 'next/font/google'
 import { Navbar, Footer } from '@/components/ui'
@@ -12,19 +13,19 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function RootLayout({children,}: {children: React.ReactNode}) 
+{
+  const cookiesStore = await cookies()
+  const username = cookiesStore.get('username')?.value || null
+
   return (
     <html lang="es" className={inter.variable}>
-      <Head>
+      <head>
         <Script src="/path/or/uri/to/tinymce.min.js" referrerPolicy="origin"></Script>
-      </Head>
+      </head>
       <body className={`${inter.className} min-h-screen text-[#0A3981]`}>
         <CartProvider>
-          <Navbar />
+          <Navbar username={username} />
           {children}
           <Footer />
         </CartProvider>
