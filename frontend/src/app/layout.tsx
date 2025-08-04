@@ -1,23 +1,27 @@
-import './globals.css'
+// app/layout.tsx
+import './globals.css';
 
-import Script from 'next/script'
-import { cookies } from 'next/headers'
+import Script from 'next/script';
+import { cookies } from 'next/headers';
 
-
-import { Inter } from 'next/font/google'
-import { Navbar, Footer } from '@/components/ui'
-import { CartProvider } from '@/context/CartContext'
+import { Inter } from 'next/font/google';
+import { Navbar, Footer } from '@/components/ui';
+import { CartProvider } from '@/context/CartContext';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-})
+});
 
-export default async function RootLayout({children,}: {children: React.ReactNode}) 
-{
-  const cookiesStore = await cookies()
-  const username = cookiesStore.get('username')?.value || null
+// Modifica la interfaz para aceptar un prop 'hideNavFooter'
+interface RootLayoutProps {
+  children: React.ReactNode;
+  hideNavFooter?: boolean; // Prop opcional para ocultar nav y footer
+}
 
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const cookiesStore = await cookies();
+  const username = cookiesStore.get('username')?.value || null;
   return (
     <html lang="es" className={inter.variable}>
       <head>
@@ -31,5 +35,5 @@ export default async function RootLayout({children,}: {children: React.ReactNode
         </CartProvider>
       </body>
     </html>
-  )
+  );
 }

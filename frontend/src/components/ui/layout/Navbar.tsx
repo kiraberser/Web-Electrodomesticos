@@ -35,83 +35,10 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
 
     // Scroll behavior states
-    const [isVisible, setIsVisible] = useState(true)
-    const [lastScrollY, setLastScrollY] = useState(0)
-    const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up")
 
     const searchInputRef = useRef<HTMLInputElement>(null)
     const userDropdownRef = useRef<HTMLDivElement>(null)
     const { getTotalItems } = useCart()
-
-    // Company information
-
-    // Throttle function for scroll performance
-    const throttle = useCallback((func: Function, delay: number) => {
-        let timeoutId: NodeJS.Timeout
-        let lastExecTime = 0
-        return function (this: any, ...args: any[]) {
-            const currentTime = Date.now()
-
-            if (currentTime - lastExecTime > delay) {
-                func.apply(this, args)
-                lastExecTime = currentTime
-            } else {
-                clearTimeout(timeoutId)
-                timeoutId = setTimeout(
-                    () => {
-                        func.apply(this, args)
-                        lastExecTime = Date.now()
-                    },
-                    delay - (currentTime - lastExecTime),
-                )
-            }
-        }
-    }, [])
-
-    // Handle scroll behavior
-    const handleScroll = useCallback(() => {
-        const currentScrollY = window.scrollY
-        const scrollThreshold = 10 // Minimum scroll to trigger
-        const hideThreshold = 100 // When to start hiding
-
-        // Ignore small scroll movements
-        if (Math.abs(currentScrollY - lastScrollY) < scrollThreshold) {
-            return
-        }
-
-        // Determine scroll direction
-        const direction = currentScrollY > lastScrollY ? "down" : "up"
-        setScrollDirection(direction)
-
-        // Show/hide logic
-        if (currentScrollY < hideThreshold) {
-            // Always show when near top
-            setIsVisible(true)
-        } else if (direction === "down" && currentScrollY > lastScrollY) {
-            // Hide when scrolling down
-            setIsVisible(false)
-            // Close any open dropdowns when hiding
-            setIsUserDropdownOpen(false)
-            setIsMenuOpen(false)
-        } else if (direction === "up") {
-            // Show when scrolling up
-            setIsVisible(true)
-        }
-
-        setLastScrollY(currentScrollY)
-    }, [lastScrollY])
-
-    // Throttled scroll handler
-    const throttledHandleScroll = useCallback(throttle(handleScroll, 100), [handleScroll, throttle])
-
-    // Setup scroll listener
-    useEffect(() => {
-        window.addEventListener("scroll", throttledHandleScroll, { passive: true })
-
-        return () => {
-            window.removeEventListener("scroll", throttledHandleScroll)
-        }
-    }, [throttledHandleScroll])
 
     // Handle search submission
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -164,8 +91,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
     return (
         <>
             <header
-                className={`bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-out ${isVisible ? "translate-y-0" : "-translate-y-full"
-                    }`}
+                className={`bg-white shadow-sm border-b top-0 left-0 right-0 z-40 transition-transform duration-300 ease-out"`}
             >
                 <InformationBar/>
                 {/* Main Header */}
@@ -395,9 +321,6 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                     onAccountOpen={() => setIsAccountOpen(true)}
                 />
             </header>
-
-            {/* Spacer to prevent content jump */}
-            <div className="h-[140px] md:h-[120px]"></div>
 
             {/* Modals and Drawers */}
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
