@@ -86,7 +86,7 @@ const AccountModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
         <>
             {/* Overlay */}
             <div
-                className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                className="fixed inset-0 bg-gray-500 opacity-75 bg-opacity-50 z-40"
                 onClick={onClose}
             />
 
@@ -124,14 +124,14 @@ const AccountModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                                 </div>
 
                                 <div className="space-y-4">
-                                    <Link href="/auth" onClick={onClose}>
-                                        <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                                    <Link href="/cuenta" onClick={onClose}>
+                                        <Button className="w-full bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">
                                             Iniciar Sesión
                                         </Button>
                                     </Link>
 
-                                    <Link href="/auth" onClick={onClose}>
-                                        <Button variant="outline" className="w-full">
+                                    <Link href="/cuenta" onClick={onClose}>
+                                        <Button variant="outline" className="w-full cursor-pointer">
                                             Crear Cuenta Nueva
                                         </Button>
                                     </Link>
@@ -141,7 +141,7 @@ const AccountModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                                     <h4 className="font-medium text-gray-900 mb-2">
                                         Beneficios de tener una cuenta
                                     </h4>
-                                    <ul className="text-sm text-gray-600 space-y-1">
+                                    <ul className="text-sm text-gray-600 space-y-1 justify-items-start">
                                         <li>• Seguimiento de pedidos en tiempo real</li>
                                         <li>• Lista de deseos personalizada</li>
                                         <li>• Historial de compras</li>
