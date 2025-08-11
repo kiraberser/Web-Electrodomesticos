@@ -32,8 +32,8 @@ const Categories = () => {
                                 <div className="relative mb-4">
                                     <Image
                                         src={category.image}
-                                        alt={category.name}
-                                        width={600} // ajusta según tu diseño
+                                        alt={category.description}
+                                        width={600} 
                                         height={240}
                                         quality={100}
                                         className="object-cover w-full h-60 rounded-lg group-hover:scale-110 transition-transform duration-300"

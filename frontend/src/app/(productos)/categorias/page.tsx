@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { CATEGORIES } from "@/data/products"
+import { categories as CATEGORIES } from "@/data/category"
 import { Wrench } from 'lucide-react'
+import Image from "next/image"
 
 export default function CategoriasPage() {
     return (
@@ -25,17 +26,18 @@ export default function CategoriasPage() {
             {/* Grid de categorías */}
             <section className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    {CATEGORIES.map((cat) => (
+                    {CATEGORIES.map((cat, index) => (
                         <Link
-                            key={cat.key}
+                            key={index}
                             href={`/categorias/${cat.key}`}
                             className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
                         >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
+                            <Image
                                 src={cat.image || "/placeholder.svg"}
-                                alt={cat.label}
-                                className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                alt={cat.description}
+                                width={600} // tamaño base para mantener proporción
+                                height={208} // 208px ≈ h-52
+                                className="w-full h-52 object-cover transition-transform duration-300 group-hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                             <div className="absolute bottom-4 left-4 right-4">

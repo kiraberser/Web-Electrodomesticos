@@ -304,7 +304,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                     onClick={() => handleCategoryClick(category.name)}
                                     className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-white rounded-lg transition-all duration-200 font-medium whitespace-nowrap cursor-pointer"
                                 >
-                                    {category.name}
+                                    {category.label}
                                 </button>
                             ))}
                         </div>
