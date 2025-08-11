@@ -1,123 +1,308 @@
-'use client'
+"use client"
 
-import { useState } from "react";
-import axios from 'axios';
+import { useEffect, useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useActionState } from "react"
+import { Button } from "@/components/ui/forms/Button"
+import { Input } from "@/components/ui/forms/InputField"
+import { Badge } from "@/components/ui"
+import { Textarea } from "@/components/ui/display/Textarea"
+import RichEditor from "@/components/blog/ckeditor"
+import { useToast } from "@/hook/use-toast"
+import { FileText, Hash, Tags, ImageIcon, Save, Eye, ArrowLeft } from "lucide-react"
+import { createPost, type BlogActionState } from "@/actions/blog"
 
-import BlogEditor from "@/components/blog/ckeditor";
-import DropdownMenuCategory from "@/components/blog/dropDownMenuCategory";
-
-import { options } from "@/data/optionsPost";
-
-interface Option {
-  id: string | number;
-  label: string;
-  value: string;
+type BlogDraft = {
+  title: string
+  slug: string
+  tags: string[]
+  coverUrl: string
+  excerpt: string
+  content: string
 }
 
-const BlogEditorPage = () => {
-  const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-  const [file, setFile] = useState<File | null>(null);
+function slugify(s: string) {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "")
+}
 
-  const handleSelect = (option: Option) => {
-    setSelectedOption(option);
-    console.log('Opción seleccionada:', option);
-  };
+const initialState: BlogActionState = { success: undefined, message: undefined }
 
-  const handleSave = async () => {
-    if (!title || !slug || !description) {
-      alert('Por favor completa todos los campos requeridos.');
-      return;
+export default function CrearBlogPage() {
+  const router = useRouter()
+  const { toast } = useToast()
+
+  const [draft, setDraft] = useState<BlogDraft>({
+    title: "",
+    slug: "",
+    tags: [],
+    coverUrl: "",
+    excerpt: "",
+    content: "",
+  })
+  const [tagInput, setTagInput] = useState("")
+  const [preview, setPreview] = useState(false)
+
+  // Server Action with useActionState (manejo de errores esperados recomendado) [^1]
+  const [state, formAction, pending] = useActionState<BlogActionState, FormData>(createPost, initialState)
+
+  useEffect(() => {
+    if (state?.success && state.id) {
+      toast({
+        title: state.message ?? "Guardado",
+        description: "Tu publicación se procesó correctamente.",
+      })
+      router.push(`/blog/${state.id}`)
+    } else if (state?.success === false && state.message) {
+      toast({
+        title: "No se pudo guardar",
+        description: state.message,
+        variant: "destructive",
+      })
     }
+  }, [state, router, toast])
 
-    try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('slug', slug);
-      formData.append('description', description);
-      formData.append('category', selectedOption?.value || 'Otros');
-      if (file) {
-        formData.append('image', file); // Asegúrate que tu backend acepte este campo
-      }
+  const wordCount = useMemo(() => {
+    const text = draft.content.replace(/<[^>]*>/g, " ")
+    const words = text.trim().split(/\s+/).filter(Boolean)
+    return words.length
+  }, [draft.content])
 
-      const response = await axios.post(
-        'http://localhost:8000/api/v1/blog/posts/create/',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+  const handleAddTag = () => {
+    const t = tagInput.trim()
+    if (!t) return
+    if (draft.tags.includes(t)) return
+    setDraft((d) => ({ ...d, tags: [...d.tags, t] }))
+    setTagInput("")
+  }
 
-      if (response.status === 201) {
-        alert('Blog guardado exitosamente');
-        // Limpieza del formulario
-        setTitle('');
-        setSlug('');
-        setDescription('');
-        setSelectedOption(null);
-        setFile(null);
-      } else {
-        alert('Hubo un problema al guardar el blog.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error al guardar el blog');
-    }
-  };
+  const handleRemoveTag = (t: string) => {
+    setDraft((d) => ({ ...d, tags: d.tags.filter((x) => x !== t) }))
+  }
+
+  const handleAutoSlug = () => {
+    if (!draft.title) return
+    setDraft((d) => ({ ...d, slug: slugify(d.title) }))
+  }
 
   return (
-    <div className="container mx-auto p-4 w-full max-w-3xl">
-      <h1 className="text-2xl font-bold mb-6">Editor de Blog</h1>
+    <main className="min-h-screen bg-gray-50">
+      {/* Encabezado */}
+      <section className="border-b border-gray-200 bg-white">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="hidden sm:block rounded-lg bg-blue-100 p-2">
+                <FileText className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Crear publicación</h1>
+                <p className="text-gray-600">Escribe, edita y publica con un editor moderno.</p>
+              </div>
+            </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Título</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded"
-          placeholder="Escribe el título del post"
-        />
-      </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => router.back()}
+                className="cursor-pointer bg-transparent"
+                aria-label="Volver"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Volver
+              </Button>
+              {/* Draft submit */}
+              <Button
+                type="submit"
+                form="blog-form"
+                name="intent"
+                value="draft"
+                disabled={pending}
+                variant="outline"
+                className="cursor-pointer bg-transparent"
+              >
+                <Save className="mr-2 h-4 w-4" />
+                {pending ? "Guardando…" : "Guardar borrador"}
+              </Button>
+              {/* Publish submit */}
+              <Button
+                type="submit"
+                form="blog-form"
+                name="intent"
+                value="published"
+                disabled={pending}
+                className="bg-blue-600 text-white cursor-pointer"
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                {pending ? "Publicando…" : "Publicar"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Contenido</label>
-        <BlogEditor initialValue="" onChange={setDescription} />
-      </div>
+      {/* Contenido */}
+      <section className="container mx-auto gap-6 px-4 py-6 m-4">
+        {/* Form + Editor */}
+        <div className="space-y-4">
+          <form id="blog-form" action={formAction} className="space-y-4">
+            {/* Título y slug */}
+            <div className="rounded-xl border border-gray-200 bg-white p-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_200px]">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Título</label>
+                  <Input
+                    name="title"
+                    value={draft.title}
+                    onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
+                    placeholder="Ej. Cómo reemplazar el motor de un ventilador"
+                    className={
+                      state?.fieldErrors?.title ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""
+                    }
+                  />
+                  {state?.fieldErrors?.title && <p className="mt-1 text-sm text-red-600">{state.fieldErrors.title}</p>}
+                </div>
+                <div>
+                  <label className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <Hash className="h-4 w-4 text-blue-600" />
+                    Slug
+                  </label>
+                  <div className="flex gap-2">
+                    <Input
+                      name="slug"
+                      value={draft.slug}
+                      onChange={(e) => setDraft((d) => ({ ...d, slug: e.target.value }))}
+                      placeholder="como-reemplazar-motor-ventilador"
+                      className={
+                        state?.fieldErrors?.slug ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""
+                      }
+                    />
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={handleAutoSlug}
+                      className="shrink-0 cursor-pointer bg-transparent"
+                    >
+                      Auto
+                    </Button>
+                  </div>
+                  {state?.fieldErrors?.slug && <p className="mt-1 text-sm text-red-600">{state.fieldErrors.slug}</p>}
+                </div>
+              </div>
+            </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Subir imagen (opcional)</label>
-        <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-      </div>
+            {/* Excerpt y portada */}
+            <div className="rounded-xl border border-gray-200 bg-white p-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Resumen (excerpt)</label>
+                  <Textarea
+                    name="excerpt"
+                    rows={4}
+                    value={draft.excerpt}
+                    onChange={(e) => setDraft((d) => ({ ...d, excerpt: e.target.value }))}
+                    placeholder="Un resumen breve para mostrar en listados…"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <ImageIcon className="h-4 w-4 text-blue-600" />
+                    Portada (URL)
+                  </label>
+                  <Input
+                    name="coverUrl"
+                    value={draft.coverUrl}
+                    onChange={(e) => setDraft((d) => ({ ...d, coverUrl: e.target.value }))}
+                    placeholder="https://..."
+                  />
+                  {draft.coverUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={draft.coverUrl || "/placeholder.svg"}
+                      alt="Portada"
+                      className="mt-3 h-40 w-full rounded-lg border object-cover"
+                    />
+                  ) : (
+                    <div className="mt-3 h-40 w-full rounded-lg border border-dashed bg-gray-50" />
+                  )}
+                </div>
+              </div>
+            </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Slug</label>
-        <input
-          type="text"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className="w-full p-2 border rounded"
-          placeholder="ej. como-reparar-un-ventilador"
-        />
-      </div>
+            {/* Tags */}
+            <div className="rounded-xl border border-gray-200 bg-white p-4">
+              <label className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Tags className="h-4 w-4 text-blue-600" />
+                Etiquetas
+              </label>
+              <div className="flex gap-2">
+                <Input
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  placeholder="Ej. ventiladores, reparación"
+                />
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={handleAddTag}
+                  className="cursor-pointer bg-transparent"
+                >
+                  Agregar
+                </Button>
+              </div>
+              {draft.tags.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {draft.tags.map((t) => (
+                    <Badge
+                      key={t}
+                      onClick={() => handleRemoveTag(t)}
+                      className="cursor-pointer bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    >
+                      #{t}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              {/* Enviamos tags como JSON en un campo oculto */}
+              <input type="hidden" name="tags" value={JSON.stringify(draft.tags)} />
+            </div>
 
-      <div className="mb-6">
-        <label className="block text-sm font-medium mb-1">Categoría</label>
-        <DropdownMenuCategory options={options} onSelect={handleSelect} />
-      </div>
+            {/* CKEditor */}
+            <div className="rounded-xl border border-gray-200 bg-white p-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">Contenido</span>
+                <div className="flex items-center gap-3 text-xs text-gray-500">
+                  <span>{wordCount} palabras</span>
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => setPreview((p) => !p)}
+                    className="h-7 cursor-pointer bg-transparent"
+                  >
+                    {preview ? "Editar" : "Vista previa"}
+                  </Button>
+                </div>
+              </div>
 
-      <button
-        onClick={handleSave}
-        className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-      >
-        Guardar entrada
-      </button>
-    </div>
-  );
-};
+              {preview ? (
+                <article className="prose max-w-none rounded-lg border bg-gray-50 p-4">
+                  {/* eslint-disable-next-line react/no-danger */}
+                  <div dangerouslySetInnerHTML={{ __html: draft.content || "<p><i>Sin contenido…</i></p>" }} />
+                </article>
+              ) : (
+                <RichEditor value={draft.content} onChange={(html) => setDraft((d) => ({ ...d, content: html }))} />
+              )}
 
-export default BlogEditorPage;
+              {/* Campo oculto para enviar el HTML del editor al Server Action */}
+              <input type="hidden" name="content" value={draft.content} />
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  )
+}
