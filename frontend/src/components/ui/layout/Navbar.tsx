@@ -293,10 +293,10 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                     <div className="container mx-auto px-4">
                         <div className="hidden md:flex items-center space-x-1 py-3 overflow-x-auto">
                             <Link
-                                href="/productos"
+                                href="/categorias"
                                 className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-white rounded-lg transition-all duration-200 font-medium whitespace-nowrap cursor-pointer"
                             >
-                                Todos los Productos
+                                Todas las categorias 
                             </Link>
                             {categories.map((category) => (
                                 <button
