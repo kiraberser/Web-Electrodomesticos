@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/forms/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/display/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/display/Card';
 import { Badge } from '@/components/ui/feedback/Badge';
 import { Input } from '@/components/ui/forms/InputField';
 import { Calendar, User, Clock, Search, ArrowRight, Eye, MessageSquare, Share2 } from 'lucide-react';
