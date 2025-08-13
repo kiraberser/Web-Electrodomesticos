@@ -1,5 +1,11 @@
 "use server"
 
+import {uploadImage} from '@/lib/cloudinary'
+import {postBlog} from '@/api/blog'
+
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+
 export type BlogActionState = {
     success?: boolean
     message?: string
@@ -11,10 +17,14 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
     const title = ((formData.get("title") as string) || "").trim()
     const slug = ((formData.get("slug") as string) || "").trim()
     const excerpt = ((formData.get("excerpt") as string) || "").trim()
-    const coverUrl = ((formData.get("coverUrl") as string) || "").trim()
-    const tagsRaw = ((formData.get("tags") as string) || "[]").trim()
-    const status = ((formData.get("intent") as string) || "draft").trim()
+    const image = formData.get('image') as File
+    const tagsRaw = formData.get('tags')
     const content = ((formData.get("content") as string) || "").trim()
+    const category = ((formData.get("category") as string) || "").trim()
+
+    if (image === null) {
+        return new Error('No se ha seleccionado una imagen')
+    }
 
     const fieldErrors: BlogActionState["fieldErrors"] = {}
     if (!title) fieldErrors.title = "El título es requerido"
@@ -25,30 +35,35 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
         return { success: false, message: "Revisa los campos marcados", fieldErrors }
     }
 
-    // Parse tags (permitimos JSON o CSV)
-    let tags: string[] = []
+    let errors = []
+
+    let imageUrl;
+
     try {
-        tags = JSON.parse(tagsRaw)
-        if (!Array.isArray(tags)) throw new Error("Invalid tags")
-    } catch {
-        tags = tagsRaw
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean)
+        console.log('esta es la imagen', image)
+        imageUrl = await uploadImage(image)
+    } catch (error){
+        console.error( 'Error al subir la imagen', error)
+        errors.push('Error al subir la imagen')
     }
 
-    // Simula guardado en BD
-    await new Promise((res) => setTimeout(res, 700))
 
-    // Genera ID si no hay (usar slug como id)
-    const id = slug || Math.random().toString(36).slice(2)
-
-    // Aquí podrías conectar a tu base de datos real y persistir:
-    // await db.insert({ title, slug, excerpt, coverUrl, tags, content, status })
-
-    return {
-        success: true,
-        id,
-        message: status === "published" ? "Publicado" : "Guardado como borrador",
+    const newPost = {
+        title: title,
+        description: content,
+        image: imageUrl,
+        resume: excerpt,
+        autor: 1,
+        tags: tagsRaw,
+        category: category
     }
+
+    console.log(newPost)
+
+    await postBlog(newPost)
+
+    console.log('Post creado con exito')
+
+    revalidatePath('/blog')
+    redirect('/')
 }
