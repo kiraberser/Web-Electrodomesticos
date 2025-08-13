@@ -10,14 +10,10 @@ class Category(models.TextChoices):
         MINISPLIT = "Minisplit", "Minisplit"
         LAVADORA = "Lavadora", "Lavadora"
         VENTILADOR = "Ventilador", "Ventilador"
-        SECADORA = "Secadora", "Secadora"
         REFRIGERADOR = "Refrigerador", "Refrigerador"
         ESTUFA = "Estufa", "Estufa"
-        HORNO = "Horno", "Horno"
         MICROONDAS = "Microondas", "Microondas"
         LICUADORA = "Licuadora", "Licuadora"
-        BATIDORA = "Batidora", "Batidora"
-        TOSTADOR = "Tostador", "Tostador"
         CAFETERA = "Cafetera", "Cafetera"
         PLANCHA = "Plancha", "Plancha"
         ASPIRADORA = "Aspiradora", "Aspiradora"
@@ -27,6 +23,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='images/', blank=True, null=True)
+    resume = models.TextField(blank=True, null=True, max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
     autor = models.ForeignKey(
         settings.AUTH_USER_MODEL, 

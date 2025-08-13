@@ -9,7 +9,7 @@ class PostSerializer(TaggitSerializer,serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['id', 'title', 'description', 'image', 'autor', 'created_at', 'category', 'slug', 'autor_name', 'tags']
-        read_only_fields = ['id', 'created_at', 'slug', 'autor']  # Campos que no se pueden modificar por el usuario
+        read_only_fields = ['id', 'created_at', 'autor']  # Campos que no se pueden modificar por el usuario
         
 class CommentSerializer(serializers.ModelSerializer):
     author_name = serializers.ReadOnlyField(source='author.username')  # Campo de solo lectura para el autor del comentario
