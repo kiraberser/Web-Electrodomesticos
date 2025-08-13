@@ -11,12 +11,13 @@ import RichEditor from "@/components/blog/ckeditor"
 import { useToast } from "@/hook/use-toast"
 import { FileText, Hash, Tags, ImageIcon, Save, Eye, ArrowLeft } from "lucide-react"
 import { createPost, type BlogActionState } from "@/actions/blog"
+import { categories } from "@/data/category"
 
 type BlogDraft = {
   title: string
   slug: string
   tags: string[]
-  coverUrl: string
+  image: string
   excerpt: string
   content: string
 }
@@ -40,37 +41,16 @@ export default function CrearBlogPage() {
     title: "",
     slug: "",
     tags: [],
-    coverUrl: "",
+    image: "",
     excerpt: "",
     content: "",
   })
   const [tagInput, setTagInput] = useState("")
   const [preview, setPreview] = useState(false)
+  const [file, setFile] = useState(null)
 
   // Server Action with useActionState (manejo de errores esperados recomendado) [^1]
   const [state, formAction, pending] = useActionState<BlogActionState, FormData>(createPost, initialState)
-
-  useEffect(() => {
-    if (state?.success && state.id) {
-      toast({
-        title: state.message ?? "Guardado",
-        description: "Tu publicación se procesó correctamente.",
-      })
-      router.push(`/blog/${state.id}`)
-    } else if (state?.success === false && state.message) {
-      toast({
-        title: "No se pudo guardar",
-        description: state.message,
-        variant: "destructive",
-      })
-    }
-  }, [state, router, toast])
-
-  const wordCount = useMemo(() => {
-    const text = draft.content.replace(/<[^>]*>/g, " ")
-    const words = text.trim().split(/\s+/).filter(Boolean)
-    return words.length
-  }, [draft.content])
 
   const handleAddTag = () => {
     const t = tagInput.trim()
@@ -88,6 +68,12 @@ export default function CrearBlogPage() {
     if (!draft.title) return
     setDraft((d) => ({ ...d, slug: slugify(d.title) }))
   }
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setFile(selectedFile);
+    setDraft((d) => ({ ...d, image: selectedFile }))
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -194,6 +180,24 @@ export default function CrearBlogPage() {
                 </div>
               </div>
             </div>
+            <div className="mt-4">
+              <label className="mb-1 block text-sm font-medium text-gray-700">Categoría</label>
+              <select
+                name="category"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                defaultValue=""
+                required
+              >
+                <option value="" disabled>
+                  Selecciona una categoría
+                </option>
+                {categories.map((cat) => (
+                  <option key={cat.key} value={cat.cat_model}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Excerpt y portada */}
             <div className="rounded-xl border border-gray-200 bg-white p-4">
@@ -211,25 +215,23 @@ export default function CrearBlogPage() {
                 <div>
                   <label className="mb-1 flex items-center gap-2 text-sm font-medium text-gray-700">
                     <ImageIcon className="h-4 w-4 text-blue-600" />
-                    Portada (URL)
+                    Seleccionar Imagen
                   </label>
                   <Input
-                    name="coverUrl"
-                    value={draft.coverUrl}
-                    onChange={(e) => setDraft((d) => ({ ...d, coverUrl: e.target.value }))}
-                    placeholder="https://..."
+                    onChange={handleFileChange}
+                    name="image"
+                    type="file"
+                    required
                   />
-                  {draft.coverUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={draft.coverUrl || "/placeholder.svg"}
-                      alt="Portada"
-                      className="mt-3 h-40 w-full rounded-lg border object-cover"
-                    />
-                  ) : (
-                    <div className="mt-3 h-40 w-full rounded-lg border border-dashed bg-gray-50" />
-                  )}
                 </div>
+                {file && (
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="Vista previa"
+                    className="mt-2 h-32 rounded-lg object-cover"
+                  />
+                )}
+
               </div>
             </div>
 
@@ -276,7 +278,6 @@ export default function CrearBlogPage() {
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-700">Contenido</span>
                 <div className="flex items-center gap-3 text-xs text-gray-500">
-                  <span>{wordCount} palabras</span>
                   <Button
                     variant="outline"
                     type="button"

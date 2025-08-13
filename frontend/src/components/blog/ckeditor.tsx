@@ -32,7 +32,7 @@ export default function RichEditor({ value = "", onChange }: BlogEditorProps) {
       <Editor
         apiKey={TOKEN || "anvs5tf93oc5h7hmikre5x6jt4hpmtfkpn3alpfkiksc8cxx"}
         onInit={(_, editor) => (editorRef.current = editor)}
-        initialValue={value}
+        value={value}
         onEditorChange={(newContent) => onChange?.(newContent)}
         init={{
           height: 500,

@@ -103,7 +103,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                             className="flex items-center space-x-3 group flex-shrink-0 cursor-pointer"
                             aria-label="Ir a página principal"
                         >
-                            <div className="relative">
+                            {/* <div className="relative">
                                 <Image
                                     src={Logo || "/placeholder.svg"}
                                     alt="Logo Refaccionaria Vega"
@@ -112,7 +112,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                     className="transition-transform group-hover:scale-105 cursor-pointer"
                                     priority
                                 />
-                            </div>
+                            </div> */}
                             <div className="hidden sm:block">
                                 <h1 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors cursor-pointer">
                                     {company.name}
