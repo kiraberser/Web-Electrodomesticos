@@ -22,7 +22,7 @@ class Category(models.TextChoices):
 class Blog(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    image = models.TextField(blank=True, null=True)
     resume = models.TextField(blank=True, null=True, max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
     autor = models.ForeignKey(

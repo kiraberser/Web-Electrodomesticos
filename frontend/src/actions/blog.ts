@@ -55,7 +55,8 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
         resume: excerpt,
         autor: 1,
         tags: tagsRaw,
-        category: category
+        category: category,
+        slug: slug
     }
 
     console.log(newPost)

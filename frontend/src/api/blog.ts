@@ -5,7 +5,7 @@ const URL = process.env.NEXT_PUBLIC_BASE_URL_API
 
 export const postBlog = async (newPost) => {
     const cookieStore = await cookies()
-    const token = cookieStore.get('refresh_cookie')?.value
+    const token = cookieStore.get('access_cookie')?.value
     console.log(token)
     try {
         await axios.post(`${URL}/blog/posts/create/`, newPost, {
