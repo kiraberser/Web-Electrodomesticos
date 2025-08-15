@@ -11,6 +11,12 @@ class PostSerializer(TaggitSerializer,serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'image', 'autor', 'created_at', 'category', 'slug', 'autor_name', 'tags']
         read_only_fields = ['id', 'created_at', 'autor']  # Campos que no se pueden modificar por el usuario
         
+    def validate_title(self, value): 
+        if Blog.objects.filter(title=value).exists():
+            raise serializers.ValidationError('Este título ya existe')
+        return value
+    
+        
 class CommentSerializer(serializers.ModelSerializer):
     author_name = serializers.ReadOnlyField(source='author.username')  # Campo de solo lectura para el autor del comentario
 
