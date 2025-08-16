@@ -17,6 +17,9 @@ class Category(models.TextChoices):
         CAFETERA = "Cafetera", "Cafetera"
         PLANCHA = "Plancha", "Plancha"
         ASPIRADORA = "Aspiradora", "Aspiradora"
+        PULIDORA = "Pulidora", "Pulidora"
+        BOMBADEAGUA = 'Bombas de agua', 'Bombas de agua'
+        TALADROS = 'Taladro', 'Taladro'
         OTROS = "Otros", "Otros"
 
 class Blog(models.Model):
