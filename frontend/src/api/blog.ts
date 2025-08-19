@@ -8,7 +8,7 @@ export const postBlog = async (newPost) => {
     const token = cookieStore.get('access_cookie')?.value
     console.log(token)
     try {
-        await axios.post(`${URL}/blog/posts/create/`, newPost, {
+        await axios.post(`${URL}/blog/posts/`, newPost, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${token}`
