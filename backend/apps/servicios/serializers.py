@@ -5,4 +5,4 @@ from .models import Servicio
 class ServicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Servicio
-        fields = '__all__'
+        fields = 'noDeServicio', 'fecha', 'marca', 'aparato', 'telefono', 'cliente', 'observaciones', 'estado'
