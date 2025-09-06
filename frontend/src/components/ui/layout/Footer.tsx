@@ -1,7 +1,5 @@
 import Image from 'next/image';
 
-import Logo from '@/../public/assets/Logo.png'
-
 import { Button } from '../forms/Button';
 import { Separator } from '../display/Separator';
 import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
@@ -9,32 +7,34 @@ import { company } from '@/data/company';
 import { categories } from '@/data/category';
 import Link from 'next/link';
 
-const Footer = () => {
+const Footer = ({ username }: { username: string | undefined }) => {
   return (
     <footer className="bg-gray-900 text-white">
       {/* Newsletter Section */}
-      <div className="bg-blue-600 py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h3 className="text-2xl font-bold mb-4">
-              Suscríbete a nuestro newsletter
-            </h3>
-            <p className="text-blue-100 mb-6">
-              Recibe las mejores ofertas y novedades directamente en tu correo
-            </p>
-            <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
-              <input
-                type="email"
-                placeholder="Tu correo electrónico"
-                className="flex-1 px-4 py-3 rounded-lg bg-white border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-              <Button className="bg-orange-500 hover:bg-orange-600 px-6 py-3">
-                Suscribirse
-              </Button>
+      {!username && (
+        <div className="bg-blue-600 py-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h3 className="text-2xl font-bold mb-4">
+                Suscríbete a nuestro newsletter
+              </h3>
+              <p className="text-blue-100 mb-6">
+                Recibe las mejores ofertas y novedades directamente en tu correo
+              </p>
+              <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
+                <input
+                  type="email"
+                  placeholder="Tu correo electrónico"
+                  className="flex-1 px-4 py-3 rounded-lg bg-white border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+                <Button className="bg-orange-500 hover:bg-orange-600 px-6 py-3">
+                  Suscribirse
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Footer */}
       <div className="py-12">
@@ -42,18 +42,8 @@ const Footer = () => {
           <div className="grid md:grid-cols-4 gap-8">
             {/* Company Info */}
             <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Image
-                  src={Logo}
-                  alt={'Logo Refaccionaria Vega'}
-                  width={50}
-                  height={50}
-                />
-                <div>
-                  <h3 className="text-xl font-bold">{company?.name || 'ElectroMart'}</h3>
-                  <p className="text-sm text-gray-400">{company?.tagline || 'Tu hogar, nuestra pasión'}</p>
-                </div>
-              </div>
+              <h3 className="text-xl font-bold">{company?.name || 'ElectroMart'}</h3>
+              <p className="text-sm text-gray-400">{company?.tagline || 'Tu hogar, nuestra pasión'}</p>
               <p className="text-gray-400 text-sm leading-relaxed">
                 {company?.description || 'Más de 20 años ofreciendo los mejores electrodomésticos con la mejor calidad y servicio.'}
               </p>
@@ -72,7 +62,7 @@ const Footer = () => {
                 {categories.slice(0, 6).map((category) => (
                   <li key={category.id}>
                     <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
-                      {category.name}
+                      {category.label}
                     </Link>
                   </li>
                 ))}
@@ -97,8 +87,6 @@ const Footer = () => {
                   <Link href="#" className="text-gray-400 hover:text-white transition-colors">
                     Garantía extendida
                   </Link>
-                </li>
-                <li>
                 </li>
                 <li>
                   <Link href="#" className="text-gray-400 hover:text-white transition-colors">
