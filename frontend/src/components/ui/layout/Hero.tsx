@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import ElectrodomesticosHero from '/public/images/hero/ElectrodomesticosHero.png'
 
-const HeroSection = () => {
+const Hero = () => {
 
   if (!true) {
     return (
@@ -130,4 +130,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default Hero;
