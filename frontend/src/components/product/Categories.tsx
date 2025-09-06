@@ -22,7 +22,7 @@ const Categories = () => {
                 </div>
 
                 {/* Categories Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 ">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 ">
                     {categories.map((category) => (
                         <Card
                             key={category.id}
@@ -36,12 +36,12 @@ const Categories = () => {
                                         width={600} 
                                         height={240}
                                         quality={100}
-                                        className="object-cover w-full h-60 rounded-lg group-hover:scale-110 transition-transform duration-300"
+                                        className="object-contain w-full h-60 rounded-lg group-hover:scale-110 transition-transform duration-300"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
                                 </div>
                                 <h3 className="font-semibold text-gray-900 mb-2 text-sm">
-                                    {category.name}
+                                    {category.label}
                                 </h3>
                                 <Badge variant="outline" className="text-xs">
                                     {10} productos
