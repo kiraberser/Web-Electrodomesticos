@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
-
 import { brands_data as brands } from '@/data/brands';
 import Image from 'next/image';
 
@@ -31,7 +28,6 @@ const Brands = () => {
                                     alt={brand.name}
                                     fill
                                     quality={100}
-                                    objectFit='contain'
                                     style={{objectFit: 'contain'}}
                                     className=" grayscale fgroup-hover:grayscale-0 transition-all duration-300"
                                 />
