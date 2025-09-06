@@ -16,7 +16,6 @@ import InformationBar from "@/components/features/home/InformationBar"
 
 import { useCart } from "@/context/CartContext"
 import AccountModal from "../display/AccountModa"
-import Logo from "../../../../public/assets/logo.png"
 import { categories } from "@/data/category"
 import { company } from "@/data/company"
 import LogOutButton from "@/components/user/LogOutButton"
@@ -301,7 +300,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                             {categories.map((category) => (
                                 <button
                                     key={category.id}
-                                    onClick={() => handleCategoryClick(category.name)}
+                                    onClick={() => handleCategoryClick(category.label)}
                                     className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-white rounded-lg transition-all duration-200 font-medium whitespace-nowrap cursor-pointer"
                                 >
                                     {category.label}
