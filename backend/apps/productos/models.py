@@ -40,7 +40,7 @@ class Refaccion(models.Model):
     proveedor = models.ForeignKey('Proveedor', on_delete=models.PROTECT, related_name='refacciones', null=True, blank=True)
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
-    marca = models.ForeignKey(Marca, on_delete=models.PROTECT, related_name='refacciones')
+    marca = models.CharField(max_length=100)
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, related_name='refacciones')
     
     precio = models.DecimalField(

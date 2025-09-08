@@ -14,7 +14,7 @@ router.register(r'categorias', CategoriaViewSet)
 router.register(r'refacciones', RefaccionViewSet)
 router.register(r'proveedores', ProveedorViewSet)
 
-urlpatterns = [
+urlpatterns = [ 
     # Las URLs base que manejan los ViewSets
     path('', include(router.urls)),
     
