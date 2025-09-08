@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 class Servicio(models.Model):
-    noDeServicio = models.AutoField(primary_key=True)
+    noDeServicio = models.IntegerField(primary_key=True)
     fecha = models.DateField(auto_now_add=True)
     marca = models.CharField(max_length=100)
     aparato = models.CharField(max_length=100)
@@ -12,6 +12,8 @@ class Servicio(models.Model):
     cliente = models.CharField(max_length=100)
     pagado = models.BooleanField(default=False, null=True)
     observaciones = models.TextField(blank=True, null=True, max_length=500)
+    nota = models.JSONField(blank=True, null=True)
+    # Snapshot de nota de costos asociada al servicio (campos principales)
     estado = models.CharField(max_length=50, choices=[
         ('Pendiente', 'Pendiente'),
         ('Reparado', 'Reparado'),
