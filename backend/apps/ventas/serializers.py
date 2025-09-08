@@ -12,8 +12,18 @@ class VentasSerializer(serializers.ModelSerializer):
         
 class VentasServiciosSerializer(serializers.ModelSerializer):
     servicio_aparato = serializers.ReadOnlyField(source='servicio.aparato')
-    
+
     class Meta:
         model = VentasServicios
-        fields = ['id', 'servicio_aparato', 'precio_unitario', 'costo', 'total', 'fecha_venta']
-        read_only_fields = ['precio_unitario', 'costo', 'total']
+        fields = [
+            'id', 'servicio', 'servicio_aparato',
+            'mano_obra', 'refacciones_total', 'total',
+            'fecha_venta', 'observaciones', 'tecnico', 'garantia_dias', 'estado_pago'
+        ]
+        read_only_fields = ['fecha_venta', 'total']
+
+    def validate(self, attrs):
+        mano_obra = attrs.get('mano_obra', 0)
+        refacciones_total = attrs.get('refacciones_total', 0)
+        attrs['total'] = (mano_obra or 0) + (refacciones_total or 0)
+        return attrs

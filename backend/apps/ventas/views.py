@@ -1,10 +1,11 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import viewsets, permissions, filters
+from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
 
-from .models import Ventas
+from .models import Ventas, VentasServicios
 from .serializers import VentasSerializer, VentasServiciosSerializer
 
 from apps.inventario.models import Inventario
@@ -52,7 +53,7 @@ class VentasServiciosViewSet(viewsets.ModelViewSet):
     ViewSet para manejar las ventas de servicios.
     Permite listar, crear, actualizar y eliminar ventas de servicios.
     """
-    queryset = Servicio.objects.filter(estado='entregado')
+    queryset = VentasServicios.objects.all()
     serializer_class = VentasServiciosSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -60,10 +61,15 @@ class VentasServiciosViewSet(viewsets.ModelViewSet):
     ordering_fields = ['fecha_venta', 'total']
 
     def perform_create(self, serializer):
-        # Aquí podrías agregar lógica adicional al crear una venta de servicio
-        servicio = serializer.validated_data['servicio']
-        precio_unitario = servicio.precio_unitario
-        costo = servicio.costo
-        total_venta = precio_unitario - costo  # Asumiendo que es una venta por servicio
+        # total se calcula en el serializer.validate
+        serializer.save()
 
-        serializer.save(precio_unitario=precio_unitario, total=total_venta, costo=costo)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        servicio_id = self.request.query_params.get('servicio')
+        if servicio_id:
+            try:
+                queryset = queryset.filter(servicio_id=servicio_id)
+            except ValueError:
+                pass
+        return queryset
