@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    typedRoutes: true,
+
   }
 };
 
