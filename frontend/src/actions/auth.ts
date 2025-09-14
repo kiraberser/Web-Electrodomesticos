@@ -4,7 +4,9 @@ import { cookies } from "next/headers"
 import { loginUser, createUser } from "@/api/user"
 import { redirect } from "next/navigation"
 
-export const actionLoginUser = async (formData) => {
+import { LoginUserType, CreateUserType } from "@/types/user"
+
+export const actionLoginUser = async (formData: LoginUserType) => {
     const response = await loginUser(formData)
     console.log(response)
     const cookieStore = await cookies()
@@ -39,8 +41,9 @@ export const actionLoginUser = async (formData) => {
     return { success: true }
 }
 
-export const actionCreateUser = async (formData) => {
-    const response = await createUser(formData)
+export const actionCreateUser = async (formData: CreateUserType) => {
+    await createUser(formData)
+    return { success: true }
 }
 
 export const actionLogOutUser = async () => {
