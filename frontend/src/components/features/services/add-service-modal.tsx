@@ -1,100 +1,82 @@
-"use client"
+"use client";
 
-import type React from "react"
+import { useFormStatus } from "react-dom";
+import { useActionState, useEffect, useRef, useState, useCallback } from "react";
+import { X, Plus, Calendar, Package, User, Phone, FileText, CheckCircle2 } from "lucide-react";
+import { Button, Input } from "@/components/ui/forms";
+import { createService } from "@/actions/services";
+import { useToast } from "@/hook/use-toast";
 
-import { useState } from "react"
-import { X, Plus, Calendar, Package, User, Phone, FileText } from "lucide-react"
-import { Button } from "@/components/ui/forms/Button"
-import { Input } from "@/components/ui/forms/InputField"
-
-interface Service {
-    fecha: string
-    aparato: string
-    telefono: string
-    cliente: string
-    observaciones: string
-    estado: "Pendiente" | "En Proceso" | "Reparado" | "Entregado" | "Cancelado"
-    marca: number
-}
+import Link from "next/link";
 
 interface AddServiceModalProps {
-    isOpen: boolean
-    onClose: () => void
-    onSubmit: (service: Service) => void
+    isOpen: boolean;
+    onCloseAction: () => void;
 }
 
-export default function AddServiceModal({ isOpen, onClose, onSubmit }: AddServiceModalProps) {
-    const [formData, setFormData] = useState<Service>({
-        fecha: new Date().toISOString().split("T")[0],
-        aparato: "",
-        telefono: "",
-        cliente: "",
-        observaciones: "",
-        estado: "Pendiente",
-        marca: 1,
-    })
+// Submit button component with loading state
+export function SubmitButton() {
+    const { pending } = useFormStatus();
+    
+    return (
+        <Button 
+            type="submit" 
+            disabled={pending}
+            className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            {pending ? (
+                <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Creando...
+                </>
+            ) : (
+                <>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Crear Servicio
+                </>
+            )}
+        </Button>
+    );
+}
 
-    const [errors, setErrors] = useState<Partial<Record<keyof Service, string>>>({})
+export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps) {
+    const initialState = { success: false, error: null };
+    const [state, formAction] = useActionState(createService, initialState);
+    const hasClosedRef = useRef(false);
+    const { toast } = useToast();
+    const [showSuccess, setShowSuccess] = useState(false);
+    const lastServiceIdRef = useRef<string | null>(null);
 
-    const validateForm = () => {
-        const newErrors: Partial<Record<keyof Service, string>> = {}
+    const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+        // No prevenir el submit; solo capturamos el ID para el CTA
+        try {
+            const form = e.currentTarget;
+            const fd = new FormData(form);
+            const id = (fd.get("noDeServicio") || "").toString().trim();
+            if (id) lastServiceIdRef.current = id;
+        } catch {}
+    }, []);
 
-        if (!formData.cliente.trim()) {
-            newErrors.cliente = "El nombre del cliente es requerido"
+    // On success: show toast and CTA, keep modal open until user decides
+    useEffect(() => {
+        if (state.success && !hasClosedRef.current) {
+            hasClosedRef.current = true;
+            setShowSuccess(true);
+            toast({
+                title: "Servicio creado",
+                description: "Se ha registrado correctamente.",
+                background: "green-500",
+            });
         }
+    }, [state.success, toast]);
 
-        if (!formData.aparato.trim()) {
-            newErrors.aparato = "El tipo de aparato es requerido"
-        }
-
-        if (!formData.telefono.trim()) {
-            newErrors.telefono = "El teléfono es requerido"
-        } else if (!/^\d{10}$/.test(formData.telefono.replace(/\D/g, ""))) {
-            newErrors.telefono = "El teléfono debe tener 10 dígitos"
-        }
-
-        if (!formData.fecha) {
-            newErrors.fecha = "La fecha es requerida"
-        }
-
-        setErrors(newErrors)
-        return Object.keys(newErrors).length === 0
-    }
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-
-        if (validateForm()) {
-            onSubmit(formData)
-            // Reset form
-            setFormData({
-                fecha: new Date().toISOString().split("T")[0],
-                aparato: "",
-                telefono: "",
-                cliente: "",
-                observaciones: "",
-                estado: "Pendiente",
-                marca: 1,
-            })
-            setErrors({})
-        }
-    }
-
-    const handleInputChange = (field: keyof Service, value: string | number) => {
-        setFormData((prev) => ({ ...prev, [field]: value }))
-        // Clear error when user starts typing
-        if (errors[field]) {
-            setErrors((prev) => ({ ...prev, [field]: undefined }))
-        }
-    }
-
-    if (!isOpen) return null
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-screen items-center justify-center p-4">
                 {/* Backdrop */}
-                <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose}></div>
+                <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onCloseAction}></div>
 
                 {/* Modal */}
                 <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 transform transition-all">
@@ -112,15 +94,43 @@ export default function AddServiceModal({ isOpen, onClose, onSubmit }: AddServic
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={onClose}
+                            onClick={onCloseAction}
                             className="text-gray-400 hover:text-gray-600 cursor-pointer"
                         >
                             <X className="w-5 h-5" />
                         </Button>
                     </div>
 
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="p-6">
+                    {/* Form or Success State */}
+                    {showSuccess ? (
+                        <div className="p-6">
+                            <div className="flex items-start gap-3 mb-4">
+                                <CheckCircle2 className="w-6 h-6 text-green-600 mt-0.5" />
+                                <div>
+                                    <h4 className="text-lg font-semibold text-gray-900">Servicio creado</h4>
+                                    <p className="text-gray-600">Puedes ver el detalle o cerrar este cuadro.</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                                <Button type="button" variant="outline" onClick={onCloseAction} className="cursor-pointer bg-transparent">
+                                    Cerrar
+                                </Button>
+                                {lastServiceIdRef.current && (
+                                    <Link href={`/admin/servicios/${lastServiceIdRef.current}`} className="cursor-pointer">
+                                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">Ver detalle</Button>
+                                    </Link>
+                                )}
+                            </div>
+                        </div>
+                    ) : (
+                    <form action={formAction} onSubmit={handleSubmit} className="p-6">
+                        {/* Global error message */}
+                        {state.error && typeof state.error === 'string' && (
+                            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                                <p className="text-red-600 text-sm">{state.error}</p>
+                            </div>
+                        )}
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Cliente */}
                             <div>
@@ -130,12 +140,30 @@ export default function AddServiceModal({ isOpen, onClose, onSubmit }: AddServic
                                 </label>
                                 <Input
                                     type="text"
-                                    value={formData.cliente}
-                                    onChange={(e) => handleInputChange("cliente", e.target.value)}
+                                    name="cliente"
                                     placeholder="Nombre del cliente"
-                                    className={`${errors.cliente ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
                                 />
-                                {errors.cliente && <p className="text-red-500 text-sm mt-1">{errors.cliente}</p>}
+                                {state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 && (
+                                    <p className="text-red-500 text-sm mt-1">{state.error.cliente._errors[0]}</p>
+                                )}
+                            </div>
+
+                            {/* No de Servicio */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <User className="w-4 h-4 inline mr-2" />
+                                    No de Servicio *
+                                </label>
+                                <Input
+                                    type="number"
+                                    name="noDeServicio"
+                                    placeholder="Número de servicio"
+                                    className={`${state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                />
+                                {state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 && (
+                                    <p className="text-red-500 text-sm mt-1">{state.error.noDeServicio._errors[0]}</p>
+                                )}
                             </div>
 
                             {/* Teléfono */}
@@ -146,51 +174,20 @@ export default function AddServiceModal({ isOpen, onClose, onSubmit }: AddServic
                                 </label>
                                 <Input
                                     type="tel"
-                                    value={formData.telefono}
-                                    onChange={(e) => handleInputChange("telefono", e.target.value)}
-                                    placeholder="2321234567"
-                                    className={`${errors.telefono ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                    name="telefono"
+                                    placeholder="Teléfono (10 dígitos)"
+                                    className={`${state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
                                 />
-                                {errors.telefono && <p className="text-red-500 text-sm mt-1">{errors.telefono}</p>}
-                            </div>
-
-                            {/* Aparato */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    <Package className="w-4 h-4 inline mr-2" />
-                                    Aparato *
-                                </label>
-                                <Input
-                                    type="text"
-                                    value={formData.aparato}
-                                    onChange={(e) => handleInputChange("aparato", e.target.value)}
-                                    placeholder="Licuadora, Bomba de Agua, etc."
-                                    className={`${errors.aparato ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
-                                />
-                                {errors.aparato && <p className="text-red-500 text-sm mt-1">{errors.aparato}</p>}
-                            </div>
-
-                            {/* Fecha */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    <Calendar className="w-4 h-4 inline mr-2" />
-                                    Fecha *
-                                </label>
-                                <Input
-                                    type="date"
-                                    value={formData.fecha}
-                                    onChange={(e) => handleInputChange("fecha", e.target.value)}
-                                    className={`${errors.fecha ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
-                                />
-                                {errors.fecha && <p className="text-red-500 text-sm mt-1">{errors.fecha}</p>}
+                                {state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 && (
+                                    <p className="text-red-500 text-sm mt-1">{state.error.telefono._errors[0]}</p>
+                                )}
                             </div>
 
                             {/* Estado */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
                                 <select
-                                    value={formData.estado}
-                                    onChange={(e) => handleInputChange("estado", e.target.value as Service["estado"])}
+                                    name="estado"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
                                     <option value="Pendiente">Pendiente</option>
@@ -203,15 +200,54 @@ export default function AddServiceModal({ isOpen, onClose, onSubmit }: AddServic
 
                             {/* Marca */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Marca</label>
-                                <Input
-                                    type="number"
-                                    value={formData.marca}
-                                    onChange={(e) => handleInputChange("marca", Number.parseInt(e.target.value) || 1)}
-                                    placeholder="1"
-                                    min="1"
-                                />
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Marca *</label>
+                                <select
+                                    name="marca"
+                                    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${state.error && typeof state.error === 'object' && state.error.marca?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                >
+                                    <option value="">Selecciona una marca</option>
+                                    <option value="Oster">Oster</option>
+                                    <option value="Siemens">Siemens</option>
+                                    <option value="Bosch">Bosch</option>
+                                    <option value="LG">LG</option>
+                                </select>
+                                {state.error && typeof state.error === 'object' && state.error.marca?._errors?.length > 0 && (
+                                    <p className="text-red-500 text-sm mt-1">{state.error.marca._errors[0]}</p>
+                                )}
                             </div>
+                        </div>
+
+                        {/* Aparato */}
+                        <div className="mt-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <Package className="w-4 h-4 inline mr-2" />
+                                Aparato *
+                            </label>
+                            <Input
+                                type="text"
+                                name="aparato"
+                                placeholder="Licuadora, Bomba de Agua, etc."
+                                className={`${state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                            />
+                            {state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 && (
+                                <p className="text-red-500 text-sm mt-1">{state.error.aparato._errors[0]}</p>
+                            )}
+                        </div>
+
+                        {/* Fecha */}
+                        <div className="mt-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <Calendar className="w-4 h-4 inline mr-2" />
+                                Fecha *
+                            </label>
+                            <Input
+                                name="fecha"
+                                type="date"
+                                className={`${state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                            />
+                            {state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 && (
+                                <p className="text-red-500 text-sm mt-1">{state.error.fecha._errors[0]}</p>
+                            )}
                         </div>
 
                         {/* Observaciones */}
@@ -221,8 +257,7 @@ export default function AddServiceModal({ isOpen, onClose, onSubmit }: AddServic
                                 Observaciones
                             </label>
                             <textarea
-                                value={formData.observaciones}
-                                onChange={(e) => handleInputChange("observaciones", e.target.value)}
+                                name='observaciones'
                                 placeholder="Describe el problema o detalles adicionales..."
                                 rows={4}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
@@ -231,17 +266,15 @@ export default function AddServiceModal({ isOpen, onClose, onSubmit }: AddServic
 
                         {/* Footer */}
                         <div className="flex items-center justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
-                            <Button type="button" variant="outline" onClick={onClose} className="cursor-pointer bg-transparent">
+                            <Button type="button" variant="outline" onClick={onCloseAction} className="cursor-pointer bg-transparent">
                                 Cancelar
                             </Button>
-                            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">
-                                <Plus className="w-4 h-4 mr-2" />
-                                Crear Servicio
-                            </Button>
+                            <SubmitButton />
                         </div>
                     </form>
+                    )}
                 </div>
             </div>
         </div>
-    )
+    );
 }
