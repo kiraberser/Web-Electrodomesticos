@@ -289,7 +289,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
 
                 {/* Desktop Navigation */}
                 <nav className="bg-gray-50 border-t" role="navigation" aria-label="Navegación principal">
-                    <div className="container mx-auto px-4">
+                    <div className="container mx-auto px-2">
                         <div className="hidden md:flex items-center space-x-1 py-3 overflow-x-auto">
                             <Link
                                 href="/categorias"
