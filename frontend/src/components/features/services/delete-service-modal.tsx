@@ -2,33 +2,23 @@
 
 import { AlertTriangle, X, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/forms/Button"
-
-interface Service {
-    noDeServicio: number
-    fecha: string
-    aparato: string
-    telefono: string
-    cliente: string
-    observaciones: string
-    estado: string
-    marca: number
-}
+import { Service } from "@/types/service"
 
 interface DeleteServiceModalProps {
     isOpen: boolean
-    onClose: () => void
-    onConfirm: () => void
+    onCloseAction: () => void
+    onConfirmAction: () => void
     service: Service | null
 }
 
-export default function DeleteServiceModal({ isOpen, onClose, onConfirm, service }: DeleteServiceModalProps) {
+export function DeleteServiceModal({ isOpen, onCloseAction, onConfirmAction, service }: DeleteServiceModalProps) {
     if (!isOpen || !service) return null
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-screen items-center justify-center p-4">
                 {/* Backdrop */}
-                <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose}></div>
+                <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onCloseAction}></div>
 
                 {/* Modal */}
                 <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all">
@@ -46,7 +36,7 @@ export default function DeleteServiceModal({ isOpen, onClose, onConfirm, service
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={onClose}
+                            onClick={onCloseAction}
                             className="text-gray-400 hover:text-gray-600 cursor-pointer"
                         >
                             <X className="w-5 h-5" />
@@ -94,10 +84,10 @@ export default function DeleteServiceModal({ isOpen, onClose, onConfirm, service
 
                     {/* Footer */}
                     <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg">
-                        <Button variant="outline" onClick={onClose} className="cursor-pointer bg-transparent">
+                        <Button variant="outline" onClick={onCloseAction} className="cursor-pointer bg-transparent">
                             Cancelar
                         </Button>
-                        <Button onClick={onConfirm} className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">
+                        <Button onClick={onConfirmAction} className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">
                             <Trash2 className="w-4 h-4 mr-2" />
                             Eliminar Servicio
                         </Button>
