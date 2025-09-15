@@ -5,31 +5,25 @@ import { Edit, Trash2, Eye, Phone, Calendar, Package, ChevronDown, ChevronUp } f
 import { Button } from "@/components/ui/forms/Button"
 import { Badge } from "@/components/ui"
 import Link from "next/link"
+import Pagination from "@/components/ui/navigation/Pagination"
+import type { AdminServicePageItem as Service, PaginationInfo } from "@/types/service"
 
-interface Service {
-    noDeServicio: number
-    fecha: string
-    aparato: string
-    telefono: string
-    cliente: string
-    observaciones: string
-    estado: "Pendiente" | "En Proceso" | "Reparado" | "Entregado" | "Cancelado"
-    marca: number
-}
 
 interface ServicesTableProps {
     services: Service[]
     loading: boolean
-    onDeleteService: (service: Service) => void
+    onDeleteServiceAction: (service: Service) => void
     searchQuery: string
+    pagination: PaginationInfo
+    onPageChangeAction: (page: number) => void
 }
 
-export default function ServicesTable({ services, loading, onDeleteService, searchQuery }: ServicesTableProps) {
+export default function ServicesTable({ services, loading, onDeleteServiceAction, searchQuery, pagination, onPageChangeAction }: ServicesTableProps) {
     const [sortField, setSortField] = useState<keyof Service>("noDeServicio")
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
     const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
 
-    // Sort services
+    // Sort services (client-side sorting for now, could be moved to server)
     const sortedServices = [...services].sort((a, b) => {
         const aValue = a[sortField]
         const bValue = b[sortField]
@@ -41,6 +35,9 @@ export default function ServicesTable({ services, loading, onDeleteService, sear
         }
     })
 
+    // Use server-side pagination data
+    const { count, currentPage, totalPages, pageSize } = pagination
+
     const handleSort = (field: keyof Service) => {
         if (sortField === field) {
             setSortDirection(sortDirection === "asc" ? "desc" : "asc")
@@ -48,6 +45,8 @@ export default function ServicesTable({ services, loading, onDeleteService, sear
             setSortField(field)
             setSortDirection("asc")
         }
+        // Reset to first page when sorting changes
+        onPageChangeAction(1)
     }
 
     const toggleRowExpansion = (serviceId: number) => {
@@ -58,6 +57,10 @@ export default function ServicesTable({ services, loading, onDeleteService, sear
             newExpanded.add(serviceId)
         }
         setExpandedRows(newExpanded)
+    }
+
+    const handlePageChange = (page: number) => {
+        onPageChangeAction(page)
     }
 
     const getStatusBadge = (status: Service["estado"]) => {
@@ -139,6 +142,24 @@ export default function ServicesTable({ services, loading, onDeleteService, sear
             </div>
         )
     }
+
+    // Pagination component
+    const hrefForPage = (p: number) => {
+        const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
+        params.set('page', String(p))
+        return `?${params.toString()}`
+    }
+
+    const TablePagination = () => (
+        <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            count={count}
+            pageSize={pageSize}
+            onPageChange={handlePageChange}
+            hrefForPage={hrefForPage}
+        />
+    )
 
     return (
         <div className="overflow-hidden">
@@ -232,16 +253,16 @@ export default function ServicesTable({ services, loading, onDeleteService, sear
                                 <td className="px-6 py-4">{getStatusBadge(service.estado)}</td>
                                 <td className="px-6 py-4">
                                     <div className="flex items-center justify-center space-x-2">
-                                        <Link href={`/clientes/servicios/${service.noDeServicio}`} variant="ghost" size="sm" className="cursor-pointer">
+                                        <Link href={`/admin/servicios/${service.noDeServicio}`}   className="cursor-pointer">
                                             <Eye className="w-4 h-4" />
                                         </Link>
-                                        <Link href={`/clientes/servicios/nota/${service.noDeServicio}`} variant="ghost" size="sm" className="cursor-pointer">
+                                        <Link href={`/admin/servicios/nota/${service.noDeServicio}`} className="cursor-pointer">
                                             <Edit className="w-4 h-4" />
                                         </Link>
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => onDeleteService(service)}
+                                            onClick={() => onDeleteServiceAction(service)}
                                             className="text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer"
                                         >
                                             <Trash2 className="w-4 h-4" />
@@ -304,18 +325,17 @@ export default function ServicesTable({ services, loading, onDeleteService, sear
                                     </div>
 
                                     <div className="flex space-x-2">
-                                        <Button variant="outline" size="sm" className="flex-1 cursor-pointer bg-transparent">
+                                        <Link href={`/admin/servicios/${service.noDeServicio}`} className="flex-1 cursor-pointer bg-transparent">
                                             <Eye className="w-4 h-4 mr-2" />
                                             Ver
-                                        </Button>
-                                        <Button variant="outline" size="sm" className="flex-1 cursor-pointer bg-transparent">
+                                        </Link>
+                                        <Link href={`/admin/servicios/nota/${service.noDeServicio}`}  className="flex-1 cursor-pointer bg-transparent">
                                             <Edit className="w-4 h-4 mr-2" />
                                             Editar
-                                        </Button>
+                                        </Link>
                                         <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => onDeleteService(service)}
+
+                                            onClick={() => onDeleteServiceAction(service)}
                                             className="flex-1 text-red-600 border-red-200 hover:bg-red-50 cursor-pointer"
                                         >
                                             <Trash2 className="w-4 h-4 mr-2" />
@@ -328,6 +348,9 @@ export default function ServicesTable({ services, loading, onDeleteService, sear
                     </div>
                 ))}
             </div>
+
+            {/* Pagination */}
+            <TablePagination />
         </div>
     )
 }

@@ -1,0 +1,8 @@
+export { ServiceHeader } from './service-header'
+export { ServiceBasicInfo } from './service-basic-info'
+export { ServiceObservations } from './service-observations'
+export { ServiceCostInfo } from './service-cost-info'
+export { ServiceDeliveryInfo } from './service-delivery-info'
+export { ServiceQuickActions } from './service-quick-actions'
+export {AddServiceModal} from './add-service-modal'
+export {DeleteServiceModal} from './delete-service-modal'
