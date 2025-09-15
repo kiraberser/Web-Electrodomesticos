@@ -1,7 +1,6 @@
 // app/layout.tsx
-import './globals.css';
+import '@/styles/index.css'
 
-import Script from 'next/script';
 import { cookies } from 'next/headers';
 
 import { Inter } from 'next/font/google';
@@ -23,15 +22,17 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const cookiesStore = await cookies();
   const username = cookiesStore.get('username')?.value || null;
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="en" className={inter.variable}>
       <head>
-        <Script src="/path/or/uri/to/tinymce.min.js" referrerPolicy="origin"></Script>
+        <title>
+          Refaccionaria "Vega"
+        </title>
       </head>
-      <body className={`${inter.className} min-h-screen text-[#0A3981]`}>
+      <body className={`${inter.className} text-[#0A3981]`}>
         <CartProvider>
-          <Navbar username={username} />
+          <Navbar username={username || undefined} />
           {children}
-          <Footer />
+          <Footer username={username || undefined}/>
         </CartProvider>
       </body>
     </html>

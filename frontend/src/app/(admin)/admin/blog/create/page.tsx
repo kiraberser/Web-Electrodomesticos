@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useActionState } from "react"
 import { Button } from "@/components/ui/forms/Button"
@@ -69,7 +69,7 @@ export default function CrearBlogPage() {
     setDraft((d) => ({ ...d, slug: slugify(d.title) }))
   }
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: any) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
     setDraft((d) => ({ ...d, image: selectedFile }))

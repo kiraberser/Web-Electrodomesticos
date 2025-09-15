@@ -22,14 +22,14 @@ const Brands = () => {
                             key={index}
                             className="relative group hover:scale-110 transition-transform duration-300 cursor-pointer"
                         >
-                            <div className="bg-gray-50 rounded-lg p-6 h-24 flex justify-center hover:bg-gray-100 transition-colors">
+                            <div className="bg-white rounded-lg p-6 h-24 flex justify-center hover:bg-white transition-colors">
                                 <Image
                                     src={brand.logo}
                                     alt={brand.name}
                                     fill
                                     quality={100}
                                     style={{objectFit: 'contain'}}
-                                    className=" grayscale fgroup-hover:grayscale-0 transition-all duration-300"
+                                    className=" group-hover:grayscale-0 transition-all duration-300"
                                 />
                             </div>
                         </div>

@@ -7,13 +7,9 @@ import Features from '@/components/features/home/Features';
 import Brands from '@/components/product/Brands';
 import { Reviews } from '@/components/features/reviews/Reviews';
 
-//Falta import Features, Testimonials, Brands
-
-
-
 const HomePage = () => {
   return (
-    <div className="min-h-screen">
+    <div >
       <HeroSection />
       <Categories />
       <Carousel />

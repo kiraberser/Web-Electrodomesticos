@@ -35,6 +35,7 @@ export default function CategoriasPage() {
                             <Image
                                 src={cat.image || "/placeholder.svg"}
                                 alt={cat.description}
+                                objectFit="cover"
                                 width={600} // tamaño base para mantener proporción
                                 height={208} // 208px ≈ h-52
                                 className="w-full h-52 object-cover transition-transform duration-300 group-hover:scale-105"
