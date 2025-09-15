@@ -83,15 +83,4 @@ class Proveedor(models.Model):
     class Meta:
         verbose_name_plural = "Proveedores"
 
-@receiver(post_save, sender=Refaccion)
-def crear_movimiento_inventario(sender, instance, created, **kwargs):
-    if created and instance.existencias > 0:
-        from apps.inventario.models import Inventario
-        Inventario.objects.create(
-            cantidad=instance.existencias,
-            precio_unitario=instance.precio,
-            marca=instance.marca,
-            categoria=instance.categoria,
-            tipo_movimiento=Inventario.TipoMovimientoChoices.ENTRADA,
-            refaccion=instance
-        )
+# La lógica de creación de movimiento inicial se movió a un servicio

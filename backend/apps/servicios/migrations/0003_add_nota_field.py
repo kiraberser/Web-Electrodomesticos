@@ -9,10 +9,5 @@ class Migration(migrations.Migration):
         ('servicios', '0002_add_nota_field'),
     ]
 
-    operations = [
-        migrations.AddField(
-    model_name='servicio',
-    name='nota',
-    field=models.JSONField(blank=True, null=True),
-),
-    ]
+    # No-op: el campo 'nota' ya existe desde 0001_initial
+    operations = []
