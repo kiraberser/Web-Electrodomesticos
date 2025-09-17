@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import UniqueConstraint
+from django.db.models.functions import Lower
 
 # Create your models here.
 
@@ -17,6 +19,7 @@ class Contact(models.Model):
 
 class Newsletter(models.Model):
     email = models.EmailField()
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -25,4 +28,7 @@ class Newsletter(models.Model):
     class Meta:
         verbose_name = 'Newsletter'
         verbose_name_plural = 'Newsletters'
+        constraints = [
+            UniqueConstraint(Lower('email'), name='unique_newsletter_email_ci')
+        ]
     
