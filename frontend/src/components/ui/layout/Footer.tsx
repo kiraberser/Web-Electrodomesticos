@@ -1,4 +1,4 @@
-import Image from 'next/image';
+"use client";
 
 import { Button } from '../forms/Button';
 import { Separator } from '../display/Separator';
@@ -6,12 +6,18 @@ import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'luci
 import { company } from '@/data/company';
 import { categories } from '@/data/category';
 import Link from 'next/link';
+import { subscribeNewsletterAction } from '@/actions/newsletter';
+import { useActionState } from 'react';
 
 const Footer = ({ username }: { username: string | undefined }) => {
+  const initialState = { success: false, error: null as any, data: undefined as any };
+  const [state, formAction] = useActionState(subscribeNewsletterAction, initialState);
   return (
     <footer className="bg-gray-900 text-white">
       {/* Newsletter Section */}
       {!username && (
+        <>
+        <form action={formAction}>
         <div className="bg-blue-600 py-12">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
@@ -24,16 +30,25 @@ const Footer = ({ username }: { username: string | undefined }) => {
               <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
                 <input
                   type="email"
+                  name="email"
                   placeholder="Tu correo electrónico"
                   className="flex-1 px-4 py-3 rounded-lg bg-white border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
-                <Button className="bg-orange-500 hover:bg-orange-600 px-6 py-3">
+                <Button type="submit" className="bg-orange-500 hover:bg-orange-600 px-6 py-3">
                   Suscribirse
                 </Button>
               </div>
+              {state?.error && (
+                <p className="mt-4 text-sm text-red-100" aria-live="polite">{String(state.error)}</p>
+              )}
+              {state?.success && !state?.error && (
+                <p className="mt-4 text-sm text-green-100" aria-live="polite">¡Suscripción exitosa! Revisa tu correo.</p>
+              )}
             </div>
           </div>
         </div>
+        </form>
+        </>
       )}
 
       {/* Main Footer */}
