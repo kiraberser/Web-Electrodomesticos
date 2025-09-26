@@ -34,12 +34,6 @@ class ContactViewSet(viewsets.ModelViewSet):
             'data': serializer.data
         }, status=status.HTTP_201_CREATED, headers=headers)
 
-    @action(detail=False, methods=['post'], url_path='submit')
-    def custom_create(self, request):
-        """
-        Método alternativo para crear contactos
-        """
-        return self.create(request)
 
 class NewsletterViewSet(viewsets.ModelViewSet):
     """
