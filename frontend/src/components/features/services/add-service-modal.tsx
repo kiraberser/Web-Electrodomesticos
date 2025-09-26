@@ -131,7 +131,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                             </div>
                         )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
                             {/* Cliente */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -142,7 +142,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                     type="text"
                                     name="cliente"
                                     placeholder="Nombre del cliente"
-                                    className={`${state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.cliente._errors[0]}</p>
@@ -159,7 +159,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                     type="number"
                                     name="noDeServicio"
                                     placeholder="Número de servicio"
-                                    className={`${state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.noDeServicio._errors[0]}</p>
@@ -176,7 +176,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                     type="tel"
                                     name="telefono"
                                     placeholder="Teléfono (10 dígitos)"
-                                    className={`${state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.telefono._errors[0]}</p>
@@ -188,7 +188,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
                                 <select
                                     name="estado"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
                                 >
                                     <option value="Pendiente">Pendiente</option>
                                     <option value="En Proceso">En Proceso</option>
@@ -203,7 +203,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Marca *</label>
                                 <select
                                     name="marca"
-                                    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${state.error && typeof state.error === 'object' && state.error.marca?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 ${state.error && typeof state.error === 'object' && state.error.marca?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
                                 >
                                     <option value="">Selecciona una marca</option>
                                     <option value="Oster">Oster</option>
@@ -217,41 +217,44 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                             </div>
                         </div>
 
-                        {/* Aparato */}
-                        <div className="mt-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                <Package className="w-4 h-4 inline mr-2" />
-                                Aparato *
-                            </label>
-                            <Input
-                                type="text"
-                                name="aparato"
-                                placeholder="Licuadora, Bomba de Agua, etc."
-                                className={`${state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
-                            />
-                            {state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 && (
-                                <p className="text-red-500 text-sm mt-1">{state.error.aparato._errors[0]}</p>
-                            )}
-                        </div>
+                        {/* Aparato y Fecha en la misma fila */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 text-gray-700">
+                            {/* Aparato */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Package className="w-4 h-4 inline mr-2" />
+                                    Aparato *
+                                </label>
+                                <Input
+                                    type="text"
+                                    name="aparato"
+                                    placeholder="Licuadora, Bomba de Agua, etc."
+                                    className={`${state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
+                                />
+                                {state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 && (
+                                    <p className="text-red-500 text-sm mt-1">{state.error.aparato._errors[0]}</p>
+                                )}
+                            </div>
 
-                        {/* Fecha */}
-                        <div className="mt-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                <Calendar className="w-4 h-4 inline mr-2" />
-                                Fecha *
-                            </label>
-                            <Input
-                                name="fecha"
-                                type="date"
-                                className={`${state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
-                            />
-                            {state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 && (
-                                <p className="text-red-500 text-sm mt-1">{state.error.fecha._errors[0]}</p>
-                            )}
+                            {/* Fecha */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Calendar className="w-4 h-4 inline mr-2" />
+                                    Fecha *
+                                </label>
+                                <Input
+                                    name="fecha"
+                                    type="date"
+                                    className={`${state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
+                                />
+                                {state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 && (
+                                    <p className="text-red-500 text-sm mt-1">{state.error.fecha._errors[0]}</p>
+                                )}
+                            </div>
                         </div>
 
                         {/* Observaciones */}
-                        <div className="mt-6">
+                        <div className="mt-6 text-gray-700">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 <FileText className="w-4 h-4 inline mr-2" />
                                 Observaciones
@@ -260,7 +263,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                 name='observaciones'
                                 placeholder="Describe el problema o detalles adicionales..."
                                 rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700"
                             />
                         </div>
 

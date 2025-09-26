@@ -2,13 +2,19 @@
 
 import { AlertTriangle, X, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/forms/Button"
-import { Service } from "@/types/service"
+
+type DeleteServiceSummary = {
+    noDeServicio: number | string
+    cliente: string
+    aparato: string
+    estado: string
+}
 
 interface DeleteServiceModalProps {
     isOpen: boolean
     onCloseAction: () => void
     onConfirmAction: () => void
-    service: Service | null
+    service: DeleteServiceSummary | null
 }
 
 export function DeleteServiceModal({ isOpen, onCloseAction, onConfirmAction, service }: DeleteServiceModalProps) {
