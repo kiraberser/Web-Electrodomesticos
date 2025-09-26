@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { Button } from "../ui/forms/Button"
+import { Button } from "@/components/admin/ui"
 import { Badge } from "../ui"
 import type { Product } from "@/data/products"
 import { X, Shield, Truck, Zap, Wrench, Pencil } from "lucide-react"
@@ -10,17 +10,17 @@ import Link from "next/link"
 type Props = {
     product: Product | null
     open: boolean
-    onClose: () => void
+    onCloseAction: () => void
 }
 
-export default function ProductDetailsDrawer({ product, open, onClose }: Props) {
+export default function ProductDetailsDrawer({ product, open, onCloseAction }: Props) {
     if (!open || !product) return null
 
     const totalSpecs = product.specs?.length || 0
 
     return (
         <div className="fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/50" onClick={onCloseAction} />
             <aside
                 className="absolute right-0 top-0 h-full w-full max-w-xl border-l border-gray-200 bg-white shadow-xl"
                 role="dialog"
@@ -32,7 +32,7 @@ export default function ProductDetailsDrawer({ product, open, onClose }: Props) 
                         <div className="text-sm font-mono text-gray-500">{product.id}</div>
                         <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={onClose} className="cursor-pointer">
+                    <Button variant="ghost" size="sm" onClick={onCloseAction} className="cursor-pointer">
                         <X className="h-5 w-5" />
                     </Button>
                 </div>
