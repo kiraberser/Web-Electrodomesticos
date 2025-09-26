@@ -2,20 +2,21 @@
 import '@/styles/index.css'
 
 import { cookies } from 'next/headers';
+import { AppChrome } from '@/components/layout/AppChrome';
 
 import { Inter } from 'next/font/google';
-import { Navbar, Footer } from '@/components/ui';
+// Navbar y Footer se inyectan vía AppChrome según la ruta
 import { CartProvider } from '@/context/CartContext';
+import RouteModalGate from '@/components/public/RouteModalGate';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
 });
 
-// Modifica la interfaz para aceptar un prop 'hideNavFooter'
 interface RootLayoutProps {
   children: React.ReactNode;
-  hideNavFooter?: boolean; // Prop opcional para ocultar nav y footer
+  modal: React.ReactNode;
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
@@ -30,11 +31,13 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body className={`${inter.className} text-[#0A3981]`}>
         <CartProvider>
-          <Navbar username={username || undefined} />
-          {children}
-          <Footer username={username || undefined}/>
+          <AppChrome username={username || undefined}>
+            {children}
+          </AppChrome>
+          <RouteModalGate />
         </CartProvider>
       </body>
     </html>
   );
 }
+

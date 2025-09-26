@@ -16,7 +16,7 @@ const Register = ({ isSubmitting, showPassword, setShowPassword, showConfirmPass
         const data = Object.fromEntries(formData);
 
         const { password, confirmPassword } = data;
- 
+
         if (password !== confirmPassword) {
             toast({
                 title: 'Error en las contaseñas',
@@ -173,4 +173,4 @@ const Register = ({ isSubmitting, showPassword, setShowPassword, showConfirmPass
     )
 }
 
-export default Register
+export default Register 

@@ -9,6 +9,7 @@ import { DeleteServiceModal, AddServiceModal } from "@/components/features/servi
 import { deleteServiceAction } from "@/actions/services"
 import { useRouter, useSearchParams } from "next/navigation"
 import type { AdminServicePageItem as Service, PaginationInfo } from "@/types/service"
+import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 
 export default function ServicesPageClient({
     initialServices,
@@ -21,6 +22,7 @@ export default function ServicesPageClient({
 }) {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const { dark } = useAdminTheme()
 
     const [services, setServices] = useState<Service[]>(initialServices)
     const [pagination, setPagination] = useState<PaginationInfo>(initialPagination)
@@ -79,17 +81,17 @@ export default function ServicesPageClient({
     }, [router])
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="bg-white border-b border-gray-200">
+        <div className={`${dark ? "text-gray-200" : "text-gray-900"}`}>
+            <div className={`${dark ? "border-b border-white/10 bg-transparent" : "bg-white border-b border-gray-200"}`}>
                 <div className="container mx-auto px-4 py-6">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Gestión de Servicios</h1>
-                            <p className="text-gray-600 mt-1">Administra todos los servicios de reparación y mantenimiento</p>
+                            <h1 className={`text-2xl font-bold ${dark ? "text-gray-100" : "text-gray-900"}`}>Gestión de Servicios</h1>
+                            <p className={`${dark ? "text-gray-400" : "text-gray-600"} mt-1`}>Administra todos los servicios de reparación y mantenimiento</p>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                            <Badge variant="secondary" className={`${dark ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"}`}>
                                 {pagination.count} servicios
                             </Badge>
                             <Button
@@ -105,22 +107,22 @@ export default function ServicesPageClient({
             </div>
 
             <div className="container mx-auto px-4 py-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                <div className={`${dark ? "rounded-lg border border-white/10 bg-[#0F172A] shadow-sm shadow-black/20" : "bg-white rounded-lg shadow-sm border border-gray-200"} p-4 mb-6`}>
                     <div className="flex flex-col sm:flex-row gap-4">
                         <div className="flex-1">
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${dark ? "text-gray-300" : "text-gray-700"}`} />
                                 <Input
                                     placeholder="Buscar por cliente, aparato, teléfono o número de servicio..."
                                     value={searchQuery}
                                     onChange={(e) => handleSearchChange(e.target.value)}
-                                    className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                    className={`pl-10 focus:ring-blue-500 ${dark ? "border-white/10 bg-white/5 text-gray-100 placeholder-gray-400 focus:border-white/20" : "border-gray-300 text-gray-700 focus:border-blue-500"}`}
                                 />
                             </div>
                         </div>
 
                         <div className="flex gap-2">
-                            <Button variant="outline" className="cursor-pointer bg-transparent">
+                            <Button variant="outline" className={`cursor-pointer bg-transparent ${dark ? "text-gray-200" : "text-gray-800"}`}>
                                 <Filter className="w-4 h-4 mr-2" />
                                 Filtros
                             </Button>
@@ -128,7 +130,7 @@ export default function ServicesPageClient({
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className={`${dark ? "rounded-lg border border-white/10 bg-[#0F172A] shadow-sm shadow-black/20" : "bg-white rounded-lg shadow-sm border border-gray-200"}`}>
                     <ServicesTable
                         services={filteredServices}
                         loading={loading}
@@ -156,7 +158,7 @@ export default function ServicesPageClient({
                     setSelectedService(null)
                 }}
                 onConfirmAction={handleDeleteService}
-                service={selectedService}
+                service={selectedService || null}
             />
 
             <AddServiceModal 

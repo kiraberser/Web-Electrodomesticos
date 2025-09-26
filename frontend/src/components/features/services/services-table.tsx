@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui"
 import Link from "next/link"
 import Pagination from "@/components/ui/navigation/Pagination"
 import type { AdminServicePageItem as Service, PaginationInfo } from "@/types/service"
+import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 
 
 interface ServicesTableProps {
@@ -19,6 +20,7 @@ interface ServicesTableProps {
 }
 
 export default function ServicesTable({ services, loading, onDeleteServiceAction, searchQuery, pagination, onPageChangeAction }: ServicesTableProps) {
+    const { dark } = useAdminTheme()
     const [sortField, setSortField] = useState<keyof Service>("noDeServicio")
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
     const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
@@ -65,11 +67,11 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
 
     const getStatusBadge = (status: Service["estado"]) => {
         const statusConfig = {
-            Pendiente: { color: "bg-yellow-100 text-yellow-800", icon: "⏳" },
-            "En Proceso": { color: "bg-blue-100 text-blue-800", icon: "🔧" },
-            Reparado: { color: "bg-green-100 text-green-800", icon: "✅" },
-            Entregado: { color: "bg-purple-100 text-purple-800", icon: "📦" },
-            Cancelado: { color: "bg-red-100 text-red-800", icon: "❌" },
+            Pendiente: { color: dark ? "bg-amber-900/20 text-amber-300" : "bg-yellow-100 text-yellow-800", icon: "⏳" },
+            "En Proceso": { color: dark ? "bg-blue-900/20 text-blue-300" : "bg-blue-100 text-blue-800", icon: "🔧" },
+            Reparado: { color: dark ? "bg-green-900/20 text-green-300" : "bg-green-100 text-green-800", icon: "✅" },
+            Entregado: { color: dark ? "bg-purple-900/20 text-purple-300" : "bg-purple-100 text-purple-800", icon: "📦" },
+            Cancelado: { color: dark ? "bg-red-900/20 text-red-300" : "bg-red-100 text-red-800", icon: "❌" },
         }
 
         const config = statusConfig[status]
@@ -118,10 +120,10 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
         return (
             <div className="p-8">
                 <div className="animate-pulse space-y-4">
-                    <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                    <div className={`h-4 rounded w-1/4 ${dark ? "bg-white/10" : "bg-gray-200"}`}></div>
                     <div className="space-y-3">
                         {[...Array(5)].map((_, i) => (
-                            <div key={i} className="h-12 bg-gray-200 rounded"></div>
+                            <div key={i} className={`h-12 rounded ${dark ? "bg-white/10" : "bg-gray-200"}`}></div>
                         ))}
                     </div>
                 </div>
@@ -132,9 +134,9 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
     if (services.length === 0) {
         return (
             <div className="p-8 text-center">
-                <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No hay servicios</h3>
-                <p className="text-gray-500">
+                <Package className={`w-12 h-12 mx-auto mb-4 ${dark ? "text-gray-400" : "text-gray-500"}`} />
+                <h3 className={`text-lg font-medium mb-2 ${dark ? "text-gray-100" : "text-gray-900"}`}>No hay servicios</h3>
+                <p className={`${dark ? "text-gray-400" : "text-gray-600"}`}>
                     {searchQuery
                         ? "No se encontraron servicios que coincidan con tu búsqueda."
                         : "Aún no tienes servicios registrados."}
@@ -162,18 +164,18 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
     )
 
     return (
-        <div className="overflow-hidden">
+        <div className={`${dark ? "text-gray-200" : "text-gray-700"} overflow-hidden`}>
             {/* Desktop Table */}
             <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className={`${dark ? "bg-transparent border-b border-white/10" : "bg-gray-50 border-b border-gray-200"}`}>
                         <tr>
                             <th className="px-6 py-4 text-left">
                                 <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleSort("noDeServicio")}
-                                    className="font-medium text-gray-700 hover:text-gray-900 cursor-pointer"
+                                    className={`font-medium cursor-pointer bg-transparent ${dark ? "text-gray-300 hover:text-gray-100" : "text-gray-700 hover:text-gray-900"}`}
                                 >
                                     No. Servicio
                                     {sortField === "noDeServicio" &&
@@ -189,7 +191,7 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleSort("fecha")}
-                                    className="font-medium text-gray-700 hover:text-gray-900 cursor-pointer"
+                                    className={`font-medium cursor-pointer bg-transparent ${dark ? "text-gray-300 hover:text-gray-100" : "text-gray-700 hover:text-gray-900"}`}
                                 >
                                     Fecha
                                     {sortField === "fecha" &&
@@ -205,7 +207,7 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleSort("cliente")}
-                                    className="font-medium text-gray-700 hover:text-gray-900 cursor-pointer"
+                                    className={`font-medium cursor-pointer bg-transparent ${dark ? "text-gray-300 hover:text-gray-100" : "text-gray-700 hover:text-gray-900"}`}
                                 >
                                     Cliente
                                     {sortField === "cliente" &&
@@ -222,30 +224,30 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
                             <th className="px-6 py-4 text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className={`${dark ? "divide-y divide-white/10" : "divide-y divide-gray-200"}`}>
                         {sortedServices.map((service) => (
-                            <tr key={service.noDeServicio} className="hover:bg-gray-50 transition-colors">
+                            <tr key={service.noDeServicio} className={`transition-colors ${dark ? "hover:bg-white/5" : "hover:bg-gray-50"}`}>
                                 <td className="px-6 py-4">
-                                    <div className="font-medium text-gray-900">
+                                    <div className={`font-medium ${dark ? "text-gray-100" : "text-gray-900"}`}>
                                         #{highlightText(service.noDeServicio.toString(), searchQuery)}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <div className="flex items-center text-gray-700">
-                                        <Calendar className="w-4 h-4 mr-2 text-gray-400" />
+                                    <div className={`flex items-center ${dark ? "text-gray-300" : "text-gray-700"}`}>
+                                        <Calendar className={`w-4 h-4 mr-2 ${dark ? "text-gray-400" : "text-gray-400"}`} />
                                         {formatDate(service.fecha)}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <div className="font-medium text-gray-900">{highlightText(service.cliente, searchQuery)}</div>
+                                    <div className={`font-medium ${dark ? "text-gray-100" : "text-gray-900"}`}>{highlightText(service.cliente, searchQuery)}</div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <div className="text-gray-700">{highlightText(service.aparato, searchQuery)}</div>
+                                    <div className={`${dark ? "text-gray-300" : "text-gray-700"}`}>{highlightText(service.aparato, searchQuery)}</div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <div className="flex items-center text-gray-700">
-                                        <Phone className="w-4 h-4 mr-2 text-gray-400" />
-                                        <a href={`tel:${service.telefono}`} className="hover:text-blue-600 cursor-pointer">
+                                    <div className={`flex items-center ${dark ? "text-gray-300" : "text-gray-700"}`}>
+                                        <Phone className={`w-4 h-4 mr-2 ${dark ? "text-gray-400" : "text-gray-400"}`} />
+                                        <a href={`tel:${service.telefono}`} className={`cursor-pointer ${dark ? "hover:text-blue-300" : "hover:text-blue-600"}`}>
                                             {highlightText(formatPhone(service.telefono), searchQuery)}
                                         </a>
                                     </div>
@@ -263,7 +265,7 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => onDeleteServiceAction(service)}
-                                            className="text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer"
+                                            className={`${dark ? "text-red-300 hover:bg-red-900/20" : "text-red-600 hover:text-red-700 hover:bg-red-50"} cursor-pointer`}
                                         >
                                             <Trash2 className="w-4 h-4" />
                                         </Button>
@@ -278,10 +280,10 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
             {/* Mobile Cards */}
             <div className="lg:hidden space-y-4 p-4">
                 {sortedServices.map((service) => (
-                    <div key={service.noDeServicio} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                    <div key={service.noDeServicio} className={`rounded-lg p-4 shadow-sm ${dark ? "border border-white/10 bg-[#0F172A] shadow-black/20" : "bg-white border border-gray-200"}`}>
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center space-x-3">
-                                <div className="font-bold text-lg text-gray-900">
+                                <div className={`font-bold text-lg ${dark ? "text-gray-100" : "text-gray-900"}`}>
                                     #{highlightText(service.noDeServicio.toString(), searchQuery)}
                                 </div>
                                 {getStatusBadge(service.estado)}
@@ -302,26 +304,26 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
 
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <span className="font-medium text-gray-900">{highlightText(service.cliente, searchQuery)}</span>
-                                <span className="text-sm text-gray-500">{formatDate(service.fecha)}</span>
+                                <span className={`font-medium ${dark ? "text-gray-100" : "text-gray-900"}`}>{highlightText(service.cliente, searchQuery)}</span>
+                                <span className={`text-sm ${dark ? "text-gray-400" : "text-gray-500"}`}>{formatDate(service.fecha)}</span>
                             </div>
 
-                            <div className="text-gray-700">{highlightText(service.aparato, searchQuery)}</div>
+                            <div className={`${dark ? "text-gray-300" : "text-gray-700"}`}>{highlightText(service.aparato, searchQuery)}</div>
 
-                            <div className="flex items-center text-gray-600">
+                            <div className={`flex items-center ${dark ? "text-gray-400" : "text-gray-600"}`}>
                                 <Phone className="w-4 h-4 mr-2" />
-                                <a href={`tel:${service.telefono}`} className="hover:text-blue-600 cursor-pointer">
+                                <a href={`tel:${service.telefono}`} className={`cursor-pointer ${dark ? "hover:text-blue-300" : "hover:text-blue-600"}`}>
                                     {highlightText(formatPhone(service.telefono), searchQuery)}
                                 </a>
                             </div>
                         </div>
 
                         {expandedRows.has(service.noDeServicio) && (
-                            <div className="mt-4 pt-4 border-t border-gray-100">
+                            <div className={`mt-4 pt-4 border-t ${dark ? "border-white/10" : "border-gray-100"}`}>
                                 <div className="space-y-3">
                                     <div>
-                                        <span className="text-sm font-medium text-gray-500">Observaciones:</span>
-                                        <p className="text-gray-700 mt-1">{service.observaciones}</p>
+                                        <span className={`text-sm font-medium ${dark ? "text-gray-400" : "text-gray-500"}`}>Observaciones:</span>
+                                        <p className={`${dark ? "text-gray-300" : "text-gray-700"} mt-1`}>{service.observaciones}</p>
                                     </div>
 
                                     <div className="flex space-x-2">
@@ -336,7 +338,7 @@ export default function ServicesTable({ services, loading, onDeleteServiceAction
                                         <Button
 
                                             onClick={() => onDeleteServiceAction(service)}
-                                            className="flex-1 text-red-600 border-red-200 hover:bg-red-50 cursor-pointer"
+                                            className={`flex-1 cursor-pointer ${dark ? "text-red-300 border-red-900/30 hover:bg-red-900/20" : "text-red-600 border-red-200 hover:bg-red-50"}`}
                                         >
                                             <Trash2 className="w-4 h-4 mr-2" />
                                             Eliminar

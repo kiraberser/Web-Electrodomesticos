@@ -3,17 +3,17 @@
 import type React from "react"
 
 import { useMemo, useState } from "react"
-import { Button } from "../ui/forms/Button"
+import { Button } from "@/components/admin/ui"
 import { Badge } from "../ui"
 import type { Product } from "@/data/products"
 import { ChevronDown, ChevronUp, Eye, Package, Tag } from "lucide-react"
 
 type Props = {
     products: Product[]
-    onView: (p: Product) => void
+    onViewAction: (p: Product) => void
 }
 
-export default function InventoryTable({ products, onView }: Props) {
+export default function InventoryTable({ products, onViewAction }: Props) {
     const [sortField, setSortField] = useState<keyof Product>("name")
     const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
 
@@ -74,7 +74,7 @@ export default function InventoryTable({ products, onView }: Props) {
                     </thead>
                     <tbody className="divide-y divide-gray-100 text-sm">
                         {sorted.map((p) => (
-                            <tr key={p.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => onView(p)}>
+                            <tr key={p.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => onViewAction(p)}>
                                 <td className="px-6 py-3 font-mono text-gray-700">{p.id}</td>
                                 <td className="px-6 py-3">
                                     <div className="font-medium text-gray-900">{p.name}</div>
@@ -97,7 +97,7 @@ export default function InventoryTable({ products, onView }: Props) {
                                             size="sm"
                                             onClick={(e) => {
                                                 e.stopPropagation()
-                                                onView(p)
+                                                onViewAction(p)
                                             }}
                                             className="bg-transparent cursor-pointer"
                                         >
@@ -118,7 +118,7 @@ export default function InventoryTable({ products, onView }: Props) {
                     <div
                         key={p.id}
                         className="rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow cursor-pointer"
-                        onClick={() => onView(p)}
+                        onClick={() => onViewAction(p)}
                     >
                         <div className="mb-2 flex items-center justify-between">
                             <div className="text-sm font-mono text-gray-500">{p.id}</div>

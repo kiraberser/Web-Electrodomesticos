@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import  IsAdminUser
 
 from .models import Servicio
 from .serializers import ServicioSerializer
@@ -9,11 +10,14 @@ from .serializers import ServicioSerializer
 class ServicioViewSet(viewsets.ModelViewSet):
     queryset = Servicio.objects.all().order_by('-noDeServicio')
     serializer_class = ServicioSerializer
+    permission_classes = [IsAdminUser]
     
 class ServiciosEntregadosView(APIView):
     """
     Devuelve los servicios reparados que están disponibles para ser entregados.
     """
+    permission_classes = [IsAdminUser]
+    
     def get(self, request):
         servicios = Servicio.objects.filter(estado='Entregado')
         if not servicios.exists():
@@ -25,6 +29,8 @@ class ServiciosReparadosView(APIView):
     """
     Devuelve los servicios que han sido reparados.
     """
+    permission_classes = [IsAdminUser]
+    
     def get(self, request):
         servicios_reparados = Servicio.objects.filter(estado='Reparado')
         if not servicios_reparados.exists():

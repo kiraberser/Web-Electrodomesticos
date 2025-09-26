@@ -36,9 +36,29 @@ class LoginUsuarioView(APIView):
             if not user.check_password(serializer.validated_data['password']):
                 return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
             
+            # Build JWTs with custom role/permissions claims
             refresh = RefreshToken.for_user(user)
+            # Common claims – customize as needed
+            is_admin = bool(getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False))
+            role = 'admin' if is_admin else 'user'
+
+            # Add claims to refresh token
+            refresh['username'] = user.username
+            refresh['is_admin'] = is_admin
+            refresh['is_staff'] = bool(getattr(user, 'is_staff', False))
+            refresh['is_superuser'] = bool(getattr(user, 'is_superuser', False))
+            refresh['role'] = role
+
+            # Access token inherits from refresh, but we can also set explicitly
+            access = refresh.access_token
+            access['username'] = user.username
+            access['is_admin'] = is_admin
+            access['is_staff'] = bool(getattr(user, 'is_staff', False))
+            access['is_superuser'] = bool(getattr(user, 'is_superuser', False))
+            access['role'] = role
+
             return Response({
                 'usuario': user.username,
                 'refresh': str(refresh),
-                'access': str(refresh.access_token)
+                'access': str(access)
             }, status=status.HTTP_200_OK)
