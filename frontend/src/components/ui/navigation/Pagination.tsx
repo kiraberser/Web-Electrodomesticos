@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/forms/Button"
+import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 
@@ -14,6 +15,7 @@ interface PaginationProps {
 }
 
 export default function Pagination({ currentPage, totalPages, count, pageSize = 10, onPageChange, hrefForPage }: PaginationProps) {
+    const { dark } = useAdminTheme()
     if (totalPages <= 1) return null
 
     const goToPage = (page: number) => {
@@ -45,8 +47,8 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
     }
 
     return (
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-gray-200">
-            <div className="flex items-center space-x-2 text-sm text-gray-700">
+        <div className={`flex items-center justify-between px-6 py-4 ${dark ? "border-t border-white/10" : "bg-white border-t border-gray-200"}`}>
+            <div className={`flex items-center space-x-2 text-sm ${dark ? "text-gray-300" : "text-gray-700"}`}>
                 {typeof count === 'number' && (
                     <span>
                         Mostrando {(currentPage - 1) * pageSize + 1} a {Math.min(currentPage * pageSize, count)} de {count} servicios
@@ -61,7 +63,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                             variant="ghost"
                             size="sm"
                             disabled={currentPage === 1}
-                            className="disabled:opacity-50 "
+                            className={`disabled:opacity-50 ${dark ? "text-gray-300" : ""}`}
                         >
                             <ChevronLeft className="w-4 h-4" />
                             Anterior
@@ -73,7 +75,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                         size="sm"
                         onClick={goToPreviousPage}
                         disabled={currentPage === 1}
-                        className=" disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`disabled:opacity-50 disabled:cursor-not-allowed ${dark ? "text-gray-300" : ""}`}
                     >
                         <ChevronLeft className="w-4 h-4" />
                         Anterior
@@ -97,7 +99,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                             variant={currentPage === page ? "default" : "ghost"}
                             size="sm"
                             onClick={() => goToPage(page)}
-                            className="cursor-pointer min-w-[40px]"
+                            className={`cursor-pointer min-w-[40px] ${dark ? "text-gray-300" : ""}`}
                         >
                             {page}
                         </Button>
@@ -110,7 +112,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                             variant="ghost"
                             size="sm"
                             disabled={currentPage === totalPages}
-                            className="disabled:opacity-50 cursor-pointer"
+                            className={`disabled:opacity-50 cursor-pointer ${dark ? "text-gray-300" : ""}`}
                         >
                             Siguiente
                             <ChevronRight className="w-4 h-4" />
@@ -122,7 +124,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                         size="sm"
                         onClick={goToNextPage}
                         disabled={currentPage === totalPages}
-                        className="cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${dark ? "text-gray-300" : ""}`}
                     >
                         Siguiente
                         <ChevronRight className="w-4 h-4" />

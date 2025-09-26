@@ -7,9 +7,13 @@ import { Badge } from "@/components/ui/feedback/Badge"
 import { User, Package, ShoppingBag, FileText, Mail, ChevronRight, LogOut, Truck, Phone, MapPin } from "lucide-react"
 
 interface Category {
-    id: string
-    name: string
+    id: number
+    key: string
     count?: number
+    label: string
+    cat_model: string
+    description: string
+    image: string
 }
 
 interface MobileMenuProps {
@@ -108,12 +112,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                                 <button
                                     key={category.id}
                                     onClick={() => {
-                                        onCategoryClick(category.name)
+                                        onCategoryClick(category.label)
                                         onClose()
                                     }}
                                     className="flex items-center justify-between w-full px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group text-left cursor-pointer"
                                 >
-                                    <span className="font-medium">{category.name}</span>
+                                    <span className="font-medium">{category.label}</span>
                                     <div className="flex items-center">
                                         {category.count && (
                                             <Badge variant="secondary" className="mr-2 text-xs">

@@ -5,7 +5,6 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import { Search, ShoppingCart, Menu, X, User, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import Image from "next/image"
 
 import { Button } from "@/components/ui/forms/Button"
 import { Badge } from "@/components/ui/feedback/Badge"
@@ -19,6 +18,7 @@ import AccountModal from "../display/AccountModa"
 import { categories } from "@/data/category"
 import { company } from "@/data/company"
 import LogOutButton from "@/components/user/LogOutButton"
+import { LayoutDashboard } from "lucide-react"
 
 
 interface NavbarProps {
@@ -202,6 +202,16 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                                         <User className="w-4 h-4 mr-3 text-gray-400" />
                                                         Mi Perfil
                                                     </Link>
+                                                    {username === "admin" && (
+                                                        <Link
+                                                            href="/admin/dashboard"
+                                                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                                                            onClick={() => setIsUserDropdownOpen(false)}
+                                                        >
+                                                            <LayoutDashboard className="w-4 h-4 mr-3 text-gray-400" />
+                                                            Dashboard
+                                                        </Link>
+                                                    )}
                                                     <Link
                                                         href="/mis-compras"
                                                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
