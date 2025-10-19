@@ -13,9 +13,6 @@ export const Modal: React.FC<{ open: boolean; title?: string; onClose: () => voi
         role="dialog" aria-modal="true">
         <div className="mb-3 flex items-center justify-between">
           <h3 className={`text-sm font-semibold ${dark ? "text-gray-100" : "text-gray-900"}`}>{title}</h3>
-          <button className={`rounded-lg p-1 ${dark ? "text-gray-400 hover:bg-white/10" : "text-gray-600 hover:bg-black/5"}`} onClick={onClose} aria-label="Cerrar">
-            ✕
-          </button>
         </div>
         {children}
       </div>

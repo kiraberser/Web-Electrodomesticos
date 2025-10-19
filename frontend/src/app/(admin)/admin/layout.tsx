@@ -138,7 +138,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   }
                 }}
               />
-              <main className={`mx-auto w-full max-w-[1400px] flex-1 space-y-3 p-3 ${dark ? "" : ""}`}>{children}</main>
+              <main className={`mx-auto w-full  flex-1 space-y-3 p-3 md:p-4 lg:p-6 xl:p-8 ${dark ? "" : ""}`}>{children}</main>
             </div>
           </div>
             <Toaster toasts={toasts} onRemove={remove} />

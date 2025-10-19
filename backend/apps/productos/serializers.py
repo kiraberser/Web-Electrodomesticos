@@ -5,12 +5,12 @@ from apps.inventario.services import registrar_entrada_inicial_refaccion
 class MarcaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marca
-        fields = ['id', 'nombre', 'pais_origen']
+        fields = ['id', 'nombre', 'pais_origen', 'logo']
 
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
-        fields = ['id', 'nombre', 'descripcion']
+        fields = ['id', 'nombre', 'descripcion', 'imagen']
 
 class RefaccionSerializer(serializers.ModelSerializer):
     marca_nombre = serializers.SerializerMethodField(read_only=True)
@@ -22,7 +22,7 @@ class RefaccionSerializer(serializers.ModelSerializer):
             'id', 'codigo_parte', 'nombre', 'descripcion', 
             'marca', 'marca_nombre', 'categoria', 'categoria_nombre',
             'precio', 'existencias', 'estado', 'compatibilidad',
-            'fecha_ingreso', 'ultima_actualizacion', 'proveedor'
+            'fecha_ingreso', 'ultima_actualizacion', 'proveedor', 'imagen'
         ]
 
     def get_marca_nombre(self, obj):
@@ -43,4 +43,4 @@ class RefaccionSerializer(serializers.ModelSerializer):
 class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proveedor
-        fields = ['id', 'nombre', 'contacto', 'telefono', 'correo_electronico', 'direccion']
+        fields = ['id', 'nombre', 'contacto', 'telefono', 'correo_electronico', 'direccion', 'logo']
