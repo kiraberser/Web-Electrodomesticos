@@ -2,7 +2,7 @@
 import '@/styles/index.css'
 
 import { cookies } from 'next/headers';
-import { AppChrome } from '@/components/layout/AppChrome';
+import { AppChrome } from '@/components/features/layout/AppChrome';
 
 import { Inter } from 'next/font/google';
 // Navbar y Footer se inyectan vía AppChrome según la ruta

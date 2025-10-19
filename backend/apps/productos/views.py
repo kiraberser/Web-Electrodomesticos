@@ -9,7 +9,7 @@ from .serializers import (
 )
 
 class MarcaViewSet(viewsets.ModelViewSet):
-    queryset = Marca.objects.all()
+    queryset = Marca.objects.all().order_by('nombre')
     serializer_class = MarcaSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -17,7 +17,7 @@ class MarcaViewSet(viewsets.ModelViewSet):
     ordering_fields = ['nombre']
 
 class CategoriaViewSet(viewsets.ModelViewSet):
-    queryset = Categoria.objects.all()
+    queryset = Categoria.objects.all().order_by('nombre')
     serializer_class = CategoriaSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -25,7 +25,7 @@ class CategoriaViewSet(viewsets.ModelViewSet):
     ordering_fields = ['nombre']
 
 class RefaccionViewSet(viewsets.ModelViewSet):
-    queryset = Refaccion.objects.select_related('marca', 'categoria').all()
+    queryset = Refaccion.objects.select_related('categoria', 'proveedor').all()
     serializer_class = RefaccionSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [
@@ -39,7 +39,7 @@ class RefaccionViewSet(viewsets.ModelViewSet):
 
     
 class ProveedorViewSet(viewsets.ModelViewSet):
-    queryset = Proveedor.objects.all()
+    queryset = Proveedor.objects.all().order_by('nombre')
     serializer_class = ProveedorSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
