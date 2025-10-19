@@ -3,12 +3,14 @@ from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from decimal import Decimal
 
 class Marca(models.Model):
     """Modelo para registrar marcas de electrodomésticos"""
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, unique=True)
     pais_origen = models.CharField(max_length=100, blank=True, null=True)
+    logo = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.nombre
@@ -21,6 +23,7 @@ class Categoria(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, unique=True)
     descripcion = models.TextField(blank=True)
+    imagen = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.nombre
@@ -42,11 +45,11 @@ class Refaccion(models.Model):
     descripcion = models.TextField(blank=True)
     marca = models.CharField(max_length=100)
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, related_name='refacciones')
-    
+    imagen = models.URLField(blank=True, null=True)
     precio = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(Decimal('0'))]
     )
     existencias = models.PositiveIntegerField(default=0)
     estado = models.CharField(
@@ -76,6 +79,7 @@ class Proveedor(models.Model):
     telefono = models.CharField(max_length=20)
     correo_electronico = models.EmailField(unique=True)
     direccion = models.TextField()
+    logo = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.nombre
