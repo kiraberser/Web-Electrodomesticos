@@ -1,6 +1,7 @@
 export * from "./Button";
 export * from "./Card";
 export * from "./Chip";
+export * from "./ImageUpload";
 export * from "./Input";
 export * from "./Modal";
 export * from "./Select";
