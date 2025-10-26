@@ -112,7 +112,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                                 <button
                                     key={category.id}
                                     onClick={() => {
-                                        onCategoryClick(category.label)
+                                        onCategoryClick(category.key)
                                         onClose()
                                     }}
                                     className="flex items-center justify-between w-full px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group text-left cursor-pointer"

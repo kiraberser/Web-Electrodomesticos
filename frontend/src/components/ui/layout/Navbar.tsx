@@ -45,14 +45,14 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
         if (searchQuery.trim()) {
             const query = searchQuery.trim()
             setSearchQuery("")
-            redirect(`/productos?search=${encodeURIComponent(query)}`)
+            redirect(`/productos?search${encodeURIComponent(query)}`)
         }
     }
 
     // Handle category navigation
     const handleCategoryClick = (categoryName: string) => {
         setIsMenuOpen(false)
-        redirect(`/productos?category=${encodeURIComponent(categoryName)}`)
+        redirect(`/categorias/${encodeURIComponent(categoryName)}`)
     }
 
     // Close dropdowns when clicking outside
@@ -310,7 +310,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                             {categories.map((category) => (
                                 <button
                                     key={category.id}
-                                    onClick={() => handleCategoryClick(category.label)}
+                                    onClick={() => handleCategoryClick(category.key)}
                                     className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-white rounded-lg transition-all duration-200 font-medium whitespace-nowrap cursor-pointer"
                                 >
                                     {category.label}

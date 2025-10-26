@@ -1,46 +1,44 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Filter, Tag, Wrench, DollarSign, X } from 'lucide-react'
 import { Badge } from "../feedback"
 import { Input } from "../forms/InputField"
 import { Button } from "../forms/Button"
-import type { Brand, ProductType } from "@/data/products"
+import type { Brand } from "@/data/products"
+import { Tag, DollarSign, X } from "@/components/icons"
 
 
 interface Props {
     brands: Brand[]
-    types: ProductType[]
-    onChange: (filters: { brands: Brand[]; types: ProductType[]; min: number; max: number }) => void
+    types?: string[]
+    onChangeAction: (filters: { brands: Brand[]; types?: any[]; min: number; max: number }) => void
     defaultMin?: number
     defaultMax?: number
 }
 
 export default function Filters({
     brands,
-    types,
-    onChange,
+    types = [],
+    onChangeAction,
     defaultMin = 0,
     defaultMax = 5000,
 }: Props) {
     const [selectedBrands, setSelectedBrands] = useState<Brand[]>([])
-    const [selectedTypes, setSelectedTypes] = useState<ProductType[]>([])
     const [minPrice, setMinPrice] = useState<number>(defaultMin)
     const [maxPrice, setMaxPrice] = useState<number>(defaultMax)
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
-        onChange({ brands: selectedBrands, types: selectedTypes, min: minPrice, max: maxPrice })
-    }, [selectedBrands, selectedTypes, minPrice, maxPrice, onChange])
+        onChangeAction({ brands: selectedBrands, types, min: minPrice, max: maxPrice })
+    }, [selectedBrands, types, minPrice, maxPrice, onChangeAction])
 
     const toggleBrand = (b: Brand) =>
         setSelectedBrands((prev) => (prev.includes(b) ? prev.filter((x) => x !== b) : [...prev, b]))
-    const toggleType = (t: ProductType) =>
-        setSelectedTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]))
+
 
     const clearAll = () => {
         setSelectedBrands([])
-        setSelectedTypes([])
+
         setMinPrice(defaultMin)
         setMaxPrice(defaultMax)
     }
@@ -50,10 +48,9 @@ export default function Filters({
             {/* Mobile filters toggle */}
             <div className="mb-4 flex items-center justify-between lg:hidden">
                 <Button variant="outline" onClick={() => setOpen(true)} className="cursor-pointer bg-transparent">
-                    <Filter className="mr-2 h-4 w-4" />
-                    Filtros
+                    <span>Filtros</span>
                 </Button>
-                {(selectedBrands.length > 0 || selectedTypes.length > 0 || minPrice !== defaultMin || maxPrice !== defaultMax) && (
+                {(selectedBrands.length > 0 || minPrice !== defaultMin || maxPrice !== defaultMax) && (
                     <Button variant="ghost" onClick={clearAll} className="text-gray-600 hover:text-gray-900 cursor-pointer">
                         Limpiar
                     </Button>
@@ -63,7 +60,6 @@ export default function Filters({
             {/* Sidebar (desktop) */}
             <aside className="sticky top-24 hidden h-fit w-full max-w-[280px] shrink-0 rounded-xl border border-gray-200 bg-white p-4 lg:block">
                 <h3 className="mb-4 flex items-center text-sm font-semibold text-gray-700">
-                    <Filter className="mr-2 h-4 w-4 text-blue-600" />
                     Filtros
                 </h3>
 
@@ -74,11 +70,11 @@ export default function Filters({
                             Marca
                         </div>
                         <div className="flex flex-wrap gap-2">
-                            {brands.map((b) => {
+                            {brands.map((b, index) => {
                                 const active = selectedBrands.includes(b)
                                 return (
                                     <button
-                                        key={b}
+                                        key={`${b}-${index}`}
                                         onClick={() => toggleBrand(b)}
                                         className={`rounded-full border px-3 py-1 text-sm transition ${active
                                             ? "border-blue-600 bg-blue-50 text-blue-700"
@@ -91,31 +87,7 @@ export default function Filters({
                             })}
                         </div>
                     </div>
-
-                    <div>
-                        <div className="mb-2 flex items-center text-sm font-medium text-gray-900">
-                            <Wrench className="mr-2 h-4 w-4 text-blue-600" />
-                            Tipo
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                            {types.map((t) => {
-                                const active = selectedTypes.includes(t)
-                                return (
-                                    <button
-                                        key={t}
-                                        onClick={() => toggleType(t)}
-                                        className={`rounded-full border px-3 py-1 text-sm transition ${active
-                                            ? "border-blue-600 bg-blue-50 text-blue-700"
-                                            : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                                            } cursor-pointer`}
-                                    >
-                                        {t}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                    </div>
-
+                    
                     <div>
                         <div className="mb-2 flex items-center text-sm font-medium text-gray-900">
                             <DollarSign className="mr-2 h-4 w-4 text-blue-600" />
@@ -207,32 +179,8 @@ export default function Filters({
 
                             <div>
                                 <div className="mb-2 flex items-center text-sm font-medium text-gray-900">
-                                    <Wrench className="mr-2 h-4 w-4 text-blue-600" />
-                                    Tipo
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {types.map((t) => {
-                                        const active = selectedTypes.includes(t)
-                                        return (
-                                            <button
-                                                key={t}
-                                                onClick={() => toggleType(t)}
-                                                className={`rounded-full border px-3 py-1 text-sm transition ${active
-                                                    ? "border-blue-600 bg-blue-50 text-blue-700"
-                                                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                                                    } cursor-pointer`}
-                                            >
-                                                {t}
-                                            </button>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="mb-2 flex items-center text-sm font-medium text-gray-900">
                                     <DollarSign className="mr-2 h-4 w-4 text-blue-600" />
-                                    Precio
+                                    <span>Precio</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Input
