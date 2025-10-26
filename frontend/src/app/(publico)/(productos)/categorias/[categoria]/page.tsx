@@ -1,26 +1,58 @@
 import { notFound } from "next/navigation"
+import { categories as CATEGORIES } from "@/data/category"
+import { getRefaccionesByCategoria, type Refaccion } from "@/api/productos"
+import { type Product, ProductType } from "@/data/products"
 import CategoryView from "@/components/product/CategoryView"
-import { products as PRODUCTS, CATEGORIES } from "@/data/products"
 
-export default function CategoriaPage({
+/**
+ * Transforma una refacción del backend a un Product del frontend
+ */
+function transformRefaccionToProduct(refaccion: Refaccion, categoryKey: string): Product {
+    return {
+        id: String(refaccion.id),
+        slug: refaccion.codigo_parte || `product-${refaccion.id}`,
+        name: refaccion.nombre,
+        price: Number(refaccion.precio),
+        brand: refaccion.marca as any,
+        type: (refaccion.categoria_nombre || "Pedestal") as ProductType,
+        category: categoryKey,
+        image: refaccion.imagen || '/placeholder.svg?height=640&width=640',
+        shortDescription: refaccion.descripcion || '',
+        specs: [
+            { label: "Marca", value: refaccion.marca },
+            { label: "Código de parte", value: refaccion.codigo_parte },
+            { label: "Estado", value: refaccion.estado },
+        ],
+        inStock: refaccion.existencias > 0,
+    }
+}
+
+export default async function CategoriaPage({
     params,
 }: {
     params: Promise<{ categoria: string }>
 }) {
-    // Next.js 15: params is a Promise in Server Components
-    const categoryParam = decodeURIComponent((params as any).categoria ?? "")
+    const { categoria } = await params
+    const categoryParam = decodeURIComponent(categoria ?? "")
     const category = CATEGORIES.find((c) => c.key === categoryParam)
+    
     if (!category) return notFound()
 
-    const products = PRODUCTS.filter((p) => p.category === category.key)
+    // Obtener productos de la categoría desde el backend
+    const refaccionesData = await getRefaccionesByCategoria(category.id_category)
+        .catch(error => {
+            console.error('Error fetching refacciones:', error)
+            return { refacciones: [], total: 0 }
+        })
+
+    // Transformar refacciones a productos
+    const products: Product[] = (refaccionesData.refacciones || [])
+        .map(refaccion => transformRefaccionToProduct(refaccion, category.key))
 
     return (
         <CategoryView
             categoryKey={category.key}
             products={products}
-            heroTitle={category.label}
-            heroDescription={category.description}
-            coverImage={category.cover}
         />
     )
 }
