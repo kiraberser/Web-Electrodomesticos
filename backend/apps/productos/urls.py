@@ -4,7 +4,8 @@ from .views import (
     MarcaViewSet, 
     CategoriaViewSet, 
     RefaccionViewSet, 
-    ProveedorViewSet
+    ProveedorViewSet,
+    refacciones_por_categoria,
 )
 
 # Crear un router para manejar automáticamente las URLs de los ViewSets
@@ -18,7 +19,7 @@ urlpatterns = [
     # Las URLs base que manejan los ViewSets
     path('', include(router.urls)),
     
-    # Ejemplos de URLs personalizadas (opcional)
-    # path('refacciones/por-marca/<int:marca_id>/', RefaccionesPorMarcaView.as_view(), name='refacciones-por-marca'),
-    # path('inventario/movimientos-recientes/', MovimientosRecentesView.as_view(), name='movimientos-recientes'),
+    # URLs personalizadas para funcionalidades específicas
+    # Obtener refacciones (productos) por categoría
+    path('categorias/<int:categoria_id>/refacciones/', refacciones_por_categoria, name='refacciones-por-categoria'),
 ]
