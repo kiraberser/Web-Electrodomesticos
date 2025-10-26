@@ -14,6 +14,7 @@ import {
     DeliveryInfoCard,
 } from "@/components/features/notes"
 import { CostNote } from "@/types/service"
+import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 
 const costNoteSchema = {
     safeParse: (data: any) => ({ success: true, error: { errors: [] } }),
@@ -21,6 +22,7 @@ const costNoteSchema = {
 
 export default function ServiceNoteClient({ serviceId, initialCostNote }: { serviceId: string; initialCostNote: CostNote }) {
     const router = useRouter()
+    const { dark } = useAdminTheme()
 
     const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
@@ -112,17 +114,25 @@ export default function ServiceNoteClient({ serviceId, initialCostNote }: { serv
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className={`min-h-screen flex items-center justify-center ${
+                dark ? "bg-gray-900" : "bg-gray-50"
+            }`}>
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Cargando información del servicio...</p>
+                    <div className={`animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4 ${
+                        dark ? "border-blue-400" : "border-blue-600"
+                    }`}></div>
+                    <p className={dark ? "text-gray-400" : "text-gray-600"}>
+                        Cargando información del servicio...
+                    </p>
                 </div>
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className={`min-h-screen bg-gradient-to-br ${
+            dark ? "from-gray-900 to-gray-800" : "from-gray-50 to-gray-100"
+        }`}>
             <NoteHeader 
                 costNote={costNote}
                 saving={saving}

@@ -3,6 +3,7 @@
 import { Package, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/forms/Button"
 import { Input } from "@/components/ui/forms/InputField"
+import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 
 interface Part {
     name: string
@@ -22,11 +23,15 @@ export default function PartsSection({
     onRemovePart: (index: number) => void
     onUpdatePart: (index: number, field: keyof Part, value: string | number) => void
 }) {
+    const { dark } = useAdminTheme()
+    
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
-                <label className="block text-sm font-medium text-gray-700 flex items-center">
-                    <Package className="w-4 h-4 mr-2 text-blue-600" />
+                <label className={`block text-sm font-medium flex items-center ${
+                    dark ? "text-gray-300" : "text-gray-700"
+                }`}>
+                    <Package className={`w-4 h-4 mr-2 ${dark ? "text-blue-400" : "text-blue-600"}`} />
                     Refacciones
                 </label>
                 <Button
@@ -42,19 +47,28 @@ export default function PartsSection({
 
             <div className="space-y-3">
                 {parts.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                        <Package className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <div className={`text-center py-8 rounded-lg border-2 border-dashed ${
+                        dark 
+                            ? "text-gray-400 bg-gray-700/50 border-gray-600" 
+                            : "text-gray-500 bg-gray-50 border-gray-300"
+                    }`}>
+                        <Package className={`w-8 h-8 mx-auto mb-2 ${dark ? "text-gray-500" : "text-gray-400"}`} />
                         <p>No hay refacciones agregadas</p>
                         <p className="text-sm">Haz clic en "Agregar" para añadir refacciones</p>
                     </div>
                 ) : (
                     parts.map((part, index) => (
-                        <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                        <div key={index} className={`border rounded-lg p-4 hover:shadow-sm transition-shadow ${
+                            dark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                        }`}>
                             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
                                 <div className="md:col-span-2">
-                                    <label className="block text-xs font-medium text-gray-600 mb-1">Refacción</label>
+                                    <label className={`block text-xs font-medium mb-1 ${
+                                        dark ? "text-gray-400" : "text-gray-600"
+                                    }`}>Refacción</label>
                                     <Input
                                         type="text"
+                                        dark={dark}
                                         value={part.name}
                                         onChange={(e) => onUpdatePart(index, "name", e.target.value)}
                                         placeholder="Nombre de la refacción"
@@ -62,22 +76,28 @@ export default function PartsSection({
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-600 mb-1">Cantidad</label>
+                                    <label className={`block text-xs font-medium mb-1 ${
+                                        dark ? "text-gray-400" : "text-gray-600"
+                                    }`}>Cantidad</label>
                                     <Input
                                         type="number"
                                         step="1"
                                         min="1"
+                                        dark={dark}
                                         value={part.quantity}
                                         onChange={(e) => onUpdatePart(index, "quantity", Number.parseInt(e.target.value) || 1)}
                                         className="text-sm text-center"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-600 mb-1">Precio</label>
+                                    <label className={`block text-xs font-medium mb-1 ${
+                                        dark ? "text-gray-400" : "text-gray-600"
+                                    }`}>Precio</label>
                                     <Input
                                         type="number"
                                         step="0.01"
                                         min="0"
+                                        dark={dark}
                                         value={part.price}
                                         onChange={(e) => onUpdatePart(index, "price", Number.parseFloat(e.target.value) || 0)}
                                         className="text-sm"
@@ -85,8 +105,8 @@ export default function PartsSection({
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="text-right">
-                                        <div className="text-xs text-gray-600 mb-1">Total</div>
-                                        <div className="text-lg font-semibold text-green-600">${part.total.toFixed(2)}</div>
+                                        <div className={`text-xs mb-1 ${dark ? "text-gray-400" : "text-gray-600"}`}>Total</div>
+                                        <div className={`text-lg font-semibold ${dark ? "text-green-400" : "text-green-600"}`}>${part.total.toFixed(2)}</div>
                                     </div>
                                     <Button
                                         variant="ghost"
