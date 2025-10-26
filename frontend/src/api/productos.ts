@@ -223,6 +223,36 @@ export const getRefaccionById = async (id: number) => {
     return { data: response.data, status: response.status }
 }
 
+/**
+ * Obtiene una refacción por su código de parte (slug)
+ * Usa el search filter del backend que busca en código_parte
+ */
+export const getRefaccionByCodigoParte = async (codigoParte: string) => {
+    try {
+        const url = `${URL}/productos/refacciones/?search=${encodeURIComponent(codigoParte)}`
+        const response = await axios.get(url)
+        
+        if (response.status !== 200) {
+            throw new Error('Failed to fetch refaccion by codigo')
+        }
+        
+        // El search puede devolver múltiples resultados, tomamos el primero que coincida exactamente
+        const refacciones = response.data.results || response.data
+        const refaccion = Array.isArray(refacciones) 
+            ? refacciones.find((r: Refaccion) => r.codigo_parte === codigoParte) || refacciones[0]
+            : refacciones
+        
+        if (!refaccion) {
+            throw new Error('Refaccion not found')
+        }
+        
+        return refaccion
+    } catch (error) {
+        console.error('Error fetching refaccion by codigo:', error)
+        throw error
+    }
+}
+
 export const createRefaccion = async (refaccionData: Refaccion) => {
     const headers = await getAuthHeaders()
     const response = await axios.post(`${URL}/productos/refacciones/`, refaccionData, { headers })
@@ -249,3 +279,44 @@ export const deleteRefaccion = async (id: number) => {
     }
 }
 
+// ========== REFACCIONES POR CATEGORÍA ==========
+
+export interface RefaccionesPorCategoriaResponse {
+    categoria: Categoria;
+    refacciones: Refaccion[];
+    total: number;
+}
+
+/**
+ * Obtiene todas las refacciones (productos) de una categoría específica
+ * @param id_category - ID de la categoría
+ * @param marca - Filtro opcional por marca
+ * @param estado - Filtro opcional por estado
+ * @returns Objeto con la categoría, lista de refacciones y total
+ */
+export const getRefaccionesByCategoria = async (
+    id_category: number,
+    marca?: string,
+    estado?: string
+): Promise<RefaccionesPorCategoriaResponse> => {
+    try {
+        const params = new URLSearchParams()
+        
+        if (marca) params.append('marca', marca)
+        if (estado) params.append('estado', estado)
+        
+        const url = `${URL}/productos/categorias/${id_category}/refacciones/${params.toString() ? '?' + params.toString() : ''}`
+        
+        const response = await axios.get(url)
+
+        if (response.status !== 200) {
+            throw new Error(`Failed to fetch refacciones for categoria ${id_category}`)
+        }
+
+        const data = response.data
+        return data
+} catch (error) {
+        console.error('Error fetching refacciones by categoria:', error)
+        throw error
+    }
+}

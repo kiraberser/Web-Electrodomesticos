@@ -1,6 +1,7 @@
 export const categories = [
   { 
     id: 1, 
+    id_category: 3, // Bombas de Agua
     key: "bombas-de-agua",
     label: "Bombas de Agua", 
     cat_model: "Bombas de Agua",
@@ -9,6 +10,7 @@ export const categories = [
   },
   { 
     id: 2, 
+    id_category: 7, // Lavadora
     key: "lavadoras",
     label: "Lavadoras", 
     cat_model: "Lavadora",
@@ -17,6 +19,7 @@ export const categories = [
   },
   { 
     id: 3, 
+    id_category: 8, // Microondas
     key: "microondas",
     label: "Microondas", 
     cat_model: "Microondas",
@@ -25,14 +28,16 @@ export const categories = [
   },
   { 
     id: 4, 
+    id_category: 9, // Motores
     key: "motores",
     label: "Motores", 
     cat_model: "Motor",
-    description: "Motores eléctricos y piezas relacionadas para diferentes electrodomésticos.",
+    description: "Motores eléctricos y piezas relacionadas para diferentes electro domésticos.",
     image: '/images/categories/Motores.webp' 
   },
   { 
     id: 5, 
+    id_category: 6, // Ventilador
     key: "ventiladores",
     label: "Ventiladores", 
     cat_model: "Ventilador",
@@ -41,6 +46,7 @@ export const categories = [
   },
   { 
     id: 6, 
+    id_category: 10, // Estufas
     key: "estufas",
     label: "Estufas", 
     cat_model: "Estufa",
@@ -49,6 +55,7 @@ export const categories = [
   },
   { 
     id: 7, 
+    id_category: 2, // Pulidora
     key: "pulidoras",
     label: "Pulidoras", 
     cat_model: "Pulidora",
@@ -57,6 +64,7 @@ export const categories = [
   },
   { 
     id: 8, 
+    id_category: 11, // Taladros
     key: "taladros",
     label: "Taladros", 
     cat_model: "Taladro",
@@ -65,6 +73,7 @@ export const categories = [
   },
   { 
     id: 9, 
+    id_category: 5, // Minisplit
     key: "minisplit",
     label: "Minisplit", 
     cat_model: "Minisplit",
@@ -73,6 +82,7 @@ export const categories = [
   },
   { 
     id: 11, 
+    id_category: 12, // Refrigeradores
     key: "refrigeradores",
     label: "Refrigeradores", 
     cat_model: "Refrigerador",
@@ -81,6 +91,7 @@ export const categories = [
   },
   { 
     id: 13, 
+    id_category: 1, // Licuadoras
     key: "licuadoras",
     label: "Licuadoras", 
     cat_model: "Licuadora",
