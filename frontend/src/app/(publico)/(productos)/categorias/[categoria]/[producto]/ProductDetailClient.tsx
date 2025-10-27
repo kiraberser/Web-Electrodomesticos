@@ -3,10 +3,10 @@
 import { useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import toast from "react-hot-toast"
 import { Button } from "@/components/ui/forms/Button"
 import { Badge } from "@/components/ui"
 import { useCart } from "@/context/CartContext"
-import { useToast } from "@/hook/use-toast"
 import Link from "next/link"
 import { type Refaccion } from "@/api/productos"
 import { ProductType, type Product } from "@/data/products"
@@ -20,7 +20,6 @@ interface Props {
 export default function ProductDetailClient({ categoria, refaccion }: Props) {
     const router = useRouter()
     const { addItem } = useCart()
-    const { toast } = useToast()
 
     // Transformar Refaccion a Product
     const product: Product = useMemo(() => ({
@@ -50,10 +49,14 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
             image: product.image,
             quantity: 1,
         })
-        toast({
-            title: "Agregado al carrito",
-            description: `${product.name} fue agregado correctamente.`,
-        })
+        toast.success(`${product.name} agregado al carrito`, {
+            duration: 3000,
+            icon: '🛒',
+            style: {
+                background: '#10b981',
+                color: '#fff',
+            },
+        });
     }
 
     return (
@@ -83,7 +86,14 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
                 {/* Imagen */}
                 <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-4">
                     <div className="relative aspect-square w-full">
-                        <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" priority={true} />
+                        <Image 
+                            src={product.image || "/placeholder.svg"} 
+                            alt={product.name} 
+                            fill 
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover" 
+                            priority={true} 
+                        />
                     </div>
                     <div className="mt-3 flex items-center gap-2">
                         <Badge className="bg-blue-600 text-white">{product.brand}</Badge>
