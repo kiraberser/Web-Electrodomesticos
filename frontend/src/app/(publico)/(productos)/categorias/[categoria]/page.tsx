@@ -3,10 +3,33 @@ import { categories as CATEGORIES } from "@/data/category"
 import { getRefaccionesByCategoria, type Refaccion } from "@/api/productos"
 import { type Product, ProductType } from "@/data/products"
 import CategoryView from "@/components/product/CategoryView"
+import type { Metadata } from "next"
 
 /**
  * Transforma una refacción del backend a un Product del frontend
  */
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ categoria: string }>
+}): Promise<Metadata> {
+    const { categoria } = await params
+    const categoryParam = decodeURIComponent(categoria ?? "")
+    const category = CATEGORIES.find((c) => c.key === categoryParam)
+    
+    if (!category) {
+        return {
+            title: 'Categoría no encontrada',
+        }
+    }
+
+    return {
+        title: `${category.label} - Refaccionaria Vega`,
+        description: category.description,
+    }
+}
+
 function transformRefaccionToProduct(refaccion: Refaccion, categoryKey: string): Product {
     return {
         id: String(refaccion.id),
