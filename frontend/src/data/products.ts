@@ -4,6 +4,7 @@ export type Brand = "Azteca" | "Oster" | "Recco" | "IndustrialPro" | "VegaTech"
 export interface Product {
   id: string
   slug: string
+  discount?: number | null
   name: string
   price: number
   brand: Brand
