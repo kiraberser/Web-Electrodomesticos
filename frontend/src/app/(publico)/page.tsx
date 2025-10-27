@@ -7,9 +7,14 @@ import Features from '@/components/features/home/Features';
 import Brands from '@/components/product/Brands';
 import { Reviews } from '@/components/features/reviews/Reviews';
 
+export const metadata = {
+  title: 'Refaccionaria Vega - Electrodomésticos y Refacciones',
+  description: 'Encuentra las mejores refacciones y electrodomésticos para tu hogar. Calidad garantizada y envíos a toda la república mexicana.',
+};
+
 const HomePage = () => {
   return (
-    <div >
+    <div>
       <HeroSection />
       <Categories />
       <Carousel />
