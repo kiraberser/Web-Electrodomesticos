@@ -160,13 +160,14 @@ REST_FRAMEWORK = {
     ],
     'SEARCH_PARAM': 'search',
     'ORDERING_PARAM': 'ordering',
-    'DEFAULT_THROTTLE_CLASSES': [
+    # Desactivar throttling en desarrollo para permitir testing con Lighthouse
+    'DEFAULT_THROTTLE_CLASSES': [] if DEBUG else [
         'rest_framework.throttling.UserRateThrottle',
         'rest_framework.throttling.AnonRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'user': '100/hour',  # Usuarios autenticados: 100 peticiones por hora
-        'anon': '20/hour',   # Usuarios no autenticados: 20 peticiones por hora
+        'user': '1000/hour',  # Usuarios autenticados: 1000 peticiones por hora
+        'anon': '500/hour',   # Usuarios no autenticados: 500 peticiones por hora
     }
 }
 SIMPLE_JWT = {
