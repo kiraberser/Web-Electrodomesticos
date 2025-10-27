@@ -1,12 +1,13 @@
 'use client'
 
+import Image from 'next/image';
 import { Button } from '@/components/ui/forms/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/display/Card';
 import { Badge } from '@/components/ui/feedback/Badge';
 import { Input } from '@/components/ui/forms/InputField';
-import { Calendar, User, Clock, Search, ArrowRight, Eye, MessageSquare, Share2 } from 'lucide-react';
+import { Calendar, User, Search, ArrowRight, Eye, MessageSquare } from 'lucide-react';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {blogPosts} from '@/data/blog';
 import { categories } from '@/data/category';
 
@@ -17,9 +18,9 @@ const BlogPage = () => {
     const postsPerPage = 6;
 
 
-    const featuredPosts = blogPosts.filter(post => post.featured);
+    const featuredPosts = useMemo(() => blogPosts.filter(post => post.featured), []);
 
-    const filteredPosts = blogPosts.filter(post => {
+    const filteredPosts = useMemo(() => blogPosts.filter(post => {
         const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -27,11 +28,11 @@ const BlogPage = () => {
         const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
 
         return matchesSearch && matchesCategory;
-    });
+    }), [searchTerm, selectedCategory]);
 
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+    const currentPosts = useMemo(() => filteredPosts.slice(indexOfFirstPost, indexOfLastPost), [filteredPosts, indexOfFirstPost, indexOfLastPost]);
     const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
     const formatDate = (dateString) => {
@@ -44,12 +45,14 @@ const BlogPage = () => {
 
     const BlogCard = ({ post, featured = false }) => (
         <Card className={`group hover:shadow-lg transition-all duration-300 ${featured ? 'md:col-span-2' : ''}`}>
-            <div className="relative overflow-hidden">
-                <img
+            <div className={`relative overflow-hidden ${featured ? 'h-64' : 'h-48'}`}>
+                <Image
                     src={post.image}
                     alt={post.title}
-                    className={`w-full object-cover group-hover:scale-105 transition-transform duration-300 ${featured ? 'h-64' : 'h-48'
-                        }`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
                 />
                 <div className="absolute top-4 left-4">
                     <Badge className="bg-blue-600 text-white">
@@ -170,16 +173,21 @@ const BlogPage = () => {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-4">
-                                        {blogPosts
+                                        {useMemo(() => blogPosts
                                             .sort((a, b) => b.views - a.views)
-                                            .slice(0, 3)
+                                            .slice(0, 3), [])
                                             .map((post) => (
                                                 <div key={post.id} className="flex space-x-3 group cursor-pointer">
-                                                    <img
-                                                        src={post.image}
-                                                        alt={post.title}
-                                                        className="w-16 h-16 object-cover rounded-md"
-                                                    />
+                                                    <div className="relative w-16 h-16 flex-shrink-0">
+                                                        <Image
+                                                            src={post.image}
+                                                            alt={post.title}
+                                                            fill
+                                                            sizes="64px"
+                                                            className="object-cover rounded-md"
+                                                            loading="lazy"
+                                                        />
+                                                    </div>
                                                     <div className="flex-1">
                                                         <h4 className="font-medium text-sm group-hover:text-blue-600 transition-colors line-clamp-2">
                                                             {post.title}
