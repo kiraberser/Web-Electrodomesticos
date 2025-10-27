@@ -25,14 +25,16 @@ export const Carousel = () => {
     <div className="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl shadow-md bg-[#D4EBF8] m-10 ">
       {/* Slides */}
       <div className="bg-[#D4EBF8] flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${current * 100}%)` }}>
-        {slides.map((slide) => (
+        {slides.map((slide, index) => (
           <div key={slide.id} className="min-w-full h-[300px] md:h-[450px] relative">
             <Image
               src={slide.image}
               alt={slide.title}
               fill
+              sizes="100vw"
               className="object-cover object-center"
-              priority
+              priority={index === 0}
+              loading={index === 0 ? "eager" : "lazy"}
             />
             <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white text-center px-4">
               <h2 className="text-2xl md:text-4xl font-bold">{slide.title}</h2>

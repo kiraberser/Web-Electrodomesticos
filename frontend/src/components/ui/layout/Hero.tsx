@@ -101,6 +101,7 @@ const Hero = () => {
                 src={ElectrodomesticosHero}
                 alt="Electrodomésticos de calidad"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+                priority={true}
               />
               {/* Floating elements */}
               <div className="absolute -top-4 -right-4 bg-orange-500 text-white p-4 rounded-lg shadow-lg">

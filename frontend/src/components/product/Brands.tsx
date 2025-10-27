@@ -20,18 +20,16 @@ const Brands = () => {
                     {brands.map((brand, index) => (
                         <div
                             key={index}
-                            className="relative group hover:scale-110 transition-transform duration-300 cursor-pointer"
+                            className="relative h-24 bg-white rounded-lg p-6 flex items-center justify-center group hover:scale-110 transition-transform duration-300 cursor-pointer"
                         >
-                            <div className="bg-white rounded-lg p-6 h-24 flex justify-center hover:bg-white transition-colors">
-                                <Image
-                                    src={brand.logo}
-                                    alt={brand.name}
-                                    fill
-                                    quality={100}
-                                    style={{objectFit: 'contain'}}
-                                    className=" group-hover:grayscale-0 transition-all duration-300"
-                                />
-                            </div>
+                            <Image
+                                src={brand.logo}
+                                alt={brand.name}
+                                fill
+                                sizes="(max-width: 768px) 33vw, 16vw"
+                                loading="lazy"
+                                className="object-contain group-hover:grayscale-0 transition-all duration-300"
+                            />
                         </div>
                     ))}
                 </div>
