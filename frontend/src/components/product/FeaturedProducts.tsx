@@ -1,13 +1,14 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import toast from 'react-hot-toast';
 import { Button } from '../ui/forms/Button';
 import { Card, CardContent } from '../ui/display/Card';
 import { Badge } from '../ui';
 import { Star, ShoppingCart, Heart, Loader2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { Toast as toast } from '../ui/feedback/Toasts';
 
 import { products } from '@/data/products';
 
@@ -17,13 +18,15 @@ const FeaturedProducts = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { addItem } = useCart();
 
-
-
-    const handleAddToCart = (product) => {
+    const handleAddToCart = (product: any) => {
         addItem(product);
-        toast({
-            title: "Producto agregado",
-            description: `${product.name} ha sido agregado al carrito`,
+        toast.success(`${product.name} agregado al carrito`, {
+            duration: 3000,
+            icon: '🛒',
+            style: {
+                background: '#10b981',
+                color: '#fff',
+            },
         });
     };
 
@@ -107,15 +110,18 @@ const FeaturedProducts = () => {
                         {getVisibleProducts().map((product) => (
                             <Card key={product.id} className="group hover:shadow-lg transition-shadow duration-300">
                                 <CardContent className="p-0">
-                                    <div className="relative overflow-hidden">
-                                        <img
-                                            src={product.image}
+                                    <div className="relative h-48 overflow-hidden">
+                                        <Image
+                                            src={product.image || "/placeholder.svg"}
                                             alt={product.name}
-                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                            loading="lazy"
                                         />
                                         <div className="absolute top-4 left-4">
                                             <Badge className="bg-orange-500 text-white">
-                                                {product.discount}
+                                                {product.discount || 0}%
                                             </Badge>
                                         </div>
                                         <div className="absolute top-4 right-4">

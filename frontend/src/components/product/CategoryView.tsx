@@ -1,10 +1,15 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { Product, Brand, ProductType } from "@/data/products"
 import Filters from "@/components/ui/product/filter"
-import { Sparkles, PackageSearch } from 'lucide-react'
-import ProductCard from "./ProductCard"
+import { PackageSearch } from 'lucide-react'
+import dynamic from "next/dynamic"
+
+// Lazy load ProductCard para reducir el bundle inicial
+const ProductCard = dynamic(() => import("./ProductCard"), {
+    loading: () => <div className="h-[400px] animate-pulse bg-gray-200 rounded-xl" />,
+})
 
 interface Props {
     categoryKey: string
@@ -21,6 +26,8 @@ export default function CategoryView({
         min: 0,
         max: 50000, // Aumentado para productos de alto precio
     })
+    const [currentPage, setCurrentPage] = useState(1)
+    const productsPerPage = 12
 
     // Memoizar marcas únicas de los productos
     const availableBrands = useMemo(() => {
@@ -42,6 +49,19 @@ export default function CategoryView({
             return brandOk && typeOk && priceOk
         })
     }, [products, filters])
+
+    // Paginar productos
+    const paginatedProducts = useMemo(() => {
+        const startIndex = (currentPage - 1) * productsPerPage
+        return filtered.slice(startIndex, startIndex + productsPerPage)
+    }, [filtered, currentPage])
+
+    const totalPages = Math.ceil(filtered.length / productsPerPage)
+
+    // Resetear a página 1 cuando cambien los filtros
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [filters.brands, filters.types, filters.min, filters.max])
 
     return (
         <div className="bg-gray-50">
@@ -66,11 +86,63 @@ export default function CategoryView({
                             <p className="text-xs text-gray-500">Intenta ajustarlos o limpiar todos.</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-4">
-                            {filtered.map((p) => (
-                                <ProductCard key={p.id} product={p} />
-                            ))}
-                        </div>
+                        <>
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-4">
+                                {paginatedProducts.map((p) => (
+                                    <ProductCard key={p.id} product={p} />
+                                ))}
+                            </div>
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <div className="mt-8 flex justify-center items-center gap-2">
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPage === 1}
+                                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Anterior
+                                    </button>
+                                    
+                                    {[...Array(totalPages)].slice(0, 5).map((_, index) => {
+                                        const page = index + 1
+                                        return (
+                                            <button
+                                                key={page}
+                                                onClick={() => setCurrentPage(page)}
+                                                className={`w-10 h-10 text-sm font-medium rounded-md ${
+                                                    currentPage === page
+                                                        ? 'bg-blue-600 text-white'
+                                                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                                }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        )
+                                    })}
+                                    
+                                    {totalPages > 5 && (
+                                        <>
+                                            <span className="text-gray-500">...</span>
+                                            <button
+                                                onClick={() => setCurrentPage(totalPages)}
+                                                className="w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                                            >
+                                                {totalPages}
+                                            </button>
+                                        </>
+                                    )}
+                                    
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                        disabled={currentPage === totalPages}
+                                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Siguiente
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </section>
