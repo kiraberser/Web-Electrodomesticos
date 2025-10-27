@@ -1,0 +1,50 @@
+# robots.txt para ecommerce-vega
+
+# Permitir todo para los bots principales
+User-agent: *
+Allow: /
+
+# Bloquear el panel de administración
+Disallow: /admin
+Disallow: /admin/*
+
+# Bloquear rutas privadas del cliente
+Disallow: /cuenta
+Disallow: /cuenta/*
+Disallow: /cart
+Disallow: /orders
+
+# Bloquear API routes (si existen)
+Disallow: /api/
+
+# Permitir acceso a imágenes
+Allow: /images/*
+
+# Permitir todas las páginas públicas
+Allow: /categorias
+Allow: /blog
+Allow: /about-us
+Allow: /faq
+Allow: /special-offers
+Allow: /privacy-policy
+Allow: /shipping-returns
+Allow: /terms-conditions
+Allow: /contacto
+
+# Configuración para bots específicos
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Bloquear bad bots comunes
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Sitemap location
+Sitemap: http://localhost:3000/sitemap.xml
+
