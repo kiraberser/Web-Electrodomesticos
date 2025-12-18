@@ -44,18 +44,16 @@ def registrar_entrada_inicial_refaccion(refaccion: Refaccion, cantidad_inicial: 
 
 
 def registrar_salida_por_compra(refaccion: Refaccion, cantidad: int, precio_unitario=None) -> Inventario:
-    """Registra una SALIDA de inventario por compra segura con validación de stock.
-
-    Devuelve el movimiento creado.
-    """
+    """Registra una SALIDA de inventario por compra segura con validación de stock."""
+    
     if not cantidad or cantidad <= 0:
         raise ValueError("La cantidad debe ser mayor a cero.")
 
     with transaction.atomic():
-        # Bloqueo pesimista para evitar sobreventa
+        # 1. Bloqueo pesimista (Esto está perfecto en tu código original)
         ref = Refaccion.objects.select_for_update().get(pk=refaccion.pk)
-        # El modelo Inventario.clean validará stock insuficiente
-        # Resolver marca
+        
+        # Resolver marca (Tu lógica original)
         marca_obj = None
         try:
             if isinstance(ref.marca, str):
@@ -65,7 +63,8 @@ def registrar_salida_por_compra(refaccion: Refaccion, cantidad: int, precio_unit
         except Exception:
             marca_obj = None
 
-        movimiento = Inventario.objects.create(
+        # 2. Instanciar el objeto SIN guardarlo todavía
+        movimiento = Inventario(
             refaccion=ref,
             cantidad=cantidad,
             precio_unitario=precio_unitario if precio_unitario is not None else ref.precio,
@@ -73,11 +72,25 @@ def registrar_salida_por_compra(refaccion: Refaccion, cantidad: int, precio_unit
             categoria=ref.categoria,
             tipo_movimiento=Inventario.TipoMovimientoChoices.SALIDA,
         )
+
+        # 3. ### CORRECCIÓN CRÍTICA ###
+        # Forzamos la validación. Esto ejecutará tu método .clean() del modelo Inventario
+        # Si no hay stock, esto lanzará ValidationError
+        try:
+            movimiento.full_clean() 
+        except Exception as e:
+            # Capturamos el error de validación y lo convertimos a ValueError para que suba limpio
+            raise ValueError(f"Error de validación de inventario (Stock insuficiente?): {e}")
+
+        # 4. Si pasa la validación, guardamos
+        movimiento.save()
+
         # Refrescar existencias en memoria
         try:
             ref.refresh_from_db(fields=['existencias'])
         except Exception:
             pass
+            
         return movimiento
 
 
