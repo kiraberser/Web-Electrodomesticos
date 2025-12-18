@@ -3,10 +3,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 
 from apps.productos.models import Refaccion
-from apps.inventario.services import registrar_salida_por_compra
-from apps.inventario.serializer import InventarioSerializer
 from .models import Pedido, PedidoItem
-from apps.ventas.models import Ventas
 
 
 class CheckoutItemSerializer(serializers.Serializer):
@@ -18,53 +15,64 @@ class CheckoutSerializer(serializers.Serializer):
     items = CheckoutItemSerializer(many=True)
 
     def create(self, validated_data):
+        """
+        Crea un pedido en estado CREADO sin procesar inventario.
+        El inventario se procesará cuando el pago sea aprobado.
+        """
         request = self.context.get('request')
         user = getattr(request, 'user', None)
         if not user or not user.is_authenticated:
             raise serializers.ValidationError({'detail': 'Autenticación requerida para checkout'})
 
-        movimientos = []
         with transaction.atomic():
-            pedido = Pedido.objects.create(usuario=user, estado=Pedido.EstadoChoices.PAGADO, total=0)
+            # Crear pedido en estado CREADO (no procesar inventario aún)
+            pedido = Pedido.objects.create(usuario=user, estado=Pedido.EstadoChoices.CREADO, total=0)
             total = 0
 
             for item in validated_data['items']:
                 try:
-                    movimiento = registrar_salida_por_compra(
+                    # Obtener precio desde el inventario sin procesar salida
+                    from apps.inventario.models import Inventario
+                    inventario = Inventario.objects.filter(
                         refaccion=item['refaccion'],
-                        cantidad=item['cantidad'],
-                    )
-                    movimientos.append(movimiento)
-                    subtotal = movimiento.cantidad * movimiento.precio_unitario
-                    # Guardar item del pedido
+                        cantidad__gt=0
+                    ).order_by('fecha').first()
+                    
+                    if not inventario:
+                        raise serializers.ValidationError({
+                            'detail': f'No hay stock disponible para {item["refaccion"].nombre}'
+                        })
+                    
+                    if inventario.cantidad < item['cantidad']:
+                        raise serializers.ValidationError({
+                            'detail': f'Stock insuficiente para {item["refaccion"].nombre}. Disponible: {inventario.cantidad}'
+                        })
+                    
+                    precio_unitario = inventario.precio_unitario
+                    subtotal = item['cantidad'] * precio_unitario
+                    
+                    # Guardar item del pedido (sin procesar inventario aún)
                     PedidoItem.objects.create(
                         pedido=pedido,
                         refaccion=item['refaccion'],
                         cantidad=item['cantidad'],
-                        precio_unitario=movimiento.precio_unitario,
+                        precio_unitario=precio_unitario,
                         subtotal=subtotal,
-                    )
-                    # Registrar venta
-                    Ventas.objects.create(
-                        usuario=user,
-                        marca=movimiento.marca,
-                        refaccion=item['refaccion'],
-                        cantidad=movimiento.cantidad,
-                        precio_unitario=movimiento.precio_unitario,
-                        total=subtotal,
                     )
                     total += subtotal
                 except DjangoValidationError as e:
                     raise serializers.ValidationError(e.message_dict if hasattr(e, 'message_dict') else {'detail': e.messages})
                 except ValueError as e:
                     raise serializers.ValidationError({'detail': str(e)})
+            
             pedido.total = total
             pedido.save(update_fields=['total'])
+        
         # Representación de respuesta
         return {
             'pedido_id': pedido.id,
             'total': str(pedido.total),
-            'movimientos': InventarioSerializer(movimientos, many=True).data,
+            'estado': pedido.estado,
         }
 
 
