@@ -6,6 +6,8 @@ import { Badge } from "../ui"
 import { Zap, Shield } from "@/components/icons"
 import Link from "next/link"
 import type { Product } from "@/data/products"
+import { useCart } from '@/context/CartContext';
+import toast from 'react-hot-toast';
 
 const ShoppingCartIcon = () => (
     <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -21,6 +23,19 @@ interface Props {
 export default function ProductCard({
     product
 }: Props) {
+    const { addItem } = useCart();
+
+    const handleAddToCart = (product: any) => {
+        addItem(product);
+        toast.success(`${product.name} agregado al carrito`, {
+            duration: 3000,
+            icon: '🛒',
+            style: {
+                background: '#10b981',
+                color: '#fff',
+            },
+        });
+    };
 
     return (
         <div className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
@@ -70,7 +85,7 @@ export default function ProductCard({
                 </div>
 
                 <Button
-                    onClick={() => {}}
+                    onClick={() => handleAddToCart(product)}
                     disabled={!product?.inStock}
                     className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                 >

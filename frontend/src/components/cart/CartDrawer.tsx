@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Plus, Minus, ShoppingCart, Trash2 } from 'lucide-react';
 import { Button } from '../ui/forms/Button';
 import { useCart } from '@/context/CartContext';
+import CheckoutButton from '../checkout/CheckoutButton';
 
 const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
     const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCart();
@@ -116,43 +117,42 @@ const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                             </div>
 
                             {/* Footer */}
-                            <div className="border-t p-4">
+                            <div className="border-t p-4 bg-white">
                                 <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-lg font-semibold text-gray-900">
-                                            Total:
-                                        </span>
+                                    {/* Total */}
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="text-lg font-semibold text-gray-900">Total estimado:</span>
                                         <span className="text-2xl font-bold text-gray-900">
                                             {formatPrice(getTotalPrice())}
                                         </span>
                                     </div>
-
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <Button
-                                            variant="outline"
+                                                            
+                                    {/* 1. ACCIÓN PRINCIPAL: Checkout (Ancho completo) */}
+                                    <div className="w-full">
+                                         <CheckoutButton />
+                                    </div>
+                                                            
+                                    {/* 2. ACCIONES SECUNDARIAS (En una fila inferior o apiladas sutilmente) */}
+                                    <div className="flex justify-between items-center pt-2">
+                                         <Button
+                                            variant="ghost"
+                                            size="sm"
                                             onClick={clearCart}
-                                            className="w-full"
+                                            className="text-red-500 hover:text-red-700 hover:bg-red-50 text-xs px-2"
                                         >
+                                            <Trash2 className="w-3 h-3 mr-1" />
                                             Vaciar carrito
                                         </Button>
+                                                            
                                         <Button
-                                            className="w-full bg-orange-500 hover:bg-orange-600"
-                                            onClick={() => {
-                                                // TODO: Implement checkout logic
-                                                alert('Funcionalidad de checkout próximamente');
-                                            }}
+                                            variant="link"
+                                            size="sm"
+                                            className="text-gray-500 text-xs"
+                                            onClick={onClose}
                                         >
-                                            Proceder al pago
+                                            Seguir comprando
                                         </Button>
                                     </div>
-
-                                    <Button
-                                        variant="ghost"
-                                        className="w-full"
-                                        onClick={onClose}
-                                    >
-                                        Continuar comprando
-                                    </Button>
                                 </div>
                             </div>
                         </>
