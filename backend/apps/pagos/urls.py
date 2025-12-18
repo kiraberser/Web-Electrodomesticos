@@ -6,7 +6,7 @@ from . import views
 app_name = 'pagos'
 
 urlpatterns = [
-    # path('', views.payment_methods, name='payment_methods'),  # Métodos de pago disponibles
-    # path('process/', views.process_payment, name='process_payment'),  # Procesar un pago
-    # path('status/', views.payment_status, name='payment_status'),  # Ver el estado de un pago
+    path('crear-preferencia/', views.CrearPreferenciaPagoView.as_view(), name='crear_preferencia'),
+    path('webhook/', views.WebhookView.as_view(), name='webhook'),
+    path('<int:pago_id>/', views.ConsultarPagoView.as_view(), name='consultar_pago'),
 ]

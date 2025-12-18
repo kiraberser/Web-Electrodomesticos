@@ -15,7 +15,7 @@ class Pedido(models.Model):
 
     id = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='pedidos')
-    estado = models.CharField(max_length=3, choices=EstadoChoices.choices, default=EstadoChoices.PAGADO)
+    estado = models.CharField(max_length=3, choices=EstadoChoices.choices, default=EstadoChoices.CREADO)
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -36,5 +36,3 @@ class PedidoItem(models.Model):
 
     def __str__(self):
         return f"Item {self.refaccion} x{self.cantidad}"
-
-# Create your models here.

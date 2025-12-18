@@ -35,7 +35,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
-    '127.0.0.1'
+    '127.0.0.1',
+    '.ngrok-free.app'
 ]
 
 # Application definition
@@ -136,7 +137,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -177,19 +177,51 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'SIGNING_KEY': env('JWT_SECRET'),
 }
+import os
 
+# ... (otras configuraciones)
+
+# Define si estás en producción basándote en el modo DEBUG o una variable de entorno
+IS_PRODUCTION = not os.getenv('DEBUG', 'True') == 'True'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # o el puerto donde corre tu frontend
-
+    "http://localhost:3000",
+    # Agrega aquí tu dominio de producción cuando lo tengas
+    # "https://mi-tienda-refacciones.com", 
 ]
 
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SAMESITE = 'NONE'
-CSRF_COOKIE_SECURE = True
+# --------------------------------------------------------
+# AJUSTE DINÁMICO DE COOKIES
+# --------------------------------------------------------
+if DEBUG == False:
+    # Configuración estricta para Producción (HTTPS)
+    CORS_ALLOW_CREDENTIALS = True
+    CSRF_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+else:
+    # Configuración relajada para Desarrollo (HTTP / Ngrok)
+    CORS_ALLOW_CREDENTIALS = True
+    
+    # IMPORTANTE: En local 'Lax' suele dar menos problemas que 'None' si no hay HTTPS
+    CSRF_COOKIE_SAMESITE = 'Lax'  
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    
+    # Desactivamos el requerimiento de HTTPS para que funcione en localhost
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
 
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'None'
+# --------------------------------------------------------
+# PARA QUE FUNCIONE NGROK (CRUCIAL)
+# --------------------------------------------------------
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    # Esto permite que Ngrok funcione sin error de CSRF Origin
+    "https://*.ngrok-free.app", 
+    "https://*.ngrok.io",
+]
 
 CORS_ALLOW_ALL_ORIGINS = False
 
@@ -201,7 +233,6 @@ CORS_ALLOW_HEADERS = (
     "x-csrftoken",
     "x-requested-with",
 )
-
 LANGUAGE_CODE = 'es-mx'
 TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
