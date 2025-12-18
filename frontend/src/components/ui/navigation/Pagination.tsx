@@ -51,7 +51,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
             <div className={`flex items-center space-x-2 text-sm ${dark ? "text-gray-300" : "text-gray-700"}`}>
                 {typeof count === 'number' && (
                     <span>
-                        Mostrando {(currentPage - 1) * pageSize + 1} a {Math.min(currentPage * pageSize, count)} de {count} servicios
+                        Mostrando {(currentPage - 1) * pageSize + 1} a {Math.min(currentPage * pageSize, count)} de {count} resultado{count !== 1 ? 's' : ''}
                     </span>
                 )}
             </div>
