@@ -86,9 +86,18 @@ class PedidoItemListSerializer(serializers.ModelSerializer):
 
 class PedidoListSerializer(serializers.ModelSerializer):
     items = PedidoItemListSerializer(many=True, read_only=True)
+    usuario_nombre = serializers.SerializerMethodField()
+    usuario_email = serializers.ReadOnlyField(source='usuario.email')
 
     class Meta:
         model = Pedido
-        fields = ['id', 'estado', 'total', 'fecha_creacion', 'items']
+        fields = ['id', 'estado', 'total', 'fecha_creacion', 'items', 'usuario_nombre', 'usuario_email']
+
+    def get_usuario_nombre(self, obj):
+        """Retorna el nombre completo del usuario o username si no tiene nombre"""
+        if obj.usuario.first_name or obj.usuario.last_name:
+            nombre_completo = f"{obj.usuario.first_name or ''} {obj.usuario.last_name or ''}".strip()
+            return nombre_completo if nombre_completo else obj.usuario.username
+        return obj.usuario.username
 
 
