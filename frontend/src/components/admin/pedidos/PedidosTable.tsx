@@ -69,6 +69,7 @@ export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosT
                             <th className="px-6 py-3">ID</th>
                             <th className="px-6 py-3">Cliente</th>
                             <th className="px-6 py-3">Estado</th>
+                            <th className="px-6 py-3">Método de Pago</th>
                             <th className="px-6 py-3">Items</th>
                             <th className="px-6 py-3">Total</th>
                             <th className="px-6 py-3">Fecha</th>
@@ -93,6 +94,11 @@ export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosT
                                     </Badge>
                                 </td>
                                 <td className={dark ? 'px-6 py-3 text-slate-400' : 'px-6 py-3 text-gray-700'}>
+                                    <div className="text-sm">
+                                        {pedido.metodo_pago || 'No especificado'}
+                                    </div>
+                                </td>
+                                <td className={dark ? 'px-6 py-3 text-slate-400' : 'px-6 py-3 text-gray-700'}>
                                     <div>
                                         <div className="font-medium">{pedido.items.length} producto{pedido.items.length !== 1 ? 's' : ''}</div>
                                         <div className="text-xs text-gray-500">
@@ -115,7 +121,7 @@ export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosT
                                             onClick={() => onView(pedido)}
                                             className={`bg-transparent cursor-pointer ${dark ? 'text-slate-400 hover:text-slate-200' : 'text-gray-600 hover:text-gray-800'}`}
                                         >
-                                            <Eye className="h-4 w-4 ${dark ? 'text-slate-400' : 'text-gray-600'}" />
+                                            <Eye className={`h-4 w-4 ${dark ? 'text-slate-400' : 'text-gray-600'}`} />
                                         </Button>
                                     </div>
                                 </td>
@@ -143,6 +149,10 @@ export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosT
                             <div>
                                 <div className="font-medium">{pedido.usuario_nombre}</div>
                                 <div className="text-xs text-gray-500">{pedido.usuario_email}</div>
+                            </div>
+                            <div>
+                                <span className="font-medium">Método de pago: </span>
+                                {pedido.metodo_pago || 'No especificado'}
                             </div>
                             <div>{pedido.items.length} producto{pedido.items.length !== 1 ? 's' : ''}</div>
                             <div className={`font-semibold text-lg ${dark ? 'text-slate-200' : 'text-gray-900'}`}>

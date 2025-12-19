@@ -88,10 +88,11 @@ class PedidoListSerializer(serializers.ModelSerializer):
     items = PedidoItemListSerializer(many=True, read_only=True)
     usuario_nombre = serializers.SerializerMethodField()
     usuario_email = serializers.ReadOnlyField(source='usuario.email')
+    metodo_pago = serializers.SerializerMethodField()
 
     class Meta:
         model = Pedido
-        fields = ['id', 'estado', 'total', 'fecha_creacion', 'items', 'usuario_nombre', 'usuario_email']
+        fields = ['id', 'estado', 'total', 'fecha_creacion', 'items', 'usuario_nombre', 'usuario_email', 'metodo_pago']
 
     def get_usuario_nombre(self, obj):
         """Retorna el nombre completo del usuario o username si no tiene nombre"""
@@ -99,5 +100,56 @@ class PedidoListSerializer(serializers.ModelSerializer):
             nombre_completo = f"{obj.usuario.first_name or ''} {obj.usuario.last_name or ''}".strip()
             return nombre_completo if nombre_completo else obj.usuario.username
         return obj.usuario.username
+
+    def get_metodo_pago(self, obj):
+        """Retorna el método de pago formateado desde la relación con Pago"""
+        try:
+            pago = obj.pago
+            if not pago:
+                return 'No especificado'
+            
+            # Mapeo de payment_type_id (tipo principal de pago)
+            tipo_map = {
+                'credit_card': 'Tarjeta de crédito',
+                'debit_card': 'Tarjeta de débito',
+                'ticket': 'Efectivo',
+                'bank_transfer': 'Transferencia bancaria',
+                'account_money': 'Dinero en cuenta',
+                'atm': 'Cajero automático',
+            }
+            
+            # Mapeo de payment_method_id (método específico)
+            metodo_map = {
+                'visa': 'Visa',
+                'master': 'Mastercard',
+                'amex': 'American Express',
+                'oxxo': 'OXXO',
+                'spei': 'SPEI',
+                'account_money': 'Dinero en cuenta',
+                'ticket': 'Efectivo',
+                'bank_transfer': 'Transferencia bancaria',
+                'atm': 'Cajero automático',
+            }
+            
+            # Priorizar payment_type_id si existe
+            if pago.payment_type_id:
+                tipo = tipo_map.get(pago.payment_type_id.lower(), pago.payment_type_id.title())
+                
+                # Si también hay payment_method_id, agregarlo como detalle
+                if pago.payment_method_id and pago.payment_method_id.lower() not in ['credit_card', 'debit_card', 'ticket']:
+                    metodo = metodo_map.get(pago.payment_method_id.lower(), pago.payment_method_id.title())
+                    # Solo agregar si es diferente y aporta información
+                    if metodo.lower() != tipo.lower() and metodo.lower() not in ['tarjeta de crédito', 'tarjeta de débito']:
+                        return f"{tipo} - {metodo}"
+                
+                return tipo
+            
+            # Si solo hay payment_method_id
+            if pago.payment_method_id:
+                return metodo_map.get(pago.payment_method_id.lower(), pago.payment_method_id.title())
+            
+            return 'No especificado'
+        except Exception:
+            return 'No especificado'
 
 
