@@ -44,8 +44,10 @@ export default function RefaccionesTable({ refacciones, onEdit, onView, onDataCh
         try {
             await deleteRefaccion(id)
             onDataChange()
-        } catch (err) {
-            alert("Error al eliminar la refacción.")
+        } catch (err: any) {
+            // Mostrar mensaje de error específico del backend
+            const errorMessage = err?.response?.data?.detail || err?.response?.data?.error || "Error al eliminar la refacción."
+            alert(errorMessage)
         } finally {
             setDeleting(null)
         }

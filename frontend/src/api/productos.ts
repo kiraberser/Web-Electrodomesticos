@@ -272,10 +272,19 @@ export const updateRefaccion = async (id: number, refaccionData: Refaccion) => {
 
 export const deleteRefaccion = async (id: number) => {
     const headers = await getAuthHeaders()
-    const response = await axios.delete(`${URL}/productos/refacciones/${id}/`, { headers })
-    
-    if (response.status !== 204) {
-        throw new Error('Failed to delete refaccion')
+    try {
+        const response = await axios.delete(`${URL}/productos/refacciones/${id}/`, { headers })
+        
+        if (response.status !== 204) {
+            throw new Error('Failed to delete refaccion')
+        }
+    } catch (error: any) {
+        // Si es un error 400 con mensaje del backend, propagarlo
+        if (error.response && error.response.status === 400 && error.response.data) {
+            throw error
+        }
+        // Para otros errores, lanzar error genérico
+        throw new Error('Error al eliminar la refacción')
     }
 }
 
