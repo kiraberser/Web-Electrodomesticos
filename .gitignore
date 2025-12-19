@@ -49,3 +49,6 @@ __pycache__/
 
 # Entorno virtual de Python
 backend/venv/
+
+backend/deploy/
+
