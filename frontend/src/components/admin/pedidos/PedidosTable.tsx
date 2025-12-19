@@ -113,9 +113,9 @@ export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosT
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => onView(pedido)}
-                                            className="bg-transparent cursor-pointer"
+                                            className={`bg-transparent cursor-pointer ${dark ? 'text-slate-400 hover:text-slate-200' : 'text-gray-600 hover:text-gray-800'}`}
                                         >
-                                            <Eye className="h-4 w-4" />
+                                            <Eye className="h-4 w-4 ${dark ? 'text-slate-400' : 'text-gray-600'}" />
                                         </Button>
                                     </div>
                                 </td>
@@ -130,8 +130,7 @@ export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosT
                 {pedidos.map((pedido) => (
                     <div
                         key={pedido.id}
-                        className={`rounded-lg border p-4 shadow-sm ${dark ? 'border-slate-800 bg-slate-800/50' : 'border-gray-200'}`}
-                    >
+                        className={`rounded-lg border p-4 shadow-sm ${dark ? 'border-slate-800 bg-slate-800/50' : 'border-gray-200'}`}               >
                         <div className="mb-2 flex items-center justify-between">
                             <div className={`text-sm font-mono font-semibold ${dark ? 'text-slate-200' : 'text-gray-900'}`}>
                                 #{pedido.id}
@@ -156,9 +155,9 @@ export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosT
                                 variant="outline"
                                 size="sm"
                                 onClick={() => onView(pedido)}
-                                className="w-full bg-transparent cursor-pointer"
+                                className={`w-full bg-transparent cursor-pointer ${dark ? 'text-slate-400 hover:text-slate-200' : 'text-gray-600 hover:text-gray-800'}`}
                             >
-                                <Eye className="mr-2 h-4 w-4" />
+                                <Eye className={`mr-2 h-4 w-4 ${dark ? 'text-slate-400' : 'text-gray-600'}`} />
                                 Ver detalles
                             </Button>
                         </div>

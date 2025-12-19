@@ -63,7 +63,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                             variant="ghost"
                             size="sm"
                             disabled={currentPage === 1}
-                            className={`disabled:opacity-50 ${dark ? "text-gray-300" : ""}`}
+                            className={`disabled:opacity-50 ${dark ? "text-gray-300" : "text-gray-700"}`}
                         >
                             <ChevronLeft className="w-4 h-4" />
                             Anterior
@@ -75,7 +75,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                         size="sm"
                         onClick={goToPreviousPage}
                         disabled={currentPage === 1}
-                        className={`disabled:opacity-50 disabled:cursor-not-allowed ${dark ? "text-gray-300" : ""}`}
+                        className={`disabled:opacity-50 disabled:cursor-not-allowed ${dark ? "text-gray-300" : "text-gray-700"}`}
                     >
                         <ChevronLeft className="w-4 h-4" />
                         Anterior
@@ -99,7 +99,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                             variant={currentPage === page ? "default" : "ghost"}
                             size="sm"
                             onClick={() => goToPage(page)}
-                            className={`cursor-pointer min-w-[40px] ${dark ? "text-gray-300" : ""}`}
+                            className={`cursor-pointer min-w-[40px] ${dark ? "text-gray-300" : "text-gray-700"}`}
                         >
                             {page}
                         </Button>
@@ -112,7 +112,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                             variant="ghost"
                             size="sm"
                             disabled={currentPage === totalPages}
-                            className={`disabled:opacity-50 cursor-pointer ${dark ? "text-gray-300" : ""}`}
+                            className={`disabled:opacity-50 cursor-pointer ${dark ? "text-gray-300" : "text-gray-700"}`}
                         >
                             Siguiente
                             <ChevronRight className="w-4 h-4" />
@@ -124,7 +124,7 @@ export default function Pagination({ currentPage, totalPages, count, pageSize = 
                         size="sm"
                         onClick={goToNextPage}
                         disabled={currentPage === totalPages}
-                        className={`cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${dark ? "text-gray-300" : ""}`}
+                        className={`cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${dark ? "text-gray-300" : "text-gray-700"}`}
                     >
                         Siguiente
                         <ChevronRight className="w-4 h-4" />
