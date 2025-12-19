@@ -6,6 +6,7 @@ import { X, Plus, Calendar, Package, User, Phone, FileText, CheckCircle2 } from 
 import { Button, Input } from "@/components/ui/forms";
 import { createService } from "@/actions/services";
 import { useToast } from "@/hook/use-toast";
+import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 
 import Link from "next/link";
 
@@ -46,6 +47,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
     const { toast } = useToast();
     const [showSuccess, setShowSuccess] = useState(false);
     const lastServiceIdRef = useRef<string | null>(null);
+    const { dark } = useAdminTheme();
 
     const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
         // No prevenir el submit; solo capturamos el ID para el CTA
@@ -76,26 +78,26 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-screen items-center justify-center p-4">
                 {/* Backdrop */}
-                <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onCloseAction}></div>
+                <div className={`fixed inset-0 transition-opacity ${dark ? 'bg-black/70' : 'bg-black/50'}`} onClick={onCloseAction}></div>
 
                 {/* Modal */}
-                <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 transform transition-all">
+                <div className={`relative rounded-lg shadow-xl max-w-2xl w-full mx-4 transform transition-all ${dark ? 'bg-[#0F172A] border border-white/10' : 'bg-white border border-gray-200'}`}>
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                    <div className={`flex items-center justify-between p-6 border-b ${dark ? 'border-white/10' : 'border-gray-200'}`}>
                         <div className="flex items-center space-x-3">
-                            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                <Plus className="w-5 h-5 text-blue-600" />
+                            <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${dark ? 'bg-blue-500/20' : 'bg-blue-100'}`}>
+                                <Plus className={`w-5 h-5 ${dark ? 'text-blue-400' : 'text-blue-600'}`} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-900">Nuevo Servicio</h3>
-                                <p className="text-sm text-gray-500">Registra un nuevo servicio de reparación</p>
+                                <h3 className={`text-lg font-semibold ${dark ? 'text-gray-100' : 'text-gray-900'}`}>Nuevo Servicio</h3>
+                                <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Registra un nuevo servicio de reparación</p>
                             </div>
                         </div>
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={onCloseAction}
-                            className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                            className={`cursor-pointer ${dark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'}`}
                         >
                             <X className="w-5 h-5" />
                         </Button>
@@ -105,13 +107,13 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                     {showSuccess ? (
                         <div className="p-6">
                             <div className="flex items-start gap-3 mb-4">
-                                <CheckCircle2 className="w-6 h-6 text-green-600 mt-0.5" />
+                                <CheckCircle2 className={`w-6 h-6 mt-0.5 ${dark ? 'text-green-400' : 'text-green-600'}`} />
                                 <div>
-                                    <h4 className="text-lg font-semibold text-gray-900">Servicio creado</h4>
-                                    <p className="text-gray-600">Puedes ver el detalle o cerrar este cuadro.</p>
+                                    <h4 className={`text-lg font-semibold ${dark ? 'text-gray-100' : 'text-gray-900'}`}>Servicio creado</h4>
+                                    <p className={dark ? 'text-gray-400' : 'text-gray-600'}>Puedes ver el detalle o cerrar este cuadro.</p>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                            <div className={`flex items-center justify-end gap-3 pt-4 border-t ${dark ? 'border-white/10' : 'border-gray-200'}`}>
                                 <Button type="button" variant="outline" onClick={onCloseAction} className="cursor-pointer bg-transparent">
                                     Cerrar
                                 </Button>
@@ -126,15 +128,15 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                     <form action={formAction} onSubmit={handleSubmit} className="p-6">
                         {/* Global error message */}
                         {state.error && typeof state.error === 'string' && (
-                            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                                <p className="text-red-600 text-sm">{state.error}</p>
+                            <div className={`mb-4 p-3 rounded-md ${dark ? 'bg-red-500/20 border border-red-500/30' : 'bg-red-50 border border-red-200'}`}>
+                                <p className={`text-sm ${dark ? 'text-red-400' : 'text-red-600'}`}>{state.error}</p>
                             </div>
                         )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+                        <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
                             {/* Cliente */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <User className="w-4 h-4 inline mr-2" />
                                     Cliente *
                                 </label>
@@ -142,7 +144,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                     type="text"
                                     name="cliente"
                                     placeholder="Nombre del cliente"
-                                    className={`${state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} ${dark ? 'text-black' : 'text-gray-700'}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.cliente?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.cliente._errors[0]}</p>
@@ -151,7 +153,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
 
                             {/* No de Servicio */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <User className="w-4 h-4 inline mr-2" />
                                     No de Servicio *
                                 </label>
@@ -159,7 +161,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                     type="number"
                                     name="noDeServicio"
                                     placeholder="Número de servicio"
-                                    className={`${state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} ${dark ? 'text-black' : 'text-gray-700'}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.noDeServicio?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.noDeServicio._errors[0]}</p>
@@ -168,7 +170,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
 
                             {/* Teléfono */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <Phone className="w-4 h-4 inline mr-2" />
                                     Teléfono *
                                 </label>
@@ -176,7 +178,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                     type="tel"
                                     name="telefono"
                                     placeholder="Teléfono (10 dígitos)"
-                                    className={`${state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} ${dark ? 'text-black' : 'text-gray-700'}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.telefono?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.telefono._errors[0]}</p>
@@ -185,10 +187,10 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
 
                             {/* Estado */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+                                <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>Estado</label>
                                 <select
                                     name="estado"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${dark ? 'border-white/10 bg-slate-800 text-gray-200' : 'border-gray-300 bg-white text-gray-700'}`}
                                 >
                                     <option value="Pendiente">Pendiente</option>
                                     <option value="En Proceso">En Proceso</option>
@@ -200,10 +202,10 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
 
                             {/* Marca */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Marca *</label>
+                                <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>Marca *</label>
                                 <select
                                     name="marca"
-                                    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 ${state.error && typeof state.error === 'object' && state.error.marca?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${dark ? 'border-white/10 bg-slate-800 text-gray-200' : 'border-gray-300 bg-white text-gray-700'} ${state.error && typeof state.error === 'object' && state.error.marca?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
                                 >
                                     <option value="">Selecciona una marca</option>
                                     <option value="Oster">Oster</option>
@@ -218,10 +220,10 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                         </div>
 
                         {/* Aparato y Fecha en la misma fila */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 text-gray-700">
+                        <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
                             {/* Aparato */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <Package className="w-4 h-4 inline mr-2" />
                                     Aparato *
                                 </label>
@@ -229,7 +231,7 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                                     type="text"
                                     name="aparato"
                                     placeholder="Licuadora, Bomba de Agua, etc."
-                                    className={`${state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} ${dark ? 'text-black' : 'text-gray-700'}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.aparato?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.aparato._errors[0]}</p>
@@ -238,14 +240,14 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
 
                             {/* Fecha */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <Calendar className="w-4 h-4 inline mr-2" />
                                     Fecha *
                                 </label>
                                 <Input
                                     name="fecha"
                                     type="date"
-                                    className={`${state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500 text-gray-700" : ""}`}
+                                    className={`${state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} ${dark ? 'text-black' : 'text-gray-700'}`}
                                 />
                                 {state.error && typeof state.error === 'object' && state.error.fecha?._errors?.length > 0 && (
                                     <p className="text-red-500 text-sm mt-1">{state.error.fecha._errors[0]}</p>
@@ -254,21 +256,21 @@ export function AddServiceModal({ isOpen, onCloseAction }: AddServiceModalProps)
                         </div>
 
                         {/* Observaciones */}
-                        <div className="mt-6 text-gray-700">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                <FileText className="w-4 h-4 inline mr-2" />
+                        <div className={`mt-6 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
+                            <label className={`block text-sm font-medium mb-2 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                <FileText className="w-4 h-4 inline mr-2"  />
                                 Observaciones
                             </label>
                             <textarea
                                 name='observaciones'
                                 placeholder="Describe el problema o detalles adicionales..."
                                 rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-gray-700"
+                                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${dark ? 'border-white/10 bg-slate-800 text-gray-100' : 'border-gray-300 bg-white text-gray-700'}`}
                             />
                         </div>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
+                        <div className={`flex items-center justify-end space-x-3 mt-8 pt-6 border-t ${dark ? 'border-white/10' : 'border-gray-200'}`}>
                             <Button type="button" variant="outline" onClick={onCloseAction} className="cursor-pointer bg-transparent">
                                 Cancelar
                             </Button>
