@@ -31,13 +31,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '.ngrok-free.app'
-]
+# ALLOWED_HOSTS desde variable de entorno (separados por comas)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.ngrok-free.app'])
 
 # Application definition
 
@@ -140,7 +137,12 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files (uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -184,11 +186,17 @@ import os
 # Define si estás en producción basándote en el modo DEBUG o una variable de entorno
 IS_PRODUCTION = not os.getenv('DEBUG', 'True') == 'True'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    # Agrega aquí tu dominio de producción cuando lo tengas
-    # "https://mi-tienda-refacciones.com", 
-]
+# CORS - Orígenes permitidos desde variable de entorno
+CORS_ALLOWED_ORIGINS = env.list(
+    'CORS_ALLOWED_ORIGINS',
+    default=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+)
+
+# Si necesitas permitir todos los orígenes en desarrollo (NO recomendado para producción)
+# CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 # --------------------------------------------------------
 # AJUSTE DINÁMICO DE COOKIES
@@ -215,13 +223,16 @@ else:
 # --------------------------------------------------------
 # PARA QUE FUNCIONE NGROK (CRUCIAL)
 # --------------------------------------------------------
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    # Esto permite que Ngrok funcione sin error de CSRF Origin
-    "https://*.ngrok-free.app", 
-    "https://*.ngrok.io",
-]
+# CSRF Trusted Origins desde variable de entorno
+CSRF_TRUSTED_ORIGINS = env.list(
+    'CSRF_TRUSTED_ORIGINS',
+    default=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://*.ngrok-free.app",
+        "https://*.ngrok.io",
+    ]
+)
 
 CORS_ALLOW_ALL_ORIGINS = False
 
