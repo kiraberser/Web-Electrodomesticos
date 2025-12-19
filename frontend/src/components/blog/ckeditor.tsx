@@ -6,11 +6,12 @@ import { Editor } from "@tinymce/tinymce-react"
 interface BlogEditorProps {
   value?: string
   onChange?: (content: string) => void
+  dark?: boolean
 }
 
 const TOKEN = process.env.NEXT_PUBLIC_TINYMCE_API_KEY // Usa tu env en `.env.local`
 
-export default function RichEditor({ value = "", onChange }: BlogEditorProps) {
+export default function RichEditor({ value = "", onChange, dark = false }: BlogEditorProps) {
   const [ready, setReady] = useState(false)
   const editorRef = useRef<any>(null)
 
@@ -21,7 +22,7 @@ export default function RichEditor({ value = "", onChange }: BlogEditorProps) {
   if (!ready) {
     return (
       <div
-        className="h-64 w-full animate-pulse rounded-lg border border-gray-200 bg-gray-50"
+        className={`h-64 w-full animate-pulse rounded-lg border ${dark ? 'border-white/10 bg-slate-800' : 'border-gray-200 bg-gray-50'}`}
         aria-hidden="true"
       />
     )
@@ -37,6 +38,8 @@ export default function RichEditor({ value = "", onChange }: BlogEditorProps) {
         init={{
           height: 500,
           menubar: true,
+          skin: dark ? "oxide-dark" : "oxide",
+          content_css: dark ? "dark" : "default",
           plugins: [
             "advlist",
             "autolink",
@@ -61,8 +64,9 @@ export default function RichEditor({ value = "", onChange }: BlogEditorProps) {
             "bold italic forecolor | alignleft aligncenter " +
             "alignright alignjustify | bullist numlist outdent indent | " +
             "removeformat | help | image link media",
-          content_style:
-            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+          content_style: dark
+            ? "body { font-family:Helvetica,Arial,sans-serif; font-size:14px; background-color: #1e293b; color: #e2e8f0; }"
+            : "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
           image_title: true,
           automatic_uploads: true,
           file_picker_types: "image",
