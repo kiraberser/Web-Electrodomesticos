@@ -29,6 +29,7 @@ export interface Pedido {
     items: PedidoItem[];
     usuario_nombre: string;
     usuario_email: string;
+    metodo_pago: string;
 }
 
 export interface PaginatedPedidosResponse {
@@ -75,6 +76,27 @@ export const getAllPedidos = async (page: number = 1): Promise<PaginatedPedidosR
     } catch (error: any) {
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error al obtener pedidos:", error.response.data);
+        } else {
+            console.error("Error desconocido:", error);
+        }
+        throw error;
+    }
+}
+
+/**
+ * Actualiza el estado de un pedido (solo para administradores)
+ */
+export const updatePedidoEstado = async (pedidoId: number, estado: string): Promise<Pedido> => {
+    try {
+        const response = await axios.patch(
+            `${url}/pedidos/${pedidoId}/update-estado/`,
+            { estado },
+            { headers: { Authorization: `Bearer ${await getToken()}` } }
+        );
+        return response.data;
+    } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response) {
+            console.error("❌ Error al actualizar estado del pedido:", error.response.data);
         } else {
             console.error("Error desconocido:", error);
         }
