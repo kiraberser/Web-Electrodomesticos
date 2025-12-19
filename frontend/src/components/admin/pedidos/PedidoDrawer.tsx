@@ -1,15 +1,18 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Button } from "@/components/admin/ui"
 import { Badge } from "@/components/ui"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Pedido } from "@/api/pedidos"
-import { X, ShoppingCart, DollarSign, Calendar, Package, User } from "lucide-react"
+import { updatePedidoEstado } from "@/api/pedidos"
+import { X, ShoppingCart, DollarSign, Calendar, Package, User, CreditCard, CheckCircle } from "lucide-react"
 
 interface PedidoDrawerProps {
     pedido: Pedido | null
     open: boolean
     onClose: () => void
+    onEstadoUpdated?: (pedido: Pedido) => void
 }
 
 const ESTADO_LABELS: Record<string, string> = {
@@ -28,8 +31,15 @@ const ESTADO_COLORS: Record<string, { light: string; dark: string }> = {
     'CAN': { light: 'bg-red-100 text-red-800', dark: 'bg-red-500/20 text-red-400' },
 }
 
-export default function PedidoDrawer({ pedido, open, onClose }: PedidoDrawerProps) {
+export default function PedidoDrawer({ pedido: initialPedido, open, onClose, onEstadoUpdated }: PedidoDrawerProps) {
     const { dark } = useAdminTheme()
+    const [pedido, setPedido] = useState<Pedido | null>(initialPedido)
+    const [updating, setUpdating] = useState(false)
+    
+    // Actualizar pedido cuando cambia el prop
+    useEffect(() => {
+        setPedido(initialPedido)
+    }, [initialPedido])
     
     if (!open || !pedido) return null
 
@@ -49,6 +59,26 @@ export default function PedidoDrawer({ pedido, open, onClose }: PedidoDrawerProp
             style: 'currency',
             currency: 'MXN'
         }).format(Number(amount))
+    }
+
+    const handleMarcarEntregado = async () => {
+        if (!pedido || pedido.estado === 'ENT') return
+        
+        if (!confirm('¿Estás seguro de marcar este pedido como entregado?')) return
+        
+        setUpdating(true)
+        try {
+            const updatedPedido = await updatePedidoEstado(pedido.id, 'ENT')
+            setPedido(updatedPedido)
+            if (onEstadoUpdated) {
+                onEstadoUpdated(updatedPedido)
+            }
+        } catch (error) {
+            alert('Error al actualizar el estado del pedido')
+            console.error(error)
+        } finally {
+            setUpdating(false)
+        }
     }
 
     return (
@@ -80,11 +110,21 @@ export default function PedidoDrawer({ pedido, open, onClose }: PedidoDrawerProp
 
                 {/* Content */}
                 <div className="flex flex-col p-4 space-y-4">
-                    {/* Status badge */}
-                    <div className="flex items-center gap-2">
+                    {/* Status badge y botón de entregado */}
+                    <div className="flex items-center justify-between gap-2">
                         <Badge className={dark ? ESTADO_COLORS[pedido.estado]?.dark : ESTADO_COLORS[pedido.estado]?.light}>
                             {ESTADO_LABELS[pedido.estado] || pedido.estado}
                         </Badge>
+                        {pedido.estado !== 'ENT' && pedido.estado !== 'CAN' && (
+                            <Button
+                                onClick={handleMarcarEntregado}
+                                disabled={updating}
+                                className={`cursor-pointer ${dark ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'}`}
+                            >
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                                {updating ? 'Marcando...' : 'Marcar como entregado'}
+                            </Button>
+                        )}
                     </div>
 
                     {/* Customer info */}
@@ -98,6 +138,17 @@ export default function PedidoDrawer({ pedido, open, onClose }: PedidoDrawerProp
                         </div>
                         <div className={`mt-1 text-sm ${dark ? 'text-slate-400' : 'text-gray-600'}`}>
                             {pedido.usuario_email}
+                        </div>
+                    </div>
+
+                    {/* Payment method */}
+                    <div className={`rounded-lg border p-4 ${dark ? 'border-slate-800 bg-slate-800/50' : 'border-gray-200 bg-gray-50'}`}>
+                        <div className={`mb-2 flex items-center gap-2 text-sm font-semibold ${dark ? 'text-slate-200' : 'text-gray-900'}`}>
+                            <CreditCard className="h-4 w-4" />
+                            Método de Pago
+                        </div>
+                        <div className={`text-sm ${dark ? 'text-slate-300' : 'text-gray-700'}`}>
+                            {pedido.metodo_pago || 'No especificado'}
                         </div>
                     </div>
 

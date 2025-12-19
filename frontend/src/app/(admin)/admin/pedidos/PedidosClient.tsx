@@ -241,6 +241,12 @@ export default function PedidosClient({
                     setDrawerOpen(false)
                     setSelectedPedido(null)
                 }}
+                onEstadoUpdated={(updatedPedido) => {
+                    // Actualizar el pedido en la lista local
+                    setPedidos(prev => prev.map(p => p.id === updatedPedido.id ? updatedPedido : p))
+                    // Recargar datos para asegurar consistencia
+                    loadData(currentPage)
+                }}
             />
         </main>
     )
