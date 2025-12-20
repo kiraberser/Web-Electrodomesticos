@@ -3,7 +3,7 @@ import type { ComponentType } from "react";
 export type SectionKey =
   | "overview"
   | "pedidos"
-  | "ajustes"
+  | "ventas"
   | "servicios"
   | "productos"
   | "blog"

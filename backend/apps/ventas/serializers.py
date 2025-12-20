@@ -8,7 +8,7 @@ class VentasSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Ventas
-        fields = ['id', 'usuario_username', 'refaccion_nombre', 'marca_nombre', 'cantidad', 'precio_unitario', 'total', 'nota', 'fecha_venta']
+        fields = ['id', 'usuario_username', 'refaccion_nombre', 'marca_nombre', 'cantidad', 'precio_unitario', 'total', 'fecha_venta']
         read_only_fields = ['precio_unitario', 'total']
         
 class VentasServiciosSerializer(serializers.ModelSerializer):

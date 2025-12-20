@@ -9,7 +9,7 @@ import { Toaster } from "@/components/admin/ui";
 import { useToasts } from "@/components/admin/hooks";
 import { AdminThemeProvider } from "@/components/admin/hooks/useAdminTheme";
 import type { DateRange, SectionKey, NavItem } from "@/components/admin/utils";
-import { LayoutDashboard, Package, ShoppingCart, Settings, Server, Book, Box  } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Server, Book, Box, Store } from "lucide-react";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -67,8 +67,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       ? "productos"
       : pathname?.includes("/pedidos")
       ? "pedidos"
-      : pathname?.includes("/ajustes")
-      ? "ajustes"
+      : pathname?.includes("/ventas")
+      ? "ventas"
       : pathname?.includes("/servicios")
       ? "servicios"
       : pathname?.includes("/blog")
@@ -83,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       { key: "overview", label: "Overview", icon: LayoutDashboard },
       { key: "pedidos", label: "Pedidos", icon: ShoppingCart },
       { key: "productos", label: "Productos", icon: Package },
-      { key: "ajustes", label: "Ajustes", icon: Settings },
+      { key: "ventas", label: "Ventas", icon: Store },
       { key: "servicios", label: "Servicios", icon: Server },
       { key: "blog", label: "Blog", icon: Book },
       { key: "inventario", label: "Inventario", icon: Box},
@@ -95,7 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       if (key === "overview") router.push("/admin/dashboard");
       if (key === "pedidos") router.push("/admin/pedidos");
       if (key === "productos") router.push("/admin/productos");
-      if (key === "ajustes") router.push("/admin/ajustes");
+      if (key === "ventas") router.push("/admin/ventas");
       if (key === "servicios") router.push("/admin/servicios");
       if (key === "blog") router.push("/admin/blog/create");
       if (key === "inventario") router.push("/admin/inventario");
