@@ -47,7 +47,7 @@ function SubmitButton({ isEditing }: { isEditing: boolean }) {
     )
 }
 
-export default function CategoriaForm({ categoria, onSuccess, onCancel }: CategoriaFormProps): React.ReactElement {
+export default function CategoriaForm({ categoria, onSuccess, onCancel }: CategoriaFormProps) {
     const { dark } = useAdminTheme()
     const initialState: ActionState = { success: false, error: null }
     const action = categoria?.id ? updateCategoriaAction : createCategoriaAction
