@@ -13,7 +13,7 @@ import {
 
 type ActionState = {
     success: boolean;
-    error: string | null;
+    error: string | null | Record<string, { _errors: string[] }> | unknown;
     data?: unknown;
 }
 
