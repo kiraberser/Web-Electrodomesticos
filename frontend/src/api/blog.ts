@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { cookies } from 'next/headers'
-const URL = process.env.NEXT_PUBLIC_BASE_URL_API
 import { CreatePostType } from '@/types/blog'
+
+const URL = process.env.NEXT_PUBLIC_BASE_URL_API
 
 export const postBlog = async (newPost:CreatePostType ) => {
     const cookieStore = await cookies()

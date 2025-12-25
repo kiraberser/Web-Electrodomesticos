@@ -59,7 +59,6 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
         slug: slug
     }
 
-    console.log(newPost)
 
     await postBlog(newPost)
 
