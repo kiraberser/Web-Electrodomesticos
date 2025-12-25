@@ -15,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -37,7 +37,8 @@
     "src/app/page.js",
     "src/components/features/reviews/Reviews.tsx",
     "src/lib/utilscookies.js",
-    "./.next/types/**/*.ts"
+    "./.next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
