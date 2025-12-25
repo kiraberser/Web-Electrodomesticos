@@ -4,7 +4,7 @@ import { blogPosts } from '@/data/blog'
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.tudominio.com'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date()
 
   // Rutas estáticas principales
