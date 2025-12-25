@@ -10,6 +10,12 @@ import { createCategoriaAction, updateCategoriaAction } from "@/actions/producto
 import { X, Plus } from "lucide-react"
 import type { Categoria } from "@/api/productos"
 
+type ActionState = {
+    success: boolean
+    error: string | null | Record<string, { _errors: string[] }> | unknown
+    data?: unknown
+}
+
 interface CategoriaFormProps {
     categoria?: Categoria | null
     onSuccess: () => void
@@ -41,11 +47,11 @@ function SubmitButton({ isEditing }: { isEditing: boolean }) {
     )
 }
 
-export default function CategoriaForm({ categoria, onSuccess, onCancel }: CategoriaFormProps) {
+export default function CategoriaForm({ categoria, onSuccess, onCancel }: CategoriaFormProps): JSX.Element {
     const { dark } = useAdminTheme()
-    const initialState = { success: false, error: null }
+    const initialState: ActionState = { success: false, error: null }
     const action = categoria?.id ? updateCategoriaAction : createCategoriaAction
-    const [state, formAction] = useActionState(action, initialState)
+    const [state, formAction] = useActionState<ActionState, FormData>(action, initialState)
 
     useEffect(() => {
         if (state.success) {
