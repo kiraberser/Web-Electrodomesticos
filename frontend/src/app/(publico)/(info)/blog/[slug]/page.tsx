@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import axios from 'axios';
@@ -36,10 +37,15 @@ const BlogPost = () => {
                 setError(null)
             } catch (error: unknown) {
                 console.error('Error fetching post:', error)
-                setError(error.message || 'Error al cargar el post')
-                if (error.response) {
-                    console.error('Response data:', error.response.data)
-                    console.error('Response status:', error.response.status)
+                const errorMessage = (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string' && error.message) || 'Error al cargar el post'
+                setError(errorMessage)
+                if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object') {
+                    if ('data' in error.response) {
+                        console.error('Response data:', error.response.data)
+                    }
+                    if ('status' in error.response) {
+                        console.error('Response status:', error.response.status)
+                    }
                 }
             } finally {
                 setLoading(false)
