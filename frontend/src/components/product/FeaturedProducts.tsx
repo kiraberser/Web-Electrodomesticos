@@ -148,7 +148,7 @@ const FeaturedProducts = () => {
                                                 {[...Array(5)].map((_, i) => (
                                                     <Star
                                                         key={i}
-                                                        className={`w-4 h-4 ${i < Math.floor(product.rating)
+                                                        className={`w-4 h-4 ${i < Math.floor(product.rating || 0)
                                                                 ? 'text-yellow-400 fill-current'
                                                                 : 'text-gray-300'
                                                             }`}
@@ -156,7 +156,7 @@ const FeaturedProducts = () => {
                                                 ))}
                                             </div>
                                             <span className="text-sm text-gray-500 ml-2">
-                                                ({product.rating})
+                                                ({product.rating || 0})
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mb-4">
@@ -164,9 +164,11 @@ const FeaturedProducts = () => {
                                                 <span className="text-2xl font-bold text-gray-900">
                                                     ${product.price}
                                                 </span>
-                                                <span className="text-sm text-gray-500 line-through">
-                                                    ${product.original_price}
-                                                </span>
+                                                {product.original_price && (
+                                                    <span className="text-sm text-gray-500 line-through">
+                                                        ${product.original_price}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
                                         <Button

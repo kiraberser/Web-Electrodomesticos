@@ -14,6 +14,8 @@ export interface Product {
   shortDescription: string
   specs: Array<{ label: string; value: string }>
   inStock: boolean
+  rating?: number
+  original_price?: number
 }
 
 export const CATEGORIES: Array<{ key: string; label: string; description: string; cover: string }> = [

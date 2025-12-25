@@ -29,7 +29,7 @@ const Features = () => {
                 {/* Features Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {features.map((feature) => {
-                        const IconComponent = iconMap[feature.icon];
+                        const IconComponent = iconMap[feature.icon as keyof typeof iconMap] || Truck;
                         return (
                             <Card
                                 key={feature.id}
