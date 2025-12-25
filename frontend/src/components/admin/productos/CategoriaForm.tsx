@@ -18,8 +18,8 @@ type ActionState = {
 
 interface CategoriaFormProps {
     categoria?: Categoria | null
-    onSuccess: () => void
-    onCancel: () => void
+    onSuccessAction: () => void
+    onCancelAction: () => void
 }
 
 function SubmitButton({ isEditing }: { isEditing: boolean }) {
@@ -47,7 +47,7 @@ function SubmitButton({ isEditing }: { isEditing: boolean }) {
     )
 }
 
-export default function CategoriaForm({ categoria, onSuccess, onCancel }: CategoriaFormProps) {
+export default function CategoriaForm({ categoria, onSuccessAction, onCancelAction }: CategoriaFormProps): React.ReactElement {
     const { dark } = useAdminTheme()
     const initialState: ActionState = { success: false, error: null }
     const action = categoria?.id ? updateCategoriaAction : createCategoriaAction
@@ -55,9 +55,9 @@ export default function CategoriaForm({ categoria, onSuccess, onCancel }: Catego
 
     useEffect(() => {
         if (state.success) {
-            onSuccess()
+            onSuccessAction()
         }
-    }, [state.success, onSuccess])
+    }, [state.success, onSuccessAction])
 
     return (
         <form action={formAction} className="space-y-4">
@@ -70,7 +70,7 @@ export default function CategoriaForm({ categoria, onSuccess, onCancel }: Catego
                 </h3>
                 <button
                     type="button"
-                    onClick={onCancel}
+                    onClick={onCancelAction}
                     className={`transition ${dark ? 'text-slate-400 hover:text-slate-200' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                     <X className="h-5 w-5" />
@@ -93,7 +93,7 @@ export default function CategoriaForm({ categoria, onSuccess, onCancel }: Catego
                     required
                 />
                 {state.error && typeof state.error === 'object' && state.error.nombre?._errors?.length > 0 && (
-                    <p className={`text-sm mt-1 ${dark ? 'text-red-400' : 'text-red-500'}`}>{state.error.nombre._errors[0]}</p>
+                    <p className={`text-sm mt-1 ${dark ? 'text-red-400' : 'text-red-500'}`}>{(state.error as Record<string, { _errors: string[] }>).nombre._errors[0]}</p>
                 )}
             </div>
 
@@ -125,7 +125,7 @@ export default function CategoriaForm({ categoria, onSuccess, onCancel }: Catego
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={onCancel}
+                    onClick={onCancelAction}
                     className="cursor-pointer"
                 >
                     Cancelar
