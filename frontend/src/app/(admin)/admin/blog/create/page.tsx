@@ -18,7 +18,7 @@ type BlogDraft = {
   title: string
   slug: string
   tags: string[]
-  image: string
+  image: string | File | null
   excerpt: string
   content: string
 }
@@ -48,7 +48,7 @@ export default function CrearBlogPage() {
   })
   const [tagInput, setTagInput] = useState("")
   const [preview, setPreview] = useState(false)
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
 
   // Server Action with useActionState (manejo de errores esperados recomendado) [^1]
   const [state, formAction, pending] = useActionState<BlogActionState, FormData>(createPost, initialState)
