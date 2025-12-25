@@ -280,8 +280,10 @@ export const deleteRefaccion = async (id: number) => {
         }
     } catch (error: unknown) {
         // Si es un error 400 con mensaje del backend, propagarlo
-        if (error.response && error.response.status === 400 && error.response.data) {
-            throw error
+        if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object') {
+            if ('status' in error.response && error.response.status === 400 && 'data' in error.response) {
+                throw error
+            }
         }
         // Para otros errores, lanzar error genérico
         throw new Error('Error al eliminar la refacción')
