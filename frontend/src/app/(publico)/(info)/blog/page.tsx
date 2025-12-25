@@ -13,7 +13,7 @@ import { categories } from '@/data/category';
 
 const BlogPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 6;
 
@@ -25,7 +25,8 @@ const BlogPage = () => {
             post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
-        const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+        const matchesCategory = selectedCategory === 'all' || 
+            (selectedCategory !== 'all' && categories.find(c => String(c.id) === selectedCategory)?.label === post.category);
 
         return matchesSearch && matchesCategory;
     }), [searchTerm, selectedCategory]);
@@ -35,7 +36,7 @@ const BlogPage = () => {
     const currentPosts = useMemo(() => filteredPosts.slice(indexOfFirstPost, indexOfLastPost), [filteredPosts, indexOfFirstPost, indexOfLastPost]);
     const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('es-ES', {
             year: 'numeric',
             month: 'long',
@@ -43,7 +44,12 @@ const BlogPage = () => {
         });
     };
 
-    const BlogCard = ({ post, featured = false }) => (
+    interface BlogCardProps {
+        post: typeof blogPosts[0];
+        featured?: boolean;
+    }
+
+    const BlogCard = ({ post, featured = false }: BlogCardProps) => (
         <Card className={`group hover:shadow-lg transition-all duration-300 ${featured ? 'md:col-span-2' : ''}`}>
             <div className={`relative overflow-hidden ${featured ? 'h-64' : 'h-48'}`}>
                 <Image
@@ -80,7 +86,7 @@ const BlogPage = () => {
                     {post.excerpt}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.slice(0, 3).map((tag, index) => (
+                    {post.tags.slice(0, 3).map((tag: string, index: number) => (
                         <Badge key={index} variant="outline" className="text-xs">
                             {tag}
                         </Badge>
@@ -145,23 +151,27 @@ const BlogPage = () => {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-2">
-                                        {categories.map((category) => (
-                                            <button
-                                                key={category.id}
-                                                onClick={() => setSelectedCategory(category.id)}
-                                                className={`w-full text-left px-3 py-2 rounded-md transition-colors ${selectedCategory === category.id
-                                                        ? 'bg-blue-100 text-blue-700'
-                                                        : 'hover:bg-gray-100'
-                                                    }`}
-                                            >
-                                                <div className="flex justify-between items-center">
-                                                    <span>{category.name}</span>
-                                                    <Badge variant="outline" className="text-xs">
-                                                        {category.count}
-                                                    </Badge>
-                                                </div>
-                                            </button>
-                                        ))}
+                                        {categories.map((category) => {
+                                            const postCount = blogPosts.filter(post => post.category === category.label).length;
+                                            const categoryKey = String(category.id);
+                                            return (
+                                                <button
+                                                    key={category.id}
+                                                    onClick={() => setSelectedCategory(categoryKey)}
+                                                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${selectedCategory === categoryKey
+                                                            ? 'bg-blue-100 text-blue-700'
+                                                            : 'hover:bg-gray-100'
+                                                        }`}
+                                                >
+                                                    <div className="flex justify-between items-center">
+                                                        <span>{category.label}</span>
+                                                        <Badge variant="outline" className="text-xs">
+                                                            {postCount}
+                                                        </Badge>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 </CardContent>
                             </Card>

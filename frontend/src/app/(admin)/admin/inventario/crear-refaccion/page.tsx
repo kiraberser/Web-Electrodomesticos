@@ -257,7 +257,7 @@ export default function CrearProductoPage() {
                             </div>
 
                             <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
-                                <Checkbox id="inStock" checked={inStock} onCheckedChange={(v) => setInStock(Boolean(v))} />
+                                <Checkbox id="inStock" checked={inStock} onCheckedChange={(v: boolean | "indeterminate") => setInStock(Boolean(v))} />
                                 <label htmlFor="inStock" className="text-sm text-gray-800">
                                     Disponible en stock
                                 </label>

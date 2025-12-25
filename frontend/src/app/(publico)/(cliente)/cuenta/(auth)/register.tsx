@@ -10,12 +10,20 @@ import { actionCreateUser } from '@/actions/auth';
 import { toast } from '@/hook/use-toast';
 import { redirect } from 'next/navigation';
 
-const Register = ({ isSubmitting, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword }) => {
+interface RegisterProps {
+    isSubmitting: boolean;
+    showPassword: boolean;
+    setShowPassword: (value: boolean) => void;
+    showConfirmPassword: boolean;
+    setShowConfirmPassword: (value: boolean) => void;
+}
+
+const Register = ({ isSubmitting, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword }: RegisterProps) => {
 
     const actionCreate = async (formData: FormData) => {
-        const data = Object.fromEntries(formData);
+        const data = Object.fromEntries(formData) as { name?: string; phone?: string; email?: string; password?: string; confirmPassword?: string };
 
-        const { password, confirmPassword } = data;
+        const { password, confirmPassword, name, phone, email } = data;
 
         if (password !== confirmPassword) {
             toast({
@@ -28,7 +36,20 @@ const Register = ({ isSubmitting, showPassword, setShowPassword, showConfirmPass
             })
             return;
         }
-        await actionCreateUser(data)
+
+        if (!name || !phone || !email || !password) {
+            toast({
+                title: 'Error de validación',
+                description: 'Por favor, completa todos los campos',
+                status: 'error',
+                background: 'red-500',
+                duration: 9000,
+                isClosable: true,
+            })
+            return;
+        }
+
+        await actionCreateUser({ name, phone, email, password })
         toast({
             title: 'Registro exitoso',
             description: 'Te has registrado correctamente',

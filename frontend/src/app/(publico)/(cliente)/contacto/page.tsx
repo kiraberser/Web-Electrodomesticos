@@ -25,14 +25,14 @@ const ContactPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const handleChange = (field, value) => {
+    const handleChange = (field: string, value: string) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
         }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
 
@@ -50,7 +50,6 @@ const ContactPage = () => {
     if (isSubmitted) {
         return (
             <div className="min-h-screen">
-                <Header />
                 <div className="container mx-auto px-4 py-20">
                     <div className="max-w-2xl mx-auto text-center">
                         <div className="mb-8">

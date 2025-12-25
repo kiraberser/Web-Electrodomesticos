@@ -170,7 +170,7 @@ export default function InventarioPage() {
                     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
                         <InventoryTable
                             products={filtered}
-                            onView={(p) => {
+                            onViewAction={(p: Product) => {
                                 setSelectedProduct(p)
                                 setDrawerOpen(true)
                             }}
@@ -180,7 +180,7 @@ export default function InventarioPage() {
             </section>
 
             {/* Drawer details */}
-            <ProductDetailsDrawer product={selectedProduct} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+            <ProductDetailsDrawer product={selectedProduct} open={drawerOpen} onCloseAction={() => setDrawerOpen(false)} />
         </main>
     )
 }

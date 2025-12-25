@@ -11,11 +11,18 @@ import { toast } from '@/hook/use-toast';
 import { redirect } from 'next/navigation';
 
 
-function Login({ isSubmitting, setIsSubmitting, showPassword, setShowPassword }) {
-    const actionLogin = async (formData: FormData) => {
-        const FormData = Object.fromEntries(formData);
+interface LoginProps {
+    isSubmitting: boolean;
+    setIsSubmitting: (value: boolean) => void;
+    showPassword: boolean;
+    setShowPassword: (value: boolean) => void;
+}
 
-        if (!FormData) {
+function Login({ isSubmitting, setIsSubmitting, showPassword, setShowPassword }: LoginProps) {
+    const actionLogin = async (formData: FormData) => {
+        const formDataObj = Object.fromEntries(formData) as { email?: string; password?: string };
+
+        if (!formDataObj.email || !formDataObj.password) {
             toast({
                 title: 'Error de validación',
                 description: 'Por favor, completa todos los campos',
@@ -26,7 +33,7 @@ function Login({ isSubmitting, setIsSubmitting, showPassword, setShowPassword })
             })
             return;
         }
-        await actionLoginUser(FormData)
+        await actionLoginUser({ email: formDataObj.email, password: formDataObj.password })
         toast({
             title: 'Inicio de sesión exitoso',
             description: 'Te has logueado correctamente',

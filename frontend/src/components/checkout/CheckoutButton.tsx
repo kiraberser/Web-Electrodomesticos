@@ -51,9 +51,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
             // --- PASO 1: CREAR PEDIDO EN DJANGO (Backend) ---
             // Mapeamos los items para tu API de pedidos (solo IDs y cantidades)
             const itemsParaPedido = items.map(item => ({
-                // OJO: Verifica si en tu carrito el ID está en item.id o item.refaccion.id
-                // Aquí asumo item.id según tu CartDrawer anterior. Ajusta si es necesario.
-                refaccion: item.id, 
+                refaccion: Number(item.id), // Convertir string a number
                 cantidad: item.quantity,
             }));
 
@@ -66,8 +64,16 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
                 throw new Error('Error al crear el pedido en el servidor');
             }
 
+            // Construir items para la preferencia de pago
+            const itemsParaPreferencia = items.map(item => ({
+                title: item.name,
+                quantity: item.quantity,
+                unit_price: item.price,
+            }));
+
             const datosPreferencia = {
-                pedido_id: nuevoPedidoId, // Usamos la variable local, no el estado
+                pedido_id: nuevoPedidoId,
+                items: itemsParaPreferencia,
                 back_urls: {
                     success: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/pago/exito`,
                     failure: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/pago/fallo`,
@@ -123,8 +129,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
                         ¡Pedido creado! Completa tu pago abajo:
                     </div>
                     <Wallet 
-                        initialization={{ preferenceId: preferenciaId, redirectMode: 'modal' }} 
-                        customization={{ visual: { buttonBackground: 'black', borderRadius: '6px' } }}
+                        initialization={{ preferenceId: preferenciaId, redirectMode: 'blank' }}
                     />
                     <button 
                         onClick={() => setPreferenciaId(null)}

@@ -56,7 +56,6 @@ const AuthPage = () => {
                                     setShowPassword={setShowPassword}/> : 
                                 <Register 
                                     isSubmitting={isSubmitting} 
-                                    setIsSubmitting={setIsSubmitting} 
                                     showPassword={showPassword} 
                                     setShowPassword={setShowPassword} 
                                     showConfirmPassword={showConfirmPassword} 
