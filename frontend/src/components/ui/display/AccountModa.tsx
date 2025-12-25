@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { X, User, Package, Heart, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../forms/Button';
@@ -277,9 +278,11 @@ const AccountModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 {wishlist.map((item) => (
                                                     <div key={item.id} className="flex items-center space-x-4 p-4 border rounded-lg">
-                                                        <img
+                                                        <Image
                                                             src={item.image}
                                                             alt={item.name}
+                                                            width={64}
+                                                            height={64}
                                                             className="w-16 h-16 object-cover rounded-md"
                                                         />
                                                         <div className="flex-1">

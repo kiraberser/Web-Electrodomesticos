@@ -99,9 +99,11 @@ const BlogPost = () => {
                 </div>
 
                 {post.image && (
-                    <img 
+                    <Image 
                         src={post.image} 
                         alt={post.title}
+                        width={1200}
+                        height={400}
                         className="w-full h-64 object-cover rounded-lg mb-6"
                     />
                 )}

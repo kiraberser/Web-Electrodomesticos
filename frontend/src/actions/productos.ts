@@ -22,6 +22,24 @@ type ActionState = {
     data?: unknown
 }
 
+// Helper function to safely extract error message
+function getErrorMessage(error: unknown, defaultMessage: string): string {
+    if (error && typeof error === 'object') {
+        // Check for axios error response
+        if ('response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
+            const data = error.response.data
+            if (data && typeof data === 'object' && 'nombre' in data && Array.isArray(data.nombre) && data.nombre[0]) {
+                return String(data.nombre[0])
+            }
+        }
+        // Check for error message
+        if ('message' in error && typeof error.message === 'string') {
+            return error.message
+        }
+    }
+    return defaultMessage
+}
+
 // ========== MARCAS ==========
 
 export const createMarcaAction = async (prevState: ActionState, formData: FormData): Promise<ActionState> => {
@@ -75,7 +93,7 @@ export const createMarcaAction = async (prevState: ActionState, formData: FormDa
         console.error("Error creating marca:", error)
         return { 
             success: false, 
-            error: error.response?.data?.nombre?.[0] || error.message || "Error al crear la marca" 
+            error: getErrorMessage(error, "Error al crear la marca")
         }
     }
 }
@@ -136,7 +154,7 @@ export const updateMarcaAction = async (prevState: ActionState, formData: FormDa
         console.error("Error updating marca:", error)
         return { 
             success: false, 
-            error: error.response?.data?.nombre?.[0] || error.message || "Error al actualizar la marca" 
+            error: getErrorMessage(error, "Error al actualizar la marca")
         }
     }
 }
@@ -194,7 +212,7 @@ export const createCategoriaAction = async (prevState: ActionState, formData: Fo
         console.error("Error creating categoria:", error)
         return { 
             success: false, 
-            error: error.response?.data?.nombre?.[0] || error.message || "Error al crear la categoría" 
+            error: getErrorMessage(error, "Error al crear la categoría")
         }
     }
 }
@@ -255,7 +273,7 @@ export const updateCategoriaAction = async (prevState: ActionState, formData: Fo
         console.error("Error updating categoria:", error)
         return { 
             success: false, 
-            error: error.response?.data?.nombre?.[0] || error.message || "Error al actualizar la categoría" 
+            error: getErrorMessage(error, "Error al actualizar la categoría")
         }
     }
 }
@@ -332,16 +350,18 @@ export const createProveedorAction = async (prevState: ActionState, formData: Fo
     } catch (error: unknown) {
         console.error("Error creating proveedor:", error)
         // Manejo de errores específicos del backend
-        const backendError = error.response?.data
-        if (backendError?.correo_electronico) {
-            return { 
-                success: false, 
-                error: { correo_electronico: { _errors: [backendError.correo_electronico[0]] } }
+        if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
+            const backendError = error.response.data
+            if (backendError && typeof backendError === 'object' && 'correo_electronico' in backendError && Array.isArray(backendError.correo_electronico) && backendError.correo_electronico[0]) {
+                return { 
+                    success: false, 
+                    error: { correo_electronico: { _errors: [String(backendError.correo_electronico[0])] } }
+                }
             }
         }
         return { 
             success: false, 
-            error: error.message || "Error al crear el proveedor" 
+            error: getErrorMessage(error, "Error al crear el proveedor")
         }
     }
 }
@@ -421,16 +441,18 @@ export const updateProveedorAction = async (prevState: ActionState, formData: Fo
     } catch (error: unknown) {
         console.error("Error updating proveedor:", error)
         // Manejo de errores específicos del backend
-        const backendError = error.response?.data
-        if (backendError?.correo_electronico) {
-            return { 
-                success: false, 
-                error: { correo_electronico: { _errors: [backendError.correo_electronico[0]] } }
+        if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
+            const backendError = error.response.data
+            if (backendError && typeof backendError === 'object' && 'correo_electronico' in backendError && Array.isArray(backendError.correo_electronico) && backendError.correo_electronico[0]) {
+                return { 
+                    success: false, 
+                    error: { correo_electronico: { _errors: [String(backendError.correo_electronico[0])] } }
+                }
             }
         }
         return { 
             success: false, 
-            error: error.message || "Error al actualizar el proveedor" 
+            error: getErrorMessage(error, "Error al actualizar el proveedor")
         }
     }
 }
@@ -524,16 +546,18 @@ export const createRefaccionAction = async (prevState: ActionState, formData: Fo
     } catch (error: unknown) {
         console.error("Error creating refaccion:", error)
         // Manejo de errores específicos del backend
-        const backendError = error.response?.data
-        if (backendError?.codigo_parte) {
-            return { 
-                success: false, 
-                error: { codigo_parte: { _errors: [backendError.codigo_parte[0]] } }
+        if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
+            const backendError = error.response.data
+            if (backendError && typeof backendError === 'object' && 'codigo_parte' in backendError && Array.isArray(backendError.codigo_parte) && backendError.codigo_parte[0]) {
+                return { 
+                    success: false, 
+                    error: { codigo_parte: { _errors: [String(backendError.codigo_parte[0])] } }
+                }
             }
         }
         return { 
             success: false, 
-            error: error.message || "Error al crear la refacción" 
+            error: getErrorMessage(error, "Error al crear la refacción")
         }
     }
 }
@@ -629,16 +653,18 @@ export const updateRefaccionAction = async (prevState: ActionState, formData: Fo
     } catch (error: unknown) {
         console.error("Error updating refaccion:", error)
         // Manejo de errores específicos del backend
-        const backendError = error.response?.data
-        if (backendError?.codigo_parte) {
-            return { 
-                success: false, 
-                error: { codigo_parte: { _errors: [backendError.codigo_parte[0]] } }
+        if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
+            const backendError = error.response.data
+            if (backendError && typeof backendError === 'object' && 'codigo_parte' in backendError && Array.isArray(backendError.codigo_parte) && backendError.codigo_parte[0]) {
+                return { 
+                    success: false, 
+                    error: { codigo_parte: { _errors: [String(backendError.codigo_parte[0])] } }
+                }
             }
         }
         return { 
             success: false, 
-            error: error.message || "Error al actualizar la refacción" 
+            error: getErrorMessage(error, "Error al actualizar la refacción")
         }
     }
 }

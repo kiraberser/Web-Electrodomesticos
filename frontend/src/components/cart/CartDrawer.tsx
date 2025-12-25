@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { X, Plus, Minus, ShoppingCart, Trash2 } from 'lucide-react';
 import { Button } from '../ui/forms/Button';
 import { useCart } from '@/context/CartContext';
@@ -64,9 +65,11 @@ const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                                 <div className="space-y-4">
                                     {items.map((item) => (
                                         <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                                            <img
+                                            <Image
                                                 src={item.image}
                                                 alt={item.name}
+                                                width={64}
+                                                height={64}
                                                 className="w-16 h-16 object-cover rounded-md"
                                             />
                                             <div className="flex-1">

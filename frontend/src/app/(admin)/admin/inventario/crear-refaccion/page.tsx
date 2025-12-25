@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { useActionState } from "react"
 import { Button } from "@/components/ui/forms/Button"
 import { Input } from "@/components/ui/forms/InputField"
@@ -285,10 +286,12 @@ export default function CrearProductoPage() {
                                 />
                                 {state?.fieldErrors?.image && <p className="mt-1 text-sm text-red-600">{state.fieldErrors.image}</p>}
 
-                                <div className="mt-3 h-48 w-full overflow-hidden rounded-lg border bg-white">
-                                    <img
+                                <div className="mt-3 h-48 w-full overflow-hidden rounded-lg border bg-white relative">
+                                    <Image
                                         src={image || "/placeholder.svg?height=320&width=640&query=product-placeholder"}
                                         alt="Vista previa"
+                                        width={640}
+                                        height={320}
                                         className="h-full w-full object-cover"
                                     />
                                 </div>

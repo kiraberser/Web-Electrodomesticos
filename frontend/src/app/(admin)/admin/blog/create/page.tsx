@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { useActionState } from "react"
 import { Button } from "@/components/ui/forms/Button"
 import { Input } from "@/components/ui/forms/InputField"
@@ -225,9 +226,11 @@ export default function CrearBlogPage() {
                   />
                 </div>
                 {file && (
-                  <img
+                  <Image
                     src={URL.createObjectURL(file)}
                     alt="Vista previa"
+                    width={256}
+                    height={128}
                     className="mt-2 h-32 rounded-lg object-cover"
                   />
                 )}
