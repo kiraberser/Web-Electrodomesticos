@@ -16,7 +16,6 @@ const inter = Inter({
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
