@@ -3,6 +3,21 @@ import { getToken } from '@/lib/utilscookies';
 
 const url = process.env.NEXT_PUBLIC_BASE_URL_API;
 
+// Helper function to safely extract error message for logging
+function getErrorLogMessage(error: unknown): string {
+    if (error && typeof error === 'object') {
+        // Check for axios error response
+        if ('response' in error && error.response && typeof error.response === 'object' && 'data' in error.response) {
+            return String(error.response.data);
+        }
+        // Check for error message
+        if ('message' in error && typeof error.message === 'string') {
+            return error.message;
+        }
+    }
+    return 'Error desconocido';
+}
+
 export interface CheckoutItem {
     refaccion: number;
     cantidad: number;
@@ -61,7 +76,7 @@ export const crearPedido = async (items: CheckoutItem[]): Promise<CheckoutRespon
         );
         return response.data;
     } catch (error: unknown) {
-        console.error("Error en crearPedido:", error.response?.data || error.message);
+        console.error("Error en crearPedido:", getErrorLogMessage(error));
         throw error;
     }
 };
@@ -82,7 +97,7 @@ export const crearPreferenciaPago = async (
         console.log(response.data);
         return response.data;
     } catch (error: unknown) {
-        console.error("Error en crearPreferenciaPago:", error.response?.data || error.message);
+        console.error("Error en crearPreferenciaPago:", getErrorLogMessage(error));
         throw error;
     }
 };
@@ -98,7 +113,7 @@ export const consultarPago = async (pagoId: number): Promise<PagoInfo> => {
         );
         return response.data;
     } catch (error: unknown) {
-        console.error("Error en consultarPago:", error.response?.data || error.message);
+        console.error("Error en consultarPago:", getErrorLogMessage(error));
         throw error;
     }
 };
