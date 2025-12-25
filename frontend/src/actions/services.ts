@@ -17,6 +17,14 @@ type ActionState = {
     data?: unknown;
 }
 
+// Helper function to safely extract error message
+function getErrorMessage(error: unknown, defaultMessage: string): string {
+    if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+        return error.message
+    }
+    return defaultMessage
+}
+
 export const getServiceAction = async (id: string): Promise<ActionState> => {
     try {
         const response = await getServiceById(id)
@@ -29,7 +37,7 @@ export const getServiceAction = async (id: string): Promise<ActionState> => {
         console.error("Error fetching service:", error)
         return { 
             success: false, 
-            error: error.message || "Error al obtener el servicio" 
+            error: getErrorMessage(error, "Error al obtener el servicio")
         }
     }
 }
@@ -60,7 +68,7 @@ export const createService = async (prevState: ActionState, formData: FormData):
         console.error("Error creating service:", error)
         return { 
             success: false, 
-            error: error.message || "Error al crear el servicio" 
+            error: getErrorMessage(error, "Error al crear el servicio")
         }
     }
 }
@@ -94,7 +102,7 @@ export const updateServiceAction = async (prevState: ActionState, formData: Form
         console.error("Error updating service:", error)
         return { 
             success: false, 
-            error: error.message || "Error al actualizar el servicio" 
+            error: getErrorMessage(error, "Error al actualizar el servicio")
         }
     }
 }
@@ -107,7 +115,7 @@ export const deleteServiceAction = async (id: string): Promise<ActionState> => {
         console.error("Error deleting service:", error)
         return { 
             success: false, 
-            error: error.message || "Error al eliminar el servicio" 
+            error: getErrorMessage(error, "Error al eliminar el servicio")
         }
     }
 }
@@ -165,6 +173,6 @@ export const createServiceSaleAction = async (prevState: ActionState, formData: 
         return { success: true, error: null, data: res.data }
     } catch (error: unknown) {
         console.error('Error creating service sale:', error)
-        return { success: false, error: error.message || 'Error al crear la venta del servicio' }
+        return { success: false, error: getErrorMessage(error, 'Error al crear la venta del servicio') }
     }
 }
