@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui"
 import { useCart } from "@/context/CartContext"
 import Link from "next/link"
 import { type Refaccion } from "@/api/productos"
-import { ProductType, type Product } from "@/data/products"
+import { ProductType, type Product, type Brand } from "@/data/products"
 import { ArrowLeft, Truck, Shield, Zap, Wrench } from "@/components/icons"
 
 interface Props {
