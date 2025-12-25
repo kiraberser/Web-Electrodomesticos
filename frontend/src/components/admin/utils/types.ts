@@ -46,4 +46,4 @@ export type ProductRow = {
   imagen?: string;
 };
 
-export type NavItem = { key: SectionKey; label: string; icon: ComponentType<any> };
+export type NavItem = { key: SectionKey; label: string; icon: ComponentType<Record<string, unknown>> };

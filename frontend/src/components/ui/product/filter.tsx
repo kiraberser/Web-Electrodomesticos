@@ -11,7 +11,7 @@ import { Tag, DollarSign, X } from "@/components/icons"
 interface Props {
     brands: Brand[]
     types?: string[]
-    onChangeAction: (filters: { brands: Brand[]; types?: any[]; min: number; max: number }) => void
+    onChangeAction: (filters: { brands: Brand[]; types?: string[]; min: number; max: number }) => void
     defaultMin?: number
     defaultMax?: number
 }

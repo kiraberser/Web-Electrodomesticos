@@ -101,7 +101,7 @@ export const ProductosSection: React.FC<{ onToastAction: (t: { type?: "success" 
       <Modal open={openEditor} onClose={() => setOpenEditor(false)} title="Crear/Editar producto" wide>
         <div className="flex flex-wrap items-center gap-2">
           {["General", "Inventario", "SEO", "Media"].map((tab) => (
-            <button key={tab} onClick={() => setEditorTab(tab as any)} className={`rounded-xl px-3 py-1.5 text-sm ${
+            <button key={tab} onClick={() => setEditorTab(tab as "General" | "Inventario" | "SEO" | "Media")} className={`rounded-xl px-3 py-1.5 text-sm ${
               editorTab === tab ? (dark ? "bg-white/10 text-white" : "bg-black/5 text-gray-900") : (dark ? "hover:bg-white/5 text-gray-200" : "hover:bg-black/5 text-gray-800")
             }`}>{tab}</button>
           ))}

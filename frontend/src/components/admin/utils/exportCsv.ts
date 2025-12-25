@@ -1,4 +1,4 @@
-export function exportRowsToCsv<T extends Record<string, any>>(rows: T[], filename: string) {
+export function exportRowsToCsv<T extends Record<string, unknown>>(rows: T[], filename: string) {
   const headers = Object.keys(rows[0] || {});
   const csv = [headers.join(","), ...rows.map((r) => headers.map((h) => JSON.stringify(r[h] ?? "")).join(","))].join("\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });

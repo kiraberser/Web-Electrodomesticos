@@ -55,7 +55,7 @@ export const AjustesSection: React.FC<{ onToastAction: (t: { type?: "success" | 
         </Card>
         <Card title="Impuestos">
           <div className="grid grid-cols-2 gap-2">
-            <Input label="IVA %" type="number" value={iva as any} onChange={(e) => setIva(Number(e.target.value))} />
+            <Input label="IVA %" type="number" value={String(iva)} onChange={(e) => setIva(Number(e.target.value))} />
             <Input label="Zona" defaultValue="MX" />
           </div>
         </Card>

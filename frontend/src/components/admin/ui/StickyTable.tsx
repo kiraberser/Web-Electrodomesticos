@@ -3,7 +3,7 @@ import React from "react";
 import type { TableColumn } from "@/components/admin/utils";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 
-export const StickyTable = <T extends Record<string, any>>({
+export const StickyTable = <T extends Record<string, unknown>>({
   columns,
   rows,
   keyField,
@@ -23,7 +23,7 @@ export const StickyTable = <T extends Record<string, any>>({
   selectedKeys?: Array<string | number>;
   onToggleSelect?: (key: string | number) => void;
   onToggleSelectAll?: () => void;
-  actions?: Array<{ key: string; label: string; icon?: React.ReactNode | React.ComponentType<any> }>;
+  actions?: Array<{ key: string; label: string; icon?: React.ReactNode | React.ComponentType<Record<string, unknown>> }>;
   className?: string;
 }) => {
   const { dark } = useAdminTheme();
@@ -51,7 +51,7 @@ export const StickyTable = <T extends Record<string, any>>({
         </thead>
         <tbody>
           {rows.map((row, idx) => {
-            const key = (row as any)[keyField];
+            const key = (row as Record<string, unknown>)[keyField] as string | number;
             return (
               <tr key={String(key)} className={`border-b ${dark ? "border-white/5 hover:bg-white/5" : "border-black/5 hover:bg-black/5"}`}>
                 {selectable && (
@@ -62,20 +62,20 @@ export const StickyTable = <T extends Record<string, any>>({
                 )}
                 {columns.map((c) => (
                   <td key={String(c.key)} className={`px-3 py-2 ${c.align === "right" ? "text-right" : c.align === "center" ? "text-center" : "text-left"} ${dark ? "text-gray-400" : "text-gray-900"}`}>
-                    {c.render ? c.render(row) : String((row as any)[c.key])}
+                    {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key])}
                   </td>
                 ))}
                 {actions && (
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1">
                       {actions.map((a) => {
-                        const iconCandidate: any = a.icon;
+                        const iconCandidate = a.icon;
                         let renderedIcon: React.ReactNode = <span className="inline-block h-4 w-4" />;
                         if (iconCandidate) {
                           if (React.isValidElement(iconCandidate)) {
                             renderedIcon = iconCandidate;
                           } else if (typeof iconCandidate !== "string") {
-                            const Comp = iconCandidate as React.ComponentType<any>;
+                            const Comp = iconCandidate as React.ComponentType<Record<string, unknown>>;
                             renderedIcon = <Comp className="h-4 w-4" />;
                           }
                         }

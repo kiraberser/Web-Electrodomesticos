@@ -91,7 +91,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
                 throw new Error('Mercado Pago no devolvió un ID de preferencia');
             }
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error en el proceso de checkout:', error);
             const msg = error.response?.data?.message || error.message || 'Error al procesar la solicitud.';
             toast.error(msg);

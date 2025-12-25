@@ -8,7 +8,7 @@ type CartItem = {
     name: string;
     price: number;
     quantity: number;
-    [key: string]: any; // Para otros posibles campos
+    [key: string]: unknown; // Para otros posibles campos
 };
 
 type CartState = {

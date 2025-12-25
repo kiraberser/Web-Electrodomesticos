@@ -10,7 +10,7 @@ import { subscribeNewsletterAction } from '@/actions/newsletter';
 import { useActionState } from 'react';
 
 const Footer = ({ username }: { username: string | undefined }) => {
-  const initialState = { success: false, error: null as any, data: undefined as any };
+  const initialState = { success: false, error: null as string | null, data: undefined as unknown };
   const [state, formAction] = useActionState(subscribeNewsletterAction, initialState);
   return (
     <footer className="bg-gray-900 text-white">

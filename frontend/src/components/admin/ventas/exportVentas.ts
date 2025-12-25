@@ -1,4 +1,4 @@
-import type { Venta } from "@/api/ventas"
+import type { Venta, VentaRefaccion, VentaServicio, Devolucion } from "@/api/ventas"
 
 /**
  * Exporta las ventas a CSV
@@ -25,20 +25,21 @@ export const exportToCSV = (ventas: Venta[], filename: string = 'ventas.csv') =>
     // Convertir ventas a filas CSV
     const rows = ventas.map((venta) => {
         const fecha = venta.tipo === 'devolucion' 
-            ? (venta as any).fecha_devolucion 
-            : (venta as any).fecha_venta
+            ? (venta as Devolucion).fecha_devolucion 
+            : (venta as VentaRefaccion | VentaServicio).fecha_venta
 
         if (venta.tipo === 'refaccion') {
+            const refaccion = venta as VentaRefaccion
             return [
                 venta.id,
                 'Refacción',
                 fecha,
-                (venta as any).refaccion_nombre || '',
-                (venta as any).marca_nombre || '',
-                (venta as any).cantidad || '',
-                (venta as any).precio_unitario || '',
+                refaccion.refaccion_nombre || '',
+                refaccion.marca_nombre || '',
+                refaccion.cantidad || '',
+                refaccion.precio_unitario || '',
                 venta.total,
-                (venta as any).usuario_username || '',
+                refaccion.usuario_username || '',
                 '',
                 '',
                 '',
@@ -46,39 +47,42 @@ export const exportToCSV = (ventas: Venta[], filename: string = 'ventas.csv') =>
                 '',
             ]
         } else if (venta.tipo === 'servicio') {
+            const servicio = venta as VentaServicio
             return [
                 venta.id,
                 'Servicio',
                 fecha,
-                (venta as any).servicio_aparato || `Servicio #${(venta as any).servicio}`,
+                servicio.servicio_aparato || `Servicio #${servicio.servicio}`,
                 '',
                 '',
                 '',
                 venta.total,
                 '',
-                (venta as any).tecnico || '',
-                (venta as any).estado_pago || '',
-                (venta as any).garantia_dias || '',
-                (venta as any).observaciones || '',
+                servicio.tecnico || '',
+                servicio.estado_pago || '',
+                servicio.garantia_dias || '',
+                servicio.observaciones || '',
                 '',
             ]
         } else {
             // devolucion
+            const devolucion = venta as Devolucion
             return [
                 venta.id,
                 'Devolución',
                 fecha,
-                (venta as any).refaccion_nombre || '',
-                (venta as any).marca_nombre || '',
-                (venta as any).cantidad || '',
-                (venta as any).precio_unitario || '',
+                devolucion.refaccion_nombre || '',
+                devolucion.marca_nombre || '',
+                devolucion.cantidad || '',
+                devolucion.precio_unitario || '',
                 venta.total,
                 '',
                 '',
                 '',
                 '',
                 '',
-                (venta as any).motivo || '',
+                '',
+                devolucion.motivo || '',
             ]
         }
     })
@@ -124,8 +128,13 @@ export const exportToExcel = (ventas: Venta[], filename: string = 'ventas.xlsx')
 /**
  * Exporta todas las ventas (necesita cargar todas las páginas)
  */
+type PaginatedVentasResponse = {
+    count: number
+    results: Venta[]
+}
+
 export const exportAllVentas = async (
-    getAllVentasFn: (page: number, tipo?: string, search?: string) => Promise<any>,
+    getAllVentasFn: (page: number, tipo?: string, search?: string) => Promise<PaginatedVentasResponse>,
     tipoFilter?: string,
     search?: string
 ) => {
@@ -148,4 +157,3 @@ export const exportAllVentas = async (
         throw error
     }
 }
-

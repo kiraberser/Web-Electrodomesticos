@@ -10,6 +10,7 @@ const SelectGroup = SelectPrimitive.Group
 
 const SelectValue = SelectPrimitive.Value
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectTrigger = React.forwardRef<any, any>(({ className, children, ...props }: any, ref: any) => (
     <SelectPrimitive.Trigger
         ref={ref}
@@ -26,6 +27,7 @@ const SelectTrigger = React.forwardRef<any, any>(({ className, children, ...prop
 ))
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectScrollUpButton = React.forwardRef<any, any>(({ className, ...props }: any, ref: any) => (
     <SelectPrimitive.ScrollUpButton
         ref={ref}
@@ -36,6 +38,7 @@ const SelectScrollUpButton = React.forwardRef<any, any>(({ className, ...props }
 ))
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectScrollDownButton = React.forwardRef<any, any>(({ className, ...props }: any, ref: any) => (
     <SelectPrimitive.ScrollDownButton
         ref={ref}
@@ -47,6 +50,7 @@ const SelectScrollDownButton = React.forwardRef<any, any>(({ className, ...props
 SelectScrollDownButton.displayName =
     SelectPrimitive.ScrollDownButton.displayName
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectContent = React.forwardRef<any, any>(({ className, children, position = "popper", ...props }: any, ref: any) => (
     <SelectPrimitive.Portal>
         <SelectPrimitive.Content
@@ -71,6 +75,7 @@ const SelectContent = React.forwardRef<any, any>(({ className, children, positio
 ))
 SelectContent.displayName = SelectPrimitive.Content.displayName
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectLabel = React.forwardRef<any, any>(({ className, ...props }: any, ref: any) => (
     <SelectPrimitive.Label
         ref={ref}
@@ -79,6 +84,7 @@ const SelectLabel = React.forwardRef<any, any>(({ className, ...props }: any, re
 ))
 SelectLabel.displayName = SelectPrimitive.Label.displayName
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectItem = React.forwardRef<any, any>(({ className, children, ...props }: any, ref: any) => (
     <SelectPrimitive.Item
         ref={ref}
@@ -97,6 +103,7 @@ const SelectItem = React.forwardRef<any, any>(({ className, children, ...props }
 ))
 SelectItem.displayName = SelectPrimitive.Item.displayName
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectSeparator = React.forwardRef<any, any>(({ className, ...props }: any, ref: any) => (
     <SelectPrimitive.Separator
         ref={ref}

@@ -36,6 +36,7 @@ export default function VentasChart({ data, loading = false, tipo = 'dia' }: Ven
             // Solo actualizar opciones si cambió el tema
             chartRef.current.applyOptions({
                 layout: {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     background: { type: 'solid', color: dark ? '#0F172A' : '#FFFFFF' } as any,
                     textColor: dark ? '#E2E8F0' : '#1F2937',
                 },

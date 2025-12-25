@@ -13,6 +13,7 @@ const TOKEN = process.env.NEXT_PUBLIC_TINYMCE_API_KEY // Usa tu env en `.env.loc
 
 export default function RichEditor({ value = "", onChange, dark = false }: BlogEditorProps) {
   const [ready, setReady] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = useRef<any>(null)
 
   useEffect(() => {
