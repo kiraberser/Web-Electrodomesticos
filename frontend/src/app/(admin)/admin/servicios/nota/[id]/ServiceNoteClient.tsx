@@ -17,7 +17,7 @@ import { CostNote } from "@/types/service"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 
 const costNoteSchema = {
-    safeParse: () => ({ success: true, error: { errors: [] } }),
+    safeParse: (_data: unknown) => ({ success: true, error: { errors: [] } }),
 }
 
 export default function ServiceNoteClient({ serviceId, initialCostNote }: { serviceId: string; initialCostNote: CostNote }) {
