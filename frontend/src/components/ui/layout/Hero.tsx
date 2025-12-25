@@ -2,8 +2,6 @@ import { Button } from '../forms/Button';
 import { ArrowRight, Star, Shield, Truck } from 'lucide-react';
 import Image from 'next/image';
 
-import ElectrodomesticosHero from '/public/images/hero/ElectrodomesticosHero.png'
-
 const Hero = () => {
 
   if (!true) {
@@ -98,8 +96,10 @@ const Hero = () => {
           <div className="relative">
             <div className="relative z-10">
               <Image
-                src={ElectrodomesticosHero}
+                src="/images/hero/ElectrodomesticosHero.png"
                 alt="Electrodomésticos de calidad"
+                width={800}
+                height={600}
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
                 priority={true}
               />
