@@ -37,7 +37,10 @@ const BlogPost = () => {
                 setError(null)
             } catch (error: unknown) {
                 console.error('Error fetching post:', error)
-                const errorMessage = (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string' && error.message) || 'Error al cargar el post'
+                let errorMessage: string = 'Error al cargar el post'
+                if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+                    errorMessage = error.message
+                }
                 setError(errorMessage)
                 if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object') {
                     if ('data' in error.response) {
