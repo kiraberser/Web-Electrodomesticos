@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Disable Turbopack to fix "generate is not a function" error
+  // experimental: {
+  //   turbo: {}
+  // },
   images: {
     remotePatterns: [
       {
