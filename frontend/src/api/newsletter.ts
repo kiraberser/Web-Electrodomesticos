@@ -12,8 +12,18 @@ export const subscribeNewsletter = async (email: string) => {
         })
         return { success: true, status: res.status, data: res.data }
     } catch (error: unknown) {
-        const status = error?.response?.status || 500
-        const data = error?.response?.data || { message: 'Error inesperado' }
+        let status = 500
+        let data = { message: 'Error inesperado' }
+        
+        if (error && typeof error === 'object' && 'response' in error && error.response && typeof error.response === 'object') {
+            if ('status' in error.response && typeof error.response.status === 'number') {
+                status = error.response.status
+            }
+            if ('data' in error.response) {
+                data = error.response.data as { message?: string }
+            }
+        }
+        
         return { success: false, status, data }
     }
 }

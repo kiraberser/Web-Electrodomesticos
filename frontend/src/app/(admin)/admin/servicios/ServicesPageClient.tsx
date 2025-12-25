@@ -36,7 +36,7 @@ export default function ServicesPageClient({
         setServices(initialServices)
         setPagination(initialPagination)
         setSearchQuery(initialQuery || "")
-    }, [initialServices, initialPagination])
+    }, [initialServices, initialPagination, initialQuery])
 
     const openDeleteModal = (service: Service) => {
         setSelectedService(service)

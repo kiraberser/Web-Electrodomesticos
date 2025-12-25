@@ -18,7 +18,7 @@ export const Reviews = () => {
 
             return () => clearInterval(timer);
         }
-    }, [testimonials.length]);
+    }, []);
 
 
     const nextTestimonial = () => {

@@ -52,7 +52,7 @@ const BlogPost = () => {
             }
         }
         fetchPost()
-    }, [params.slug])
+    }, [params])
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString)
