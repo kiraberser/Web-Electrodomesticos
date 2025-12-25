@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useMemo } from "react"
+import { useState, useEffect, useRef } from "react"
 import { getAllVentas, getEstadisticasVentas, getGraficoVentas } from "@/api/ventas"
 import type { Venta, EstadisticasVentas, GraficoVentasData } from "@/api/ventas"
 import VentasStats from "@/components/admin/ventas/VentasStats"
@@ -54,7 +54,6 @@ export default function VentasPage() {
     
     // Refs para evitar múltiples llamadas en React Strict Mode
     const hasLoadedRef = useRef(false)
-    const isLoadingDataRef = useRef(false)
     const isLoadingStatsRef = useRef(false)
     const isLoadingGraficoRef = useRef(false)
     const lastFiltersRef = useRef({ tipoFilter: "Todos", search: "" })

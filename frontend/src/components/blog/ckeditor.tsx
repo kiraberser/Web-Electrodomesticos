@@ -70,7 +70,7 @@ export default function RichEditor({ value = "", onChange, dark = false }: BlogE
           image_title: true,
           automatic_uploads: true,
           file_picker_types: "image",
-          images_upload_handler: function (blobInfo, progress) {
+          images_upload_handler: function (blobInfo) {
             return new Promise((resolve, reject) => {
               const formData = new FormData()
               formData.append("file", blobInfo.blob(), blobInfo.filename())

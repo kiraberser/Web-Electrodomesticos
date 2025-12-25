@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/admin/ui"
-import { Badge } from "@/components/ui"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Marca } from "@/api/productos"
 import { deleteMarca } from "@/api/productos"
@@ -26,7 +25,7 @@ export default function MarcasTable({ marcas, onEdit, onDataChange }: MarcasTabl
         try {
             await deleteMarca(id)
             onDataChange()
-        } catch (err) {
+        } catch {
             alert("Error al eliminar la marca. Puede que tenga productos asociados.")
         } finally {
             setDeleting(null)

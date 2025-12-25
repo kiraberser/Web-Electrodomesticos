@@ -68,9 +68,6 @@ export const createService = async (prevState: ActionState, formData: FormData):
 export const updateServiceAction = async (prevState: ActionState, formData: FormData): Promise<ActionState> => {
     const data = Object.fromEntries(formData.entries())
     
-    // Add the service ID from the form
-    const serviceId = data.serviceId as string
-    
     const parsedData = serviceSchema.safeParse(data)
     
     if (!parsedData.success) {

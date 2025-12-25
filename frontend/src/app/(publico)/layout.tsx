@@ -25,7 +25,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" className={inter.variable}>
       <head>
         <title>
-          Refaccionaria "Vega"
+          Refaccionaria &quot;Vega&quot;
         </title>
       </head>
       <body className={`${inter.className} text-[#0A3981]`}>

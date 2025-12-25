@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/display/Card';
-import { Star, Quote, Loader2 } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 
 import { testimonials_data as testimonials} from '@/data/testimonials';
 
@@ -55,7 +55,7 @@ export const Reviews = () => {
                                             <div className="mb-6">
                                                 <Quote className="w-12 h-12 text-blue-500 mx-auto mb-4" />
                                                 <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                                                    "{testimonial.comment}"
+                                                    &quot;{testimonial.comment}&quot;
                                                 </p>
                                                 <div className="flex justify-center mb-4">
                                                     {[...Array(5)].map((_, i) => (

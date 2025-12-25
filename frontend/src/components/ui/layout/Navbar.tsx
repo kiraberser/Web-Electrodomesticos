@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Search, ShoppingCart, Menu, X, User, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"

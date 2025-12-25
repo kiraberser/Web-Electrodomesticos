@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo, useEffect, useRef } from "react"
-import { Button } from "@/components/admin/ui"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Pedido } from "@/api/pedidos"
 import { getAllPedidos } from "@/api/pedidos"

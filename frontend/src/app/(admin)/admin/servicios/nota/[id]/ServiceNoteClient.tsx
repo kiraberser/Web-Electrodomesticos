@@ -17,14 +17,14 @@ import { CostNote } from "@/types/service"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 
 const costNoteSchema = {
-    safeParse: (data: any) => ({ success: true, error: { errors: [] } }),
+    safeParse: () => ({ success: true, error: { errors: [] } }),
 }
 
 export default function ServiceNoteClient({ serviceId, initialCostNote }: { serviceId: string; initialCostNote: CostNote }) {
     const router = useRouter()
     const { dark } = useAdminTheme()
 
-    const [loading, setLoading] = useState(false)
+    const [loading] = useState(false)
     const [saving, setSaving] = useState(false)
     const [costNote, setCostNote] = useState<CostNote>(initialCostNote)
     const [errors, setErrors] = useState<Partial<Record<string, string>>>({})

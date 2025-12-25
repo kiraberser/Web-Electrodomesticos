@@ -13,8 +13,6 @@ import { useCart } from '@/context/CartContext';
 import { products } from '@/data/products';
 
 const FeaturedProducts = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const { addItem } = useCart();
 

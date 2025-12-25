@@ -15,7 +15,7 @@ export const postBlog = async (newPost:CreatePostType ) => {
                 'Authorization': `Bearer ${token}`
             }
         })
-    } catch (error) {
+    } catch {
         return new Error('Error al crear el post')
     }
 }

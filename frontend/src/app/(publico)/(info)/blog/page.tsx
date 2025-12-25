@@ -118,7 +118,7 @@ const BlogPage = () => {
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-3xl mx-auto">
                         <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                            Blog Refaccionaria 'Vega'
+                            Blog Refaccionaria &apos;Vega&apos;
                         </h1>
                         <p className="text-xl text-blue-100 mb-8">
                             Descubre consejos, guías y las últimas tendencias en electrodomésticos y tecnología para el hogar

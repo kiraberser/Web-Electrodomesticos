@@ -13,7 +13,7 @@ interface DropDownParams {
     onSelect: (option: Option) => void;
 }
 
-const dropDownMenuCategory = ({ options, onSelect }: DropDownParams) => {
+const DropDownMenuCategory = ({ options, onSelect }: DropDownParams) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -81,4 +81,4 @@ const dropDownMenuCategory = ({ options, onSelect }: DropDownParams) => {
   );
 };
 
-export default dropDownMenuCategory;
+export default DropDownMenuCategory;

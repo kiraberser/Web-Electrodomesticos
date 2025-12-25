@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Package, Clock, AlertCircle, CheckCircle, XCircle } from "lucide-react"
+import { ArrowLeft, Clock, AlertCircle, CheckCircle, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/forms/Button"
 import type { ServiceDetail } from "@/types/service"
 import Link from "next/link"

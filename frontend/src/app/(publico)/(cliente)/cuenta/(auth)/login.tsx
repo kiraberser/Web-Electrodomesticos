@@ -18,7 +18,7 @@ interface LoginProps {
     setShowPassword: (value: boolean) => void;
 }
 
-function Login({ isSubmitting, setIsSubmitting, showPassword, setShowPassword }: LoginProps) {
+function Login({ isSubmitting, showPassword, setShowPassword }: LoginProps) {
     const actionLogin = async (formData: FormData) => {
         const formDataObj = Object.fromEntries(formData) as { email?: string; password?: string };
 

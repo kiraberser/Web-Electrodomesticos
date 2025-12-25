@@ -1,18 +1,15 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/forms/Button';
 import Link from 'next/link';
-import { consultarPago } from '@/api/pagos';
 
 export default function PagoExitoPage() {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const pedidoId = searchParams.get('pedido_id');
     const [loading, setLoading] = useState(true);
-    const [pagoInfo, setPagoInfo] = useState<any>(null);
 
     useEffect(() => {
         const verificarPago = async () => {

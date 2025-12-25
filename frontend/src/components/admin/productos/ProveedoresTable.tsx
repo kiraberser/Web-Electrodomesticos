@@ -25,7 +25,7 @@ export default function ProveedoresTable({ proveedores, onEdit, onDataChange }: 
         try {
             await deleteProveedor(id)
             onDataChange()
-        } catch (err) {
+        } catch {
             alert("Error al eliminar el proveedor. Puede que tenga productos asociados.")
         } finally {
             setDeleting(null)

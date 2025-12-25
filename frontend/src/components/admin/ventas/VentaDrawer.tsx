@@ -4,7 +4,7 @@ import { Button } from "@/components/admin/ui"
 import { Badge } from "@/components/ui"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Venta, VentaRefaccion, VentaServicio, Devolucion } from "@/api/ventas"
-import { X, Store, Wrench, RotateCcw, Calendar, DollarSign, Package, User, FileText } from "lucide-react"
+import { X, Store, Wrench, Calendar, DollarSign, Package, User, FileText } from "lucide-react"
 
 interface VentaDrawerProps {
     venta: Venta | null

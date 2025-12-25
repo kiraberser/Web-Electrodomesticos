@@ -64,20 +64,25 @@ export async function createProduct(prev: ProductActionState, formData: FormData
         return { success: false, message: "Revisa los campos marcados", fieldErrors }
     }
 
-    // Parse specs
-    let specs: Array<{ label: string; value: string }> = []
-    try {
-        const parsed = JSON.parse(specsRaw)
-        if (Array.isArray(parsed)) {
-            specs = parsed
-                .map((s) => ({ label: String(s.label || "").trim(), value: String(s.value || "").trim() }))
-                .filter((s) => s.label && s.value)
+    // Parse specs (preparado para uso futuro)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _specs: Array<{ label: string; value: string }> = (() => {
+        try {
+            const parsed = JSON.parse(specsRaw)
+            if (Array.isArray(parsed)) {
+                return parsed
+                    .map((s) => ({ label: String(s.label || "").trim(), value: String(s.value || "").trim() }))
+                    .filter((s) => s.label && s.value)
+            }
+        } catch {
+            // Silencioso; dejamos specs vacío
         }
-    } catch {
-        // Silencioso; dejamos specs vacío
-    }
+        return []
+    })()
 
-    const inStock = inStockRaw === "on" || inStockRaw === "true"
+    // Parse inStock (preparado para uso futuro)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _inStock = inStockRaw === "on" || inStockRaw === "true"
 
     // Simula guardado (reemplaza por tu persistencia real)
     await new Promise((r) => setTimeout(r, 700))

@@ -25,7 +25,7 @@ export default function CategoriasTable({ categorias, onEdit, onDataChange }: Ca
         try {
             await deleteCategoria(id)
             onDataChange()
-        } catch (err) {
+        } catch {
             alert("Error al eliminar la categoría. Puede que tenga productos asociados.")
         } finally {
             setDeleting(null)

@@ -95,7 +95,7 @@ export const updateServiceNote = async (id: string, note: any) => {
 export const updateService = async (serviceData: Service) => {
     const cookieStore = await cookies()
     const token = cookieStore.get('access_cookie')?.value
-    const response = await axios.put(`${URL}/servicios/${serviceData.noDeServicio}/`, serviceData, {
+    await axios.put(`${URL}/servicios/${serviceData.noDeServicio}/`, serviceData, {
         headers: {
             "Content-Type": "application/json",
             'Authorization': `Bearer ${token}`

@@ -39,7 +39,7 @@ const AuthPage = () => {
                             <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <span className="text-white font-bold text-2xl">E</span>
                             </div>
-                            <CardTitle className="text-2xl">Refaccionaria 'Vega'</CardTitle>
+                            <CardTitle className="text-2xl">Refaccionaria &apos;Vega&apos;</CardTitle>
                             <p className="text-gray-600">Reparamos lo que no se ve, pero es necesario</p>
                         </CardHeader>
                         <CardContent>

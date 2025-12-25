@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/forms/InputField"
 import { Badge } from "@/components/ui"
 import { Textarea } from "@/components/ui/display/Textarea"
 import RichEditor from "@/components/blog/ckeditor"
-import { useToast } from "@/hook/use-toast"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import { FileText, Hash, Tags, ImageIcon, Save, Eye, ArrowLeft } from "lucide-react"
 import { createPost, type BlogActionState } from "@/actions/blog"
@@ -36,7 +35,6 @@ const initialState: BlogActionState = { success: undefined, message: undefined }
 
 export default function CrearBlogPage() {
   const router = useRouter()
-  const { toast } = useToast()
   const { dark } = useAdminTheme()
 
   const [draft, setDraft] = useState<BlogDraft>({

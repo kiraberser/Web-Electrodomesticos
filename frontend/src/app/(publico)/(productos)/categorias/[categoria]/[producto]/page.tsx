@@ -8,7 +8,7 @@ export async function generateMetadata({
 }: {
     params: Promise<{ categoria: string; producto: string }>
 }): Promise<Metadata> {
-    const { categoria, producto } = await params
+    const { producto } = await params
     const productoSlug = decodeURIComponent(producto ?? "")
     
     try {

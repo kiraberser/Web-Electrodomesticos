@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { TabsContent } from '@/components/ui/display/Tabs';
 import { Button } from '@/components/ui/forms/Button';
 import { Label } from '@/components/ui/forms/Label';
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
 import { Input } from '@/components/ui/forms/InputField';
 
 import { actionCreateUser } from '@/actions/auth';

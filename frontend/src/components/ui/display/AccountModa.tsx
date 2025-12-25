@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Mail, Phone, MapPin, Package, Heart, Settings, LogOut } from 'lucide-react';
+import { X, User, Package, Heart, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../forms/Button';
 import { Input } from '../forms/InputField';

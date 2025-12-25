@@ -1,7 +1,6 @@
 "use client";
 
 import '@/styles/index.css';
-import { Inter } from 'next/font/google'
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Sidebar, Topbar } from "@/components/admin/layout";
@@ -10,8 +9,6 @@ import { useToasts } from "@/components/admin/hooks";
 import { AdminThemeProvider } from "@/components/admin/hooks/useAdminTheme";
 import type { DateRange, SectionKey, NavItem } from "@/components/admin/utils";
 import { LayoutDashboard, Package, ShoppingCart, Server, Book, Box, Store } from "lucide-react";
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();

@@ -54,7 +54,7 @@ export default function PartsSection({
                     }`}>
                         <Package className={`w-8 h-8 mx-auto mb-2 ${dark ? "text-gray-500" : "text-gray-400"}`} />
                         <p>No hay refacciones agregadas</p>
-                        <p className="text-sm">Haz clic en "Agregar" para añadir refacciones</p>
+                        <p className="text-sm">Haz clic en &quot;Agregar&quot; para añadir refacciones</p>
                     </div>
                 ) : (
                     parts.map((part, index) => (

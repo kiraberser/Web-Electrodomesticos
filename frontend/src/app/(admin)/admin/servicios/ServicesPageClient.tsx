@@ -26,7 +26,7 @@ export default function ServicesPageClient({
 
     const [services, setServices] = useState<Service[]>(initialServices)
     const [pagination, setPagination] = useState<PaginationInfo>(initialPagination)
-    const [loading, setLoading] = useState(false)
+    const [loading] = useState(false)
     const [searchQuery, setSearchQuery] = useState(initialQuery || "")
     const [selectedService, setSelectedService] = useState<Service | null>(null)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)

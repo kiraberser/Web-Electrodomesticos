@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
-const axios = require('axios').default;
+import axios from 'axios';
 
 const TOKEN = process.env.NEXT_PUBLIC_API_KEY
 

@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/display/Card';
-import { Truck, Shield, Wrench, Headphones, Loader2 } from 'lucide-react';
+import { Truck, Shield, Wrench, Headphones } from 'lucide-react';
 
 import { company } from '@/data/company';
 import { features_data as features } from '@/data/features';

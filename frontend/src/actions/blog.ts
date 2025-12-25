@@ -35,7 +35,7 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
         return { success: false, message: "Revisa los campos marcados", fieldErrors }
     }
 
-    let errors = []
+    const errors = []
 
     let imageUrl;
 

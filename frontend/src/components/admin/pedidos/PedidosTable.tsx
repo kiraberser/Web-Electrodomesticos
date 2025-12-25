@@ -28,7 +28,7 @@ const ESTADO_COLORS: Record<string, { light: string; dark: string }> = {
     'CAN': { light: 'bg-red-100 text-red-800', dark: 'bg-red-500/20 text-red-400' },
 }
 
-export default function PedidosTable({ pedidos, onView, onDataChange }: PedidosTableProps) {
+export default function PedidosTable({ pedidos, onView }: PedidosTableProps) {
     const { dark } = useAdminTheme()
 
     const formatDate = (dateString: string) => {
