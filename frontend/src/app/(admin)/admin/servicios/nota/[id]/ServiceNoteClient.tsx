@@ -17,6 +17,7 @@ import { CostNote } from "@/types/service"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 
 const costNoteSchema = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     safeParse: (_data: unknown) => ({ success: true, error: { errors: [] } }),
 }
 
