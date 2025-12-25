@@ -27,7 +27,7 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
         slug: refaccion.codigo_parte,
         name: refaccion.nombre,
         price: Number(refaccion.precio),
-        brand: refaccion.marca as any,
+        brand: refaccion.marca as Brand,
         type: refaccion.categoria_nombre as ProductType,
         category: categoria,
         image: refaccion.imagen || '/placeholder.svg?height=640&width=640',

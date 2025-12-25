@@ -278,7 +278,7 @@ export const deleteRefaccion = async (id: number) => {
         if (response.status !== 204) {
             throw new Error('Failed to delete refaccion')
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         // Si es un error 400 con mensaje del backend, propagarlo
         if (error.response && error.response.status === 400 && error.response.data) {
             throw error

@@ -12,7 +12,7 @@ export const createUser = async (data: CreateUserType) => {
             password: data.password,
         });
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error en createUser:", error.response?.data || error.message);
         throw error;
     }
@@ -25,7 +25,7 @@ export const loginUser = async (data: LoginUserType) => {
             password: data.password,
         });
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error en loginUser:", error.response?.data || error.message);
         throw error;
     }

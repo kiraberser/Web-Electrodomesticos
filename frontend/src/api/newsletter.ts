@@ -11,7 +11,7 @@ export const subscribeNewsletter = async (email: string) => {
             headers: { 'Content-Type': 'application/json' },
         })
         return { success: true, status: res.status, data: res.data }
-    } catch (error: any) {
+    } catch (error: unknown) {
         const status = error?.response?.status || 500
         const data = error?.response?.data || { message: 'Error inesperado' }
         return { success: false, status, data }

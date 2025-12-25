@@ -25,7 +25,7 @@ export default function ProductCard({
 }: Props) {
     const { addItem } = useCart();
 
-    const handleAddToCart = (product: any) => {
+    const handleAddToCart = (product: Product) => {
         addItem(product);
         toast.success(`${product.name} agregado al carrito`, {
             duration: 3000,

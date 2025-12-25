@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-function decodeJwtPayload(jwt?: string): any | null {
+function decodeJwtPayload(jwt?: string): Record<string, unknown> | null {
     if (!jwt) return null;
     try {
         const part = (jwt.split('.')[1] || '').replace(/-/g, '+').replace(/_/g, '/');

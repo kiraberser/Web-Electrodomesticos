@@ -13,8 +13,8 @@ import {
 
 type ActionState = {
     success: boolean;
-    error: any;
-    data?: any;
+    error: string | null;
+    data?: unknown;
 }
 
 export const getServiceAction = async (id: string): Promise<ActionState> => {
@@ -25,7 +25,7 @@ export const getServiceAction = async (id: string): Promise<ActionState> => {
             error: null,
             data: response.data 
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error fetching service:", error)
         return { 
             success: false, 
@@ -56,7 +56,7 @@ export const createService = async (prevState: ActionState, formData: FormData):
     try {
         await postService(newService)
         return { success: true, error: null }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error creating service:", error)
         return { 
             success: false, 
@@ -90,7 +90,7 @@ export const updateServiceAction = async (prevState: ActionState, formData: Form
             error: null,
             data: updatedService 
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error updating service:", error)
         return { 
             success: false, 
@@ -103,7 +103,7 @@ export const deleteServiceAction = async (id: string): Promise<ActionState> => {
     try {
         await deleteService(id)
         return { success: true, error: null }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error deleting service:", error)
         return { 
             success: false, 
@@ -163,7 +163,7 @@ export const createServiceSaleAction = async (prevState: ActionState, formData: 
         await updateServiceNote(String(servicio), noteSnapshot)
 
         return { success: true, error: null, data: res.data }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error creating service sale:', error)
         return { success: false, error: error.message || 'Error al crear la venta del servicio' }
     }

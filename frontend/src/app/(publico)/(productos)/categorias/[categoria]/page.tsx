@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { categories as CATEGORIES } from "@/data/category"
 import { getRefaccionesByCategoria, type Refaccion } from "@/api/productos"
-import { type Product, ProductType } from "@/data/products"
+import { type Product, ProductType, type Brand } from "@/data/products"
 import CategoryView from "@/components/product/CategoryView"
 import type { Metadata } from "next"
 
@@ -36,7 +36,7 @@ function transformRefaccionToProduct(refaccion: Refaccion, categoryKey: string):
         slug: refaccion.codigo_parte || `product-${refaccion.id}`,
         name: refaccion.nombre,
         price: Number(refaccion.precio),
-        brand: refaccion.marca as any,
+        brand: refaccion.marca as Brand,
         type: (refaccion.categoria_nombre || "Pedestal") as ProductType,
         category: categoryKey,
         image: refaccion.imagen || '/placeholder.svg?height=640&width=640',

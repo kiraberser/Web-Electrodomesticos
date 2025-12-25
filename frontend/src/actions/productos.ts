@@ -18,8 +18,8 @@ import { uploadImage } from "@/lib/cloudinary"
 
 type ActionState = {
     success: boolean
-    error: any
-    data?: any
+    error: string | null
+    data?: unknown
 }
 
 // ========== MARCAS ==========
@@ -71,7 +71,7 @@ export const createMarcaAction = async (prevState: ActionState, formData: FormDa
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error creating marca:", error)
         return { 
             success: false, 
@@ -132,7 +132,7 @@ export const updateMarcaAction = async (prevState: ActionState, formData: FormDa
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error updating marca:", error)
         return { 
             success: false, 
@@ -190,7 +190,7 @@ export const createCategoriaAction = async (prevState: ActionState, formData: Fo
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error creating categoria:", error)
         return { 
             success: false, 
@@ -251,7 +251,7 @@ export const updateCategoriaAction = async (prevState: ActionState, formData: Fo
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error updating categoria:", error)
         return { 
             success: false, 
@@ -329,7 +329,7 @@ export const createProveedorAction = async (prevState: ActionState, formData: Fo
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error creating proveedor:", error)
         // Manejo de errores específicos del backend
         const backendError = error.response?.data
@@ -418,7 +418,7 @@ export const updateProveedorAction = async (prevState: ActionState, formData: Fo
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error updating proveedor:", error)
         // Manejo de errores específicos del backend
         const backendError = error.response?.data
@@ -521,7 +521,7 @@ export const createRefaccionAction = async (prevState: ActionState, formData: Fo
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error creating refaccion:", error)
         // Manejo de errores específicos del backend
         const backendError = error.response?.data
@@ -626,7 +626,7 @@ export const updateRefaccionAction = async (prevState: ActionState, formData: Fo
             error: null,
             data: response.data
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error updating refaccion:", error)
         // Manejo de errores específicos del backend
         const backendError = error.response?.data

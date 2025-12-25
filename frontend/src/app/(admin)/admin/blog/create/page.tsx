@@ -69,7 +69,7 @@ export default function CrearBlogPage() {
     setDraft((d) => ({ ...d, slug: slugify(d.title) }))
   }
 
-  const handleFileChange = (e: any) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
     setDraft((d) => ({ ...d, image: selectedFile }))

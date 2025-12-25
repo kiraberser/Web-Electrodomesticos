@@ -49,7 +49,7 @@ export const crearPedido = async (items: CheckoutItem[]): Promise<CheckoutRespon
             { headers: { Authorization: `Bearer ${await getToken()}` } }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
 
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error de validación del Backend:", error.response.data);
@@ -73,7 +73,7 @@ export const getAllPedidos = async (page: number = 1): Promise<PaginatedPedidosR
             }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error al obtener pedidos:", error.response.data);
         } else {
@@ -94,7 +94,7 @@ export const updatePedidoEstado = async (pedidoId: number, estado: string): Prom
             { headers: { Authorization: `Bearer ${await getToken()}` } }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error al actualizar estado del pedido:", error.response.data);
         } else {

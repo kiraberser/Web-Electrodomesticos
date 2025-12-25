@@ -57,8 +57,10 @@ export default function VentasPage() {
     const isLoadingStatsRef = useRef(false)
     const isLoadingGraficoRef = useRef(false)
     const lastFiltersRef = useRef({ tipoFilter: "Todos", search: "" })
-    const lastStatsParamsRef = useRef({ tipo: 'mes', año: new Date().getFullYear(), mes: new Date().getMonth() + 1, dia: new Date().getDate() })
-    const lastGraficoParamsRef = useRef({ tipo: 'dia', año: new Date().getFullYear(), mes: new Date().getMonth() + 1 })
+    type StatsParams = { tipo: string; año: number; mes: number; dia: number }
+    type GraficoParams = { tipo: string; año: number; mes?: number }
+    const lastStatsParamsRef = useRef<StatsParams>({ tipo: 'mes', año: new Date().getFullYear(), mes: new Date().getMonth() + 1, dia: new Date().getDate() })
+    const lastGraficoParamsRef = useRef<GraficoParams>({ tipo: 'dia', año: new Date().getFullYear(), mes: new Date().getMonth() + 1 })
 
     // Cargar datos iniciales solo una vez
     useEffect(() => {
@@ -109,7 +111,7 @@ export default function VentasPage() {
             return
         }
         
-        lastStatsParamsRef.current = currentParams as any
+        lastStatsParamsRef.current = currentParams as StatsParams
         isLoadingStatsRef.current = true
         
         try {
@@ -154,7 +156,7 @@ export default function VentasPage() {
             return
         }
         
-        lastGraficoParamsRef.current = currentParams as any
+        lastGraficoParamsRef.current = currentParams as GraficoParams
         isLoadingGraficoRef.current = true
         setLoadingGrafico(true)
         

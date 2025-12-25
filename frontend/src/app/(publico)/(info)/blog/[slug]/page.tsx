@@ -34,7 +34,7 @@ const BlogPost = () => {
                 const response = await axios.get(`http://localhost:8000/api/v1/blog/post/${params.slug}/`)
                 setPost(response.data)
                 setError(null)
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.error('Error fetching post:', error)
                 setError(error.message || 'Error al cargar el post')
                 if (error.response) {

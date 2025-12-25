@@ -10,13 +10,13 @@ import { Badge } from '../ui';
 import { Star, ShoppingCart, Heart, Loader2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
-import { products } from '@/data/products';
+import { products, type Product } from '@/data/products';
 
 const FeaturedProducts = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { addItem } = useCart();
 
-    const handleAddToCart = (product: any) => {
+    const handleAddToCart = (product: Product) => {
         addItem(product);
         toast.success(`${product.name} agregado al carrito`, {
             duration: 3000,

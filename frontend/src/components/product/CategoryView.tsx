@@ -19,7 +19,7 @@ interface Props {
 export default function CategoryView({
     products,
 }: Props) {
-    const [filters, setFilters] = useState<{ brands: Brand[]; types?: any[]; min: number; max: number }>({
+    const [filters, setFilters] = useState<{ brands: Brand[]; types?: ProductType[]; min: number; max: number }>({
         brands: [],
         types: [],
         min: 0,

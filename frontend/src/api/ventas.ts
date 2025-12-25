@@ -99,7 +99,7 @@ export const getAllVentas = async (
     search?: string
 ): Promise<PaginatedVentasResponse> => {
     try {
-        const params: any = { page };
+        const params: Record<string, string | number> = { page };
         if (tipo) params.tipo = tipo;
         if (search) params.search = search;
         
@@ -111,7 +111,7 @@ export const getAllVentas = async (
             }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error al obtener ventas:", error.response.data);
         } else {
@@ -134,7 +134,7 @@ export const getEstadisticasVentas = async (
     dia?: number
 ): Promise<EstadisticasVentas & { tipo: string; año: number; mes?: number }> => {
     try {
-        const params: any = { tipo };
+        const params: Record<string, string | number> = { tipo };
         if (año) params.año = año;
         if (mes) params.mes = mes;
         if (dia && tipo === 'dia') params.dia = dia;
@@ -147,7 +147,7 @@ export const getEstadisticasVentas = async (
             }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error al obtener estadísticas de ventas:", error.response.data);
         } else {
@@ -169,7 +169,7 @@ export const getGraficoVentas = async (
     mes?: number
 ): Promise<GraficoVentasResponse & { tipo: string; año: number; mes?: number }> => {
     try {
-        const params: any = { tipo };
+        const params: Record<string, string | number> = { tipo };
         if (año) params.año = año;
         if (mes) params.mes = mes;
         
@@ -181,7 +181,7 @@ export const getGraficoVentas = async (
             }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error al obtener datos del gráfico:", error.response.data);
         } else {

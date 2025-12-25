@@ -77,7 +77,7 @@ export const getServiceById = async (id: string) => {
     return { data: response.data, status: response.status };
 }
 
-export const updateServiceNote = async (id: string, note: any) => {
+export const updateServiceNote = async (id: string, note: Record<string, unknown>) => {
     const cookieStore = await cookies()
     const token = cookieStore.get('access_cookie')?.value
     const response = await axios.patch(`${URL}/servicios/${id}/`, { nota: note }, {

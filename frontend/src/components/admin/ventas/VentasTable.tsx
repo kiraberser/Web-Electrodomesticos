@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
-import type { Venta } from "@/api/ventas"
+import type { Venta, VentaRefaccion, VentaServicio, Devolucion } from "@/api/ventas"
 import { Badge } from "@/components/ui"
 import { Button } from "@/components/admin/ui"
 import { Store, Wrench, RotateCcw, Eye, ChevronDown, ChevronUp } from "lucide-react"
@@ -119,8 +119,8 @@ export default function VentasTable({ ventas, loading = false, onView }: VentasT
                         {ventas.map((venta) => {
                             const TipoIcon = getTipoIcon(venta.tipo)
                             const fecha = venta.tipo === 'devolucion' 
-                                ? (venta as any).fecha_devolucion 
-                                : (venta as any).fecha_venta
+                                ? (venta as Devolucion).fecha_devolucion 
+                                : (venta as VentaRefaccion | VentaServicio).fecha_venta
 
                             return (
                                 <tr
@@ -163,21 +163,21 @@ export default function VentasTable({ ventas, loading = false, onView }: VentasT
                                         {venta.tipo === 'refaccion' && (
                                             <div>
                                                 <div className="font-medium">
-                                                    {(venta as any).refaccion_nombre}
+                                                    {(venta as VentaRefaccion | Devolucion).refaccion_nombre}
                                                 </div>
                                                 <div className={`text-xs ${dark ? 'text-slate-400' : 'text-gray-600'}`}>
-                                                    {(venta as any).marca_nombre}
+                                                    {(venta as VentaRefaccion | Devolucion).marca_nombre}
                                                 </div>
                                             </div>
                                         )}
                                         {venta.tipo === 'servicio' && (
                                             <div>
                                                 <div className="font-medium">
-                                                    {(venta as any).servicio_aparato || `Servicio #${(venta as any).servicio}`}
+                                                    {(venta as VentaServicio).servicio_aparato || `Servicio #${(venta as VentaServicio).servicio}`}
                                                 </div>
-                                                {(venta as any).tecnico && (
+                                                {(venta as VentaServicio).tecnico && (
                                                     <div className={`text-xs ${dark ? 'text-slate-400' : 'text-gray-600'}`}>
-                                                        Técnico: {(venta as any).tecnico}
+                                                        Técnico: {(venta as VentaServicio).tecnico}
                                                     </div>
                                                 )}
                                             </div>
@@ -185,18 +185,18 @@ export default function VentasTable({ ventas, loading = false, onView }: VentasT
                                         {venta.tipo === 'devolucion' && (
                                             <div>
                                                 <div className="font-medium">
-                                                    {(venta as any).refaccion_nombre}
+                                                    {(venta as VentaRefaccion | Devolucion).refaccion_nombre}
                                                 </div>
                                                 <div className={`text-xs ${dark ? 'text-slate-400' : 'text-gray-600'}`}>
-                                                    {(venta as any).marca_nombre}
+                                                    {(venta as VentaRefaccion | Devolucion).marca_nombre}
                                                 </div>
                                             </div>
                                         )}
                                     </td>
                                     <td className={`px-6 py-4 ${dark ? 'text-slate-300' : 'text-gray-700'}`}>
-                                        {venta.tipo === 'refaccion' && (venta as any).cantidad}
+                                        {venta.tipo === 'refaccion' && (venta as VentaRefaccion).cantidad}
                                         {venta.tipo === 'servicio' && '-'}
-                                        {venta.tipo === 'devolucion' && (venta as any).cantidad}
+                                        {venta.tipo === 'devolucion' && (venta as Devolucion).cantidad}
                                     </td>
                                     <td className={`px-6 py-4 font-semibold ${dark ? 'text-slate-100' : 'text-gray-900'}`}>
                                         {formatCurrency(venta.total)}
@@ -205,15 +205,15 @@ export default function VentasTable({ ventas, loading = false, onView }: VentasT
                                         {formatDate(fecha)}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {venta.tipo === 'servicio' && (venta as any).estado_pago && (
+                                        {venta.tipo === 'servicio' && (venta as VentaServicio).estado_pago && (
                                             <Badge
                                                 className={
                                                     dark
-                                                        ? ESTADO_PAGO_COLORS[(venta as any).estado_pago]?.dark
-                                                        : ESTADO_PAGO_COLORS[(venta as any).estado_pago]?.light
+                                                        ? ESTADO_PAGO_COLORS[(venta as VentaServicio).estado_pago]?.dark
+                                                        : ESTADO_PAGO_COLORS[(venta as VentaServicio).estado_pago]?.light
                                                 }
                                             >
-                                                {(venta as any).estado_pago}
+                                                {(venta as VentaServicio).estado_pago}
                                             </Badge>
                                         )}
                                         {venta.tipo !== 'servicio' && (
@@ -245,8 +245,8 @@ export default function VentasTable({ ventas, loading = false, onView }: VentasT
                 {ventas.map((venta) => {
                     const TipoIcon = getTipoIcon(venta.tipo)
                     const fecha = venta.tipo === 'devolucion' 
-                        ? (venta as any).fecha_devolucion 
-                        : (venta as any).fecha_venta
+                        ? (venta as Devolucion).fecha_devolucion 
+                        : (venta as VentaRefaccion | VentaServicio).fecha_venta
 
                     return (
                         <div
@@ -283,16 +283,16 @@ export default function VentasTable({ ventas, loading = false, onView }: VentasT
                                         </Badge>
                                     </div>
                                     <div className={`font-medium ${dark ? 'text-slate-200' : 'text-gray-900'}`}>
-                                        {venta.tipo === 'refaccion' && (venta as any).refaccion_nombre}
+                                        {venta.tipo === 'refaccion' && (venta as VentaRefaccion).refaccion_nombre}
                                         {venta.tipo === 'servicio' && 
-                                            ((venta as any).servicio_aparato || `Servicio #${(venta as any).servicio}`)}
-                                        {venta.tipo === 'devolucion' && (venta as any).refaccion_nombre}
+                                            ((venta as VentaServicio).servicio_aparato || `Servicio #${(venta as VentaServicio).servicio}`)}
+                                        {venta.tipo === 'devolucion' && (venta as Devolucion).refaccion_nombre}
                                     </div>
                                     <div className={`mt-1 text-sm ${dark ? 'text-slate-400' : 'text-gray-600'}`}>
-                                        {venta.tipo === 'refaccion' && (venta as any).marca_nombre}
-                                        {venta.tipo === 'servicio' && (venta as any).tecnico && 
-                                            `Técnico: ${(venta as any).tecnico}`}
-                                        {venta.tipo === 'devolucion' && (venta as any).marca_nombre}
+                                        {venta.tipo === 'refaccion' && (venta as VentaRefaccion).marca_nombre}
+                                        {venta.tipo === 'servicio' && (venta as VentaServicio).tecnico && 
+                                            `Técnico: ${(venta as VentaServicio).tecnico}`}
+                                        {venta.tipo === 'devolucion' && (venta as Devolucion).marca_nombre}
                                     </div>
                                     <div className={`mt-2 text-xs ${dark ? 'text-slate-500' : 'text-gray-500'}`}>
                                         {formatDate(fecha)}
@@ -302,15 +302,15 @@ export default function VentasTable({ ventas, loading = false, onView }: VentasT
                                     <div className={`text-lg font-bold ${dark ? 'text-slate-100' : 'text-gray-900'}`}>
                                         {formatCurrency(venta.total)}
                                     </div>
-                                    {venta.tipo === 'servicio' && (venta as any).estado_pago && (
+                                    {venta.tipo === 'servicio' && (venta as VentaServicio).estado_pago && (
                                         <Badge
                                             className={`mt-1 ${
                                                 dark
-                                                    ? ESTADO_PAGO_COLORS[(venta as any).estado_pago]?.dark
-                                                    : ESTADO_PAGO_COLORS[(venta as any).estado_pago]?.light
+                                                    ? ESTADO_PAGO_COLORS[(venta as VentaServicio).estado_pago]?.dark
+                                                    : ESTADO_PAGO_COLORS[(venta as VentaServicio).estado_pago]?.light
                                             }`}
                                         >
-                                            {(venta as any).estado_pago}
+                                            {(venta as VentaServicio).estado_pago}
                                         </Badge>
                                     )}
                                     {onView && (

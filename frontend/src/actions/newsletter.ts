@@ -4,8 +4,8 @@ import { subscribeNewsletter } from "@/api/newsletter"
 
 type ActionState = {
     success: boolean
-    error: any
-    data?: any
+    error: string | null
+    data?: unknown
 }
 
 export const subscribeNewsletterAction = async (prevState: ActionState, formData: FormData): Promise<ActionState> => {

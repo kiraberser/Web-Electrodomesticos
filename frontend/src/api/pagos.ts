@@ -60,7 +60,7 @@ export const crearPedido = async (items: CheckoutItem[]): Promise<CheckoutRespon
             { headers: { Authorization: `Bearer ${await getToken()}` } }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error en crearPedido:", error.response?.data || error.message);
         throw error;
     }
@@ -81,7 +81,7 @@ export const crearPreferenciaPago = async (
         );
         console.log(response.data);
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error en crearPreferenciaPago:", error.response?.data || error.message);
         throw error;
     }
@@ -97,7 +97,7 @@ export const consultarPago = async (pagoId: number): Promise<PagoInfo> => {
             { headers: { Authorization: `Bearer ${await getToken()}` } }
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error en consultarPago:", error.response?.data || error.message);
         throw error;
     }
