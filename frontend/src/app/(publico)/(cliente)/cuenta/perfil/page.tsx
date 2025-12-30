@@ -35,6 +35,7 @@ export default async function PerfilPage() {
             address_references: user.address_references || null,
             full_address: user.full_address || null,
             address: user.address || null, // Legacy field
+            primary_address: (user as any).primary_address || null, // Dirección principal desde Direccion
             date_joined: user.date_joined,
             is_staff: user.is_staff || false,
             is_superuser: user.is_superuser || false,

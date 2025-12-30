@@ -38,8 +38,37 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
                     value={formattedDate}
                 />
 
-                {/* Address Display */}
-                {user.full_address || user.address_street ? (
+                {/* Address Display - Priorizar primary_address desde Direccion */}
+                {user.primary_address ? (
+                    <div className="col-span-1 md:col-span-2">
+                        <div className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                            <div className="mt-1">
+                                <MapPin className="text-[#1F509A]" size={20} />
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <p className="text-sm font-medium text-gray-400">Dirección de Envío</p>
+                                    <span className="text-xs font-medium text-[#E38E49] bg-[#FFF8F3] px-2 py-0.5 rounded">
+                                        Principal
+                                    </span>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-gray-800 font-medium">{user.primary_address.street}</p>
+                                    <p className="text-gray-700">{user.primary_address.colony}</p>
+                                    <p className="text-gray-700">
+                                        {user.primary_address.city}, {user.primary_address.state}
+                                    </p>
+                                    <p className="text-gray-600 text-sm">CP: {user.primary_address.postal_code}</p>
+                                    {user.primary_address.references && (
+                                        <p className="text-gray-600 text-sm italic mt-2">
+                                            Referencias: {user.primary_address.references}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : user.full_address || user.address_street ? (
                     <div className="col-span-1 md:col-span-2">
                         <div className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
                             <div className="mt-1">
