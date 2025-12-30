@@ -1,23 +1,27 @@
 import type { Metadata } from "next"
+import { redirect } from "next/navigation"
+import { getDirecciones } from "@/api/user"
+import { DireccionesList } from "@/components/usuario"
 
 export const metadata: Metadata = {
     title: 'Mis Direcciones - Refaccionaria Vega',
     description: 'Gestiona tus direcciones de envío',
 }
 
-export default function DireccionesPage() {
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-900 mb-6">Mis Direcciones</h1>
-                
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <p className="text-gray-600 text-center py-8">
-                        Aquí podrás agregar y gestionar tus direcciones de envío.
-                    </p>
+export default async function DireccionesPage() {
+    try {
+        const direcciones = await getDirecciones()
+
+        return (
+            <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+                <div className="max-w-7xl mx-auto">
+                    <DireccionesList direcciones={direcciones} />
                 </div>
             </div>
-        </div>
-    )
+        )
+    } catch (error) {
+        console.error("Error loading direcciones:", error)
+        redirect("/cuenta/perfil")
+    }
 }
 
