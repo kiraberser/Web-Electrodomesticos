@@ -1,7 +1,14 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
-from .views import LoginUsuarioView, RegistroUsuarioView, GetUserData, UpdateUserProfileView
+from .views import (
+    LoginUsuarioView, 
+    RegistroUsuarioView, 
+    GetUserData, 
+    UpdateUserProfileView,
+    DireccionesListView,
+    DireccionDetailView
+)
 
 urlpatterns = [
     # Endpoints de autenticación
@@ -11,4 +18,7 @@ urlpatterns = [
     path('login/', LoginUsuarioView.as_view()),
     path('user-profile/', GetUserData.as_view(), name='user-profile'),
     path('user-profile/update/', UpdateUserProfileView.as_view(), name='update-user-profile'),
+    # Endpoints de direcciones
+    path('user-profile/direcciones/', DireccionesListView.as_view(), name='direcciones-list'),
+    path('user-profile/direcciones/<int:pk>/', DireccionDetailView.as_view(), name='direccion-detail'),
 ]
