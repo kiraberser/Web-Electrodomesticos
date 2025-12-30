@@ -5,7 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import ValidationError
 
 from .models import Usuario
-from .serializers import RegistroSerializer, LoginSerializer
+from .serializers import RegistroSerializer, LoginSerializer, UserProfileSerializer, UpdateUserProfileSerializer
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class RegistroUsuarioView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -62,3 +63,66 @@ class LoginUsuarioView(APIView):
                 'refresh': str(refresh),
                 'access': str(access)
             }, status=status.HTTP_200_OK)
+            
+class GetUserData(APIView):
+    """
+    Vista para obtener la información del perfil del usuario autenticado
+    Requiere autenticación mediante JWT
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        """
+        Retorna los datos del usuario autenticado
+        """
+        user = request.user
+        serializer = UserProfileSerializer(user)
+        
+        return Response({
+            'usuario': serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class UpdateUserProfileView(APIView):
+    """
+    Vista para actualizar la información del perfil del usuario autenticado
+    Requiere autenticación mediante JWT
+    Solo permite actualizar el propio perfil
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request):
+        """
+        Actualiza los datos del usuario autenticado (actualización completa)
+        """
+        user = request.user
+        serializer = UpdateUserProfileSerializer(user, data=request.data, partial=False)
+        
+        if serializer.is_valid():
+            serializer.save()
+            updated_user = UserProfileSerializer(user)
+            return Response({
+                'message': 'Perfil actualizado exitosamente',
+                'usuario': updated_user.data
+            }, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request):
+        """
+        Actualiza los datos del usuario autenticado (actualización parcial)
+        """
+        user = request.user
+        serializer = UpdateUserProfileSerializer(user, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            updated_user = UserProfileSerializer(user)
+            return Response({
+                'message': 'Perfil actualizado exitosamente',
+                'usuario': updated_user.data
+            }, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
