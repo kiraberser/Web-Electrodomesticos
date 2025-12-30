@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from .models import Direccion
 
 User = get_user_model()
 
@@ -47,9 +48,55 @@ class RegistroSerializer(serializers.ModelSerializer):
         return value
 
 
+class DireccionSerializer(serializers.ModelSerializer):
+    """Serializer para direcciones de envío"""
+    full_address = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Direccion
+        fields = [
+            'id',
+            'nombre',
+            'street',
+            'colony',
+            'city',
+            'state',
+            'postal_code',
+            'references',
+            'is_primary',
+            'full_address',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'full_address']
+    
+    def get_full_address(self, obj):
+        """Retorna la dirección completa formateada"""
+        return obj.get_full_address()
+    
+    def validate_postal_code(self, value):
+        """Validar formato de código postal"""
+        if value and value.strip():
+            cleaned = value.replace(' ', '').replace('-', '')
+            if not cleaned.isdigit():
+                raise serializers.ValidationError('El código postal debe contener solo números')
+            if len(cleaned) != 5:
+                raise serializers.ValidationError('El código postal debe tener 5 dígitos')
+        return value
+    
+    def validate(self, data):
+        """Validar que no haya más de 3 direcciones"""
+        usuario = self.context['request'].user
+        if self.instance is None:  # Creación
+            if Direccion.objects.filter(usuario=usuario).count() >= 3:
+                raise serializers.ValidationError("No puedes tener más de 3 direcciones de envío")
+        return data
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer para obtener los datos del perfil del usuario"""
     full_address = serializers.SerializerMethodField()
+    primary_address = serializers.SerializerMethodField()
     
     class Meta:
         model = User
@@ -62,27 +109,41 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'phone',
             'bio',
             'avatar',
+            # Campos legacy de dirección (deprecados, usar Direccion model)
             'address_street',
             'address_colony',
             'address_city',
             'address_state',
             'address_postal_code',
             'address_references',
-            'full_address',
             'address',  # Legacy field
+            # Campos nuevos desde Direccion
+            'full_address',
+            'primary_address',
             'date_joined',
             'is_staff',
             'is_superuser',
         ]
-        read_only_fields = ['id', 'date_joined', 'is_staff', 'is_superuser', 'full_address']
+        read_only_fields = ['id', 'date_joined', 'is_staff', 'is_superuser', 'full_address', 'primary_address']
     
     def get_full_address(self, obj):
-        """Retorna la dirección completa formateada"""
+        """Retorna la dirección completa formateada desde Direccion principal o campos legacy"""
         return obj.get_full_address()
+    
+    def get_primary_address(self, obj):
+        """Retorna la dirección principal desde el modelo Direccion"""
+        primary = obj.get_primary_address()
+        if primary:
+            return DireccionSerializer(primary).data
+        return None
 
 
 class UpdateUserProfileSerializer(serializers.ModelSerializer):
-    """Serializer para actualizar el perfil del usuario"""
+    """Serializer para actualizar el perfil del usuario
+    
+    NOTA: Los campos de dirección (address_*) están deprecados.
+    Para gestionar direcciones, usar el modelo Direccion y sus endpoints.
+    """
     email = serializers.EmailField(required=False)
     phone = serializers.CharField(max_length=20, required=False, allow_blank=True)
     address_postal_code = serializers.CharField(max_length=10, required=False, allow_blank=True)
@@ -95,6 +156,7 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
             'email',
             'phone',
             'bio',
+            # Campos legacy de dirección (deprecados, mantener solo para compatibilidad)
             'address_street',
             'address_colony',
             'address_city',
@@ -135,3 +197,37 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+
+
+class CreateDireccionSerializer(serializers.ModelSerializer):
+    """Serializer para crear direcciones"""
+    
+    class Meta:
+        model = Direccion
+        fields = [
+            'nombre',
+            'street',
+            'colony',
+            'city',
+            'state',
+            'postal_code',
+            'references',
+            'is_primary',
+        ]
+    
+    def validate_postal_code(self, value):
+        """Validar formato de código postal"""
+        if value and value.strip():
+            cleaned = value.replace(' ', '').replace('-', '')
+            if not cleaned.isdigit():
+                raise serializers.ValidationError('El código postal debe contener solo números')
+            if len(cleaned) != 5:
+                raise serializers.ValidationError('El código postal debe tener 5 dígitos')
+        return value
+    
+    def validate(self, data):
+        """Validar límite de direcciones"""
+        usuario = self.context['request'].user
+        if Direccion.objects.filter(usuario=usuario).count() >= 3:
+            raise serializers.ValidationError("No puedes tener más de 3 direcciones de envío")
+        return data

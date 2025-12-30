@@ -4,8 +4,15 @@ from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import ValidationError
 
-from .models import Usuario
-from .serializers import RegistroSerializer, LoginSerializer, UserProfileSerializer, UpdateUserProfileSerializer
+from .models import Usuario, Direccion
+from .serializers import (
+    RegistroSerializer, 
+    LoginSerializer, 
+    UserProfileSerializer, 
+    UpdateUserProfileSerializer,
+    DireccionSerializer,
+    CreateDireccionSerializer
+)
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class RegistroUsuarioView(APIView):
@@ -126,3 +133,123 @@ class UpdateUserProfileView(APIView):
             }, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DireccionesListView(APIView):
+    """
+    Vista para listar y crear direcciones del usuario autenticado
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Obtener todas las direcciones del usuario"""
+        direcciones = Direccion.objects.filter(usuario=request.user)
+        serializer = DireccionSerializer(direcciones, many=True)
+        return Response({
+            'direcciones': serializer.data
+        }, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        """Crear una nueva dirección"""
+        serializer = CreateDireccionSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        
+        if serializer.is_valid():
+            # Asignar el usuario actual
+            direccion = serializer.save(usuario=request.user)
+            
+            # Si se marca como principal, desmarcar las demás
+            if direccion.is_primary:
+                Direccion.objects.filter(
+                    usuario=request.user,
+                    is_primary=True
+                ).exclude(pk=direccion.pk).update(is_primary=False)
+            
+            response_serializer = DireccionSerializer(direccion)
+            return Response({
+                'message': 'Dirección creada exitosamente',
+                'direccion': response_serializer.data
+            }, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DireccionDetailView(APIView):
+    """
+    Vista para obtener, actualizar y eliminar una dirección específica
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self, pk, usuario):
+        """Obtener la dirección o retornar 404"""
+        try:
+            return Direccion.objects.get(pk=pk, usuario=usuario)
+        except Direccion.DoesNotExist:
+            return None
+    
+    def get(self, request, pk):
+        """Obtener una dirección específica"""
+        direccion = self.get_object(pk, request.user)
+        if not direccion:
+            return Response(
+                {'detail': 'Dirección no encontrada'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        serializer = DireccionSerializer(direccion)
+        return Response({
+            'direccion': serializer.data
+        }, status=status.HTTP_200_OK)
+    
+    def patch(self, request, pk):
+        """Actualizar una dirección"""
+        direccion = self.get_object(pk, request.user)
+        if not direccion:
+            return Response(
+                {'detail': 'Dirección no encontrada'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        serializer = CreateDireccionSerializer(
+            direccion,
+            data=request.data,
+            partial=True,
+            context={'request': request}
+        )
+        
+        if serializer.is_valid():
+            serializer.save()
+            
+            # Si se marca como principal, desmarcar las demás
+            if direccion.is_primary:
+                Direccion.objects.filter(
+                    usuario=request.user,
+                    is_primary=True
+                ).exclude(pk=direccion.pk).update(is_primary=False)
+            
+            response_serializer = DireccionSerializer(direccion)
+            return Response({
+                'message': 'Dirección actualizada exitosamente',
+                'direccion': response_serializer.data
+            }, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        """Eliminar una dirección"""
+        direccion = self.get_object(pk, request.user)
+        if not direccion:
+            return Response(
+                {'detail': 'Dirección no encontrada'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        direccion.delete()
+        return Response(
+            {'message': 'Dirección eliminada exitosamente'},
+            status=status.HTTP_200_OK
+        )
