@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CreateUserType, LoginUserType, UpdateUserProfileInput } from '@/types/user';
+import { CreateUserType, LoginUserType, UpdateUserProfileInput, Direccion, CreateDireccionInput, UpdateDireccionInput } from '@/types/user';
 import { cookies } from 'next/headers';
 
 const url = process.env.NEXT_PUBLIC_BASE_URL_API;
@@ -99,6 +99,96 @@ export const updateUserProfile = async (data: UpdateUserProfileInput) => {
         return response.data;
     } catch (error: unknown) {
         console.error("Error en updateUserProfile:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const getDirecciones = async (): Promise<Direccion[]> => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        const response = await axios.get(`${url}/user/user-profile/direcciones/`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data.direcciones;
+    } catch (error: unknown) {
+        console.error("Error en getDirecciones:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const createDireccion = async (data: CreateDireccionInput): Promise<Direccion> => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        
+        // Limpiar código postal
+        const cleanedData = {
+            ...data,
+            postal_code: data.postal_code.replace(/\s|-/g, '')
+        };
+        
+        const response = await axios.post(
+            `${url}/user/user-profile/direcciones/`,
+            cleanedData,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        return response.data.direccion;
+    } catch (error: unknown) {
+        console.error("Error en createDireccion:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const updateDireccion = async (id: number, data: UpdateDireccionInput): Promise<Direccion> => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        
+        // Limpiar código postal si está presente
+        const cleanedData = data.postal_code 
+            ? { ...data, postal_code: data.postal_code.replace(/\s|-/g, '') }
+            : data;
+        
+        const response = await axios.patch(
+            `${url}/user/user-profile/direcciones/${id}/`,
+            cleanedData,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        return response.data.direccion;
+    } catch (error: unknown) {
+        console.error("Error en updateDireccion:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const deleteDireccion = async (id: number): Promise<void> => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        await axios.delete(
+            `${url}/user/user-profile/direcciones/${id}/`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+    } catch (error: unknown) {
+        console.error("Error en deleteDireccion:", getErrorLogMessage(error));
         throw error;
     }
 };
