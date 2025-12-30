@@ -22,7 +22,7 @@ function isAdminFromJWT(jwt?: string): boolean {
     );
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
     // Permitir la propia página de no autorizado
