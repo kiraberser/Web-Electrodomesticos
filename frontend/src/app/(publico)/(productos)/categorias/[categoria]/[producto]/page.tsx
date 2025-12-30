@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 export default async function ProductoPage({
     params,
 }: {
-    params: { categoria: string; producto: string }
+    params: Promise<{ categoria: string; producto: string }>
 }) {
-    const { categoria, producto } = params
+    const { categoria, producto } = await params
     const categoriaParam = decodeURIComponent(categoria ?? "")
     const productoSlug = decodeURIComponent(producto ?? "")
 
