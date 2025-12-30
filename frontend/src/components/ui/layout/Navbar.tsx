@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import { Search, ShoppingCart, Menu, X, User, ChevronDown } from "lucide-react"
+import { Search, ShoppingCart, Menu, X, User, ChevronDown, MapPin, Heart, Package, ShoppingBag } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
@@ -195,7 +195,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
 
                                                 <div className="py-1">
                                                     <Link
-                                                        href="/mi-perfil"
+                                                        href="/cuenta/perfil"
                                                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
                                                         onClick={() => setIsUserDropdownOpen(false)}
                                                     >
@@ -212,14 +212,40 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                                             Dashboard
                                                         </Link>
                                                     )}
+                                                    <div className="border-t border-gray-100 my-1"></div>
                                                     <Link
-                                                        href="/mis-compras"
+                                                        href="/cuenta/perfil/direcciones"
                                                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
                                                         onClick={() => setIsUserDropdownOpen(false)}
                                                     >
-                                                        <ShoppingCart className="w-4 h-4 mr-3 text-gray-400" />
+                                                        <MapPin className="w-4 h-4 mr-3 text-gray-400" />
+                                                        Direcciones
+                                                    </Link>
+                                                    <Link
+                                                        href="/cuenta/perfil/favoritos"
+                                                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                                                        onClick={() => setIsUserDropdownOpen(false)}
+                                                    >
+                                                        <Heart className="w-4 h-4 mr-3 text-gray-400" />
+                                                        Favoritos
+                                                    </Link>
+                                                    <Link
+                                                        href="/cuenta/perfil/mis-compras"
+                                                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                                                        onClick={() => setIsUserDropdownOpen(false)}
+                                                    >
+                                                        <ShoppingBag className="w-4 h-4 mr-3 text-gray-400" />
                                                         Mis Compras
                                                     </Link>
+                                                    <Link
+                                                        href="/cuenta/perfil/pedidos"
+                                                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                                                        onClick={() => setIsUserDropdownOpen(false)}
+                                                    >
+                                                        <Package className="w-4 h-4 mr-3 text-gray-400" />
+                                                        Pedidos
+                                                    </Link>
+                                                    <div className="border-t border-gray-100 my-1"></div>
                                                     <Link
                                                         href="/politicas-envio"
                                                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"

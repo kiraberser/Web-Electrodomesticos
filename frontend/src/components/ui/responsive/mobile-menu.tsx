@@ -4,7 +4,7 @@ import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/forms/Button"
 import { Badge } from "@/components/ui/feedback/Badge"
-import { User, Package, ShoppingBag, FileText, Mail, ChevronRight, LogOut, Truck, Phone, MapPin } from "lucide-react"
+import { User, Package, ShoppingBag, FileText, Mail, ChevronRight, LogOut, Truck, Phone, MapPin, Heart, LayoutDashboard } from "lucide-react"
 
 interface Category {
     id: number
@@ -149,7 +149,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
                             {/* Account Links */}
                             <Link
-                                href="/mi-perfil"
+                                href="/cuenta/perfil"
                                 className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
                                 onClick={onClose}
                             >
@@ -160,8 +160,49 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                                 <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
                             </Link>
 
+                            {username === "admin" && (
+                                <Link
+                                    href="/admin/dashboard"
+                                    className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
+                                    onClick={onClose}
+                                >
+                                    <div className="flex items-center">
+                                        <LayoutDashboard className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
+                                        <span className="font-medium">Dashboard</span>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                                </Link>
+                            )}
+
+                            {/* Separator */}
+                            <div className="border-t border-gray-200 my-4"></div>
+
                             <Link
-                                href="/mis-compras"
+                                href="/cuenta/perfil/direcciones"
+                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
+                                onClick={onClose}
+                            >
+                                <div className="flex items-center">
+                                    <MapPin className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
+                                    <span className="font-medium">Direcciones</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                            </Link>
+
+                            <Link
+                                href="/cuenta/perfil/favoritos"
+                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
+                                onClick={onClose}
+                            >
+                                <div className="flex items-center">
+                                    <Heart className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
+                                    <span className="font-medium">Favoritos</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                            </Link>
+
+                            <Link
+                                href="/cuenta/perfil/mis-compras"
                                 className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
                                 onClick={onClose}
                             >
@@ -171,6 +212,21 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                                 </div>
                                 <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
                             </Link>
+
+                            <Link
+                                href="/cuenta/perfil/pedidos"
+                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
+                                onClick={onClose}
+                            >
+                                <div className="flex items-center">
+                                    <Package className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
+                                    <span className="font-medium">Pedidos</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                            </Link>
+
+                            {/* Separator */}
+                            <div className="border-t border-gray-200 my-4"></div>
 
                             <Link
                                 href="/politicas-envio"
