@@ -1,31 +1,41 @@
 'use client'
 
-import React, { useState} from 'react';
+import { useState} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { Star, ShoppingCart, Heart, Loader2 } from 'lucide-react';
+
 import { Button } from '../ui/forms/Button';
 import { Card, CardContent } from '../ui/display/Card';
 import { Badge } from '../ui';
-import { Star, ShoppingCart, Heart, Loader2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-
 import { products, type Product } from '@/data/products';
 
 const FeaturedProducts = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const { addItem } = useCart();
 
     const handleAddToCart = (product: Product) => {
-        addItem(product);
-        toast.success(`${product.name} agregado al carrito`, {
-            duration: 3000,
-            icon: '🛒',
-            style: {
-                background: '#10b981',
-                color: '#fff',
-            },
-        });
+        setLoading(true);
+        try {
+            addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 });
+            toast.success(`${product.name} agregado al carrito`, {
+                duration: 3000,
+                icon: '🛒',
+                style: {
+                    background: '#10b981',
+                    color: '#fff',
+                },
+            });
+            setLoading(false);
+        } catch (error) {
+            setError(error as string);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const nextSlide = () => {
