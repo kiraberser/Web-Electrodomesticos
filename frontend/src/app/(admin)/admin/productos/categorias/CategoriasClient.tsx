@@ -112,8 +112,8 @@ export default function CategoriasClient({ initialCategorias }: CategoriasClient
             >
                 <CategoriaForm
                     categoria={editingCategoria}
-                    onSuccess={handleSuccess}
-                    onCancel={() => setShowModal(false)}
+                    onSuccessAction={handleSuccess}
+                    onCancelAction={() => setShowModal(false)}
                 />
             </Modal>
         </main>
