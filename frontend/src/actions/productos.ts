@@ -16,7 +16,7 @@ import {
 } from "@/api/productos"
 import { uploadImage } from "@/lib/cloudinary"
 
-type ActionState = {
+export type ActionState = {
     success: boolean
     error: string | null | Record<string, { _errors: string[] }> | unknown
     data?: unknown
