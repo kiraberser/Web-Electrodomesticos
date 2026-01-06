@@ -1,6 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from django.db.models import Q
+from django.utils import timezone
+from datetime import timedelta
 
 from .serializers import CheckoutSerializer, PedidoListSerializer
 from .models import Pedido
@@ -16,12 +19,57 @@ class CheckoutView(APIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 class MisPedidosView(APIView):
+    """Obtiene todos los pedidos del usuario con paginación
+    
+    Solo muestra pedidos:
+    - Pagados (estado PAG, ENV)
+    - Creados sin pagar (estado CRE) que tengan menos de 3 días
+    
+    Excluye:
+    - Pedidos entregados (estado ENT)
+    - Pedidos cancelados (estado CAN)
+    - Pedidos creados sin pagar con más de 3 días
+    """
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PedidoPagination
 
     def get(self, request):
-        pedidos = Pedido.objects.filter(usuario=request.user).select_related('usuario', 'pago').prefetch_related('items__refaccion')
-        data = PedidoListSerializer(pedidos, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        # Fecha límite: 3 días atrás
+        fecha_limite = timezone.now() - timedelta(days=3)
+        
+        # Filtrar pedidos:
+        # 1. Pagados (PAG) o Enviados (ENV) - siempre se muestran
+        # 2. Creados (CRE) sin pago aprobado que tengan menos de 3 días
+        pedidos = Pedido.objects.filter(
+            usuario=request.user
+        ).exclude(
+            estado__in=['ENT', 'CAN']  # Excluir entregados y cancelados
+        ).filter(
+            # Pedidos pagados/enviados O pedidos creados recientes sin pagar
+            Q(
+                estado__in=['PAG', 'ENV']
+            ) | Q(
+                estado='CRE',
+                fecha_creacion__gte=fecha_limite,  # Menos de 3 días
+                pago__status__isnull=True  # Sin pago
+            ) | Q(
+                estado='CRE',
+                fecha_creacion__gte=fecha_limite,
+                pago__status__in=['PEN', 'REC', 'CAN']  # Pago pendiente, rechazado o cancelado
+            )
+        ).select_related('usuario', 'pago').prefetch_related('items__refaccion').order_by('-fecha_creacion')
+        
+        # Aplicar paginación
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(pedidos, request)
+        
+        if page is not None:
+            serializer = PedidoListSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
+        # Si no hay paginación, retornar todos (no debería pasar con paginación activa)
+        serializer = PedidoListSerializer(pedidos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class MisPedidosPagadosView(APIView):
