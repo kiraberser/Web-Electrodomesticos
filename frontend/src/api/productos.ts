@@ -253,6 +253,36 @@ export const getRefaccionByCodigoParte = async (codigoParte: string) => {
     }
 }
 
+/**
+ * Obtiene una refacción por su nombre (slug)
+ * Usa el search filter del backend que busca en nombre
+ */
+export const getRefaccionByNombre = async (nombre: string) => {
+    try {
+        const url = `${URL}/productos/refacciones/?search=${encodeURIComponent(nombre)}`
+        const response = await axios.get(url)
+        
+        if (response.status !== 200) {
+            throw new Error('Failed to fetch refaccion by nombre')
+        }
+        
+        // El search puede devolver múltiples resultados, tomamos el primero que coincida exactamente
+        const refacciones = response.data.results || response.data
+        const refaccion = Array.isArray(refacciones) 
+            ? refacciones.find((r: Refaccion) => r.nombre === nombre) || refacciones[0]
+            : refacciones
+        
+        if (!refaccion) {
+            throw new Error('Refaccion not found')
+        }
+        
+        return refaccion
+    } catch (error) {
+        console.error('Error fetching refaccion by nombre:', error)
+        throw error
+    }
+}
+
 export const createRefaccion = async (refaccionData: Refaccion) => {
     const headers = await getAuthHeaders()
     const response = await axios.post(`${URL}/productos/refacciones/`, refaccionData, { headers })

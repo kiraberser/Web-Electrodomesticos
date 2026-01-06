@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { CreateUserType, LoginUserType, UpdateUserProfileInput, Direccion, CreateDireccionInput, UpdateDireccionInput } from '@/types/user';
 import { cookies } from 'next/headers';
+import { Refaccion } from './productos';
 
 const url = process.env.NEXT_PUBLIC_BASE_URL_API;
 
@@ -189,6 +190,68 @@ export const deleteDireccion = async (id: number): Promise<void> => {
         );
     } catch (error: unknown) {
         console.error("Error en deleteDireccion:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+// Funciones de Favoritos
+export interface FavoritosResponse {
+    favoritos: Refaccion[];
+    total: number;
+}
+
+export const getFavoritos = async (): Promise<FavoritosResponse> => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        const response = await axios.get(`${url}/user/user-profile/favoritos/`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error: unknown) {
+        console.error("Error en getFavoritos:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const agregarFavorito = async (refaccionId: number): Promise<Refaccion> => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        const response = await axios.post(
+            `${url}/user/user-profile/favoritos/`,
+            { refaccion_id: refaccionId },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        return response.data.favorito;
+    } catch (error: unknown) {
+        console.error("Error en agregarFavorito:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const eliminarFavorito = async (refaccionId: number): Promise<void> => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        await axios.delete(
+            `${url}/user/user-profile/favoritos/${refaccionId}/`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+    } catch (error: unknown) {
+        console.error("Error en eliminarFavorito:", getErrorLogMessage(error));
         throw error;
     }
 };

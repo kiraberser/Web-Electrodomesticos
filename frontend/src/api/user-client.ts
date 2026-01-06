@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import { UpdateUserProfileInput } from '@/types/user'
+import { Refaccion } from './productos'
 
 const url = process.env.NEXT_PUBLIC_BASE_URL_API
 
@@ -11,7 +12,9 @@ function getTokenFromCookies(): string | null {
     const cookies = document.cookie.split(';')
     for (let cookie of cookies) {
         const [name, value] = cookie.trim().split('=')
-        if (name === 'access_cookie') {
+        console.log(name, value)
+        if (value === 'username') {
+            console.log('username', value)
             return decodeURIComponent(value)
         }
     }
@@ -75,6 +78,69 @@ export const updateUserProfileClient = async (data: UpdateUserProfileInput) => {
         return response.data
     } catch (error: unknown) {
         console.error("Error en updateUserProfileClient:", getErrorLogMessage(error))
+        throw error
+    }
+}
+
+// Funciones de Favoritos (versión cliente)
+export interface FavoritosResponse {
+    favoritos: Refaccion[];
+    total: number;
+}
+
+export const getFavoritosClient = async (): Promise<FavoritosResponse> => {
+    try {
+        // Las cookies HttpOnly se envían automáticamente con withCredentials
+        // No necesitamos leer el token manualmente
+        const response = await axios.get(`${url}/user/user-profile/favoritos/`, {
+            withCredentials: true, // Envía cookies automáticamente (incluyendo HttpOnly)
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        return response.data
+    } catch (error: unknown) {
+        console.error("Error en getFavoritosClient:", getErrorLogMessage(error))
+        throw error
+    }
+}
+
+export const agregarFavoritoClient = async (refaccionId: number): Promise<Refaccion> => {
+    try {
+        // Las cookies HttpOnly se envían automáticamente con withCredentials
+        // No necesitamos leer el token manualmente
+        const response = await axios.post(
+            `${url}/user/user-profile/favoritos/`,
+            { refaccion_id: refaccionId },
+            {
+                withCredentials: true, // Envía cookies automáticamente (incluyendo HttpOnly)
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        return response.data.favorito
+    } catch (error: unknown) {
+        console.error("Error en agregarFavoritoClient:", getErrorLogMessage(error))
+        throw error
+    }
+}
+
+export const eliminarFavoritoClient = async (refaccionId: number): Promise<void> => {
+    try {
+        // Las cookies HttpOnly se envían automáticamente con withCredentials
+        // No necesitamos leer el token manualmente
+        await axios.delete(
+            `${url}/user/user-profile/favoritos/${refaccionId}/`,
+            {
+                withCredentials: true, // Envía cookies automáticamente (incluyendo HttpOnly)
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+    } catch (error: unknown) {
+        console.error("Error en eliminarFavoritoClient:", getErrorLogMessage(error))
         throw error
     }
 }
