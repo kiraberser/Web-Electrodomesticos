@@ -113,6 +113,29 @@ export const updatePedidoEstado = async (pedidoId: number, estado: string): Prom
 }
 
 /**
+ * Obtiene todos los pedidos del usuario autenticado con paginación
+ */
+export const obtenerMisPedidos = async (page: number = 1): Promise<PaginatedPedidosResponse> => {
+    try {
+        const response = await axios.get(
+            `${url}/pedidos/mis-pedidos/`,
+            { 
+                params: { page },
+                headers: { Authorization: `Bearer ${await getToken()}` } 
+            }
+        );
+        return response.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            console.error("❌ Error al obtener pedidos:", error.response.data);
+        } else {
+            console.error("Error desconocido:", error);
+        }
+        throw error;
+    }
+}
+
+/**
  * Obtiene los pedidos pagados del usuario autenticado con paginación
  */
 export const obtenerMisPedidosPagados = async (page: number = 1): Promise<PaginatedPedidosResponse> => {
