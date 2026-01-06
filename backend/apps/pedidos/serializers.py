@@ -78,10 +78,11 @@ class CheckoutSerializer(serializers.Serializer):
 
 class PedidoItemListSerializer(serializers.ModelSerializer):
     refaccion_nombre = serializers.ReadOnlyField(source='refaccion.nombre')
+    refaccion_imagen = serializers.ReadOnlyField(source='refaccion.imagen')
 
     class Meta:
         model = PedidoItem
-        fields = ['id', 'refaccion', 'refaccion_nombre', 'cantidad', 'precio_unitario', 'subtotal']
+        fields = ['id', 'refaccion', 'refaccion_nombre', 'refaccion_imagen', 'cantidad', 'precio_unitario', 'subtotal']
 
 
 class PedidoListSerializer(serializers.ModelSerializer):

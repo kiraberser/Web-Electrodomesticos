@@ -73,16 +73,16 @@ class MisPedidosView(APIView):
 
 
 class MisPedidosPagadosView(APIView):
-    """Obtiene solo los pedidos del usuario que tienen un pago aprobado"""
+    """Obtiene solo los pedidos entregados del usuario (para compras)"""
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = PedidoPagadoPagination
 
     def get(self, request):
-        # Filtrar solo pedidos que tienen un pago aprobado
-        # Esto automáticamente excluye pedidos solo creados sin pago
+        # Filtrar solo pedidos entregados (estado ENT) con pago aprobado
         pedidos = Pedido.objects.filter(
             usuario=request.user,
-            pago__status='APR'  # Solo pedidos con pago aprobado
+            estado='ENT',  # Solo pedidos entregados
+            pago__status='APR'  # Con pago aprobado
         ).select_related('usuario', 'pago').prefetch_related('items__refaccion').order_by('-fecha_creacion')
         
         # Aplicar paginación
