@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState, useEffect, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -9,6 +9,9 @@ import { useCart } from "@/context/CartContext";
 import { type Refaccion } from "@/api/productos";
 import { type Brand, type Product, ProductType } from "@/data/products";
 import CheckoutButton from "@/components/checkout/CheckoutButton";
+import { agregarFavoritoAction, eliminarFavoritoAction } from "@/actions/favoritos";
+import AuthRequiredModal from "@/components/favoritos/AuthRequiredModal";
+import { checkAuthentication } from "@/lib/cookies";
 // Iconos modernos (reemplaza los anteriores si es necesario)
 import {
     ArrowLeft,
@@ -32,67 +35,185 @@ import { Badge } from "@/components/ui"; // Tu componente existente
 interface Props {
     categoria: string;
     refaccion: Refaccion;
+    initialIsFavorite?: boolean;
 }
 
-// Helper function to check if user is authenticated
-// Usamos la cookie 'username' que no es httpOnly para verificar autenticación
-function checkAuthentication(): boolean {
-    if (typeof document === 'undefined') return false;
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        // Verificar si existe la cookie 'username' (no httpOnly)
-        if (name === 'username' && value) {
-            return true;
-        }
-    }
-    return false;
-}
 
-export default function ProductDetailClient({ categoria, refaccion }: Props) {
+export default function ProductDetailClient({ categoria, refaccion, initialIsFavorite = false }: Props) {
     const router = useRouter();
+    const pathname = usePathname();
     const { addItem, items, updateQuantity } = useCart();
 
     // Estados para interactividad local
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
+    const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
     const [userRating, setUserRating] = useState(0);
     const [reviewText, setReviewText] = useState("");
     const [quantity, setQuantity] = useState(1);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showCheckout, setShowCheckout] = useState(false);
+    // Inicializar isAuthenticated basado en cookies si estamos en el cliente
+    const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return checkAuthentication();
+        }
+        return false;
+    });
+    const [isMounted, setIsMounted] = useState(false);
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
-    // Verificar autenticación al montar el componente y cuando cambie
+    // Ref para prevenir múltiples clicks simultáneos
+    const isProcessingRef = useRef(false);
+    
+    // Cola de acciones pendientes de favoritos para sincronizar cuando cambie de pestaña
+    // Usar sessionStorage para compartir entre componentes
+    const STORAGE_KEY = 'pending_favorite_actions';
+    const getPendingActions = (): Array<{ action: 'add' | 'remove'; refaccionId: number }> => {
+        if (typeof window === 'undefined') return [];
+        try {
+            const stored = sessionStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
+        } catch {
+            return [];
+        }
+    };
+    const setPendingActions = (actions: Array<{ action: 'add' | 'remove'; refaccionId: number }>) => {
+        if (typeof window === 'undefined') return;
+        try {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(actions));
+        } catch {
+            // Ignorar errores de storage
+        }
+    };
+    const pendingFavoriteActionsRef = useRef<Array<{ action: 'add' | 'remove'; refaccionId: number }>>(getPendingActions());
+    const isSyncingRef = useRef(false);
+    
+    // Sincronizar ref con sessionStorage
     useEffect(() => {
-        const checkAuth = () => {
-            try {
-                const authenticated = checkAuthentication();
-                setIsAuthenticated(authenticated);
-            } catch (error) {
-                console.error('Error checking auth:', error);
-                setIsAuthenticated(false);
+        pendingFavoriteActionsRef.current = getPendingActions();
+    }, []);
+
+    // Verificar autenticación solo en el cliente después del montaje
+    useEffect(() => {
+        setIsMounted(true);
+        const authStatus = checkAuthentication();
+        setIsAuthenticated(authStatus);
+        
+        // Si está autenticado, asegurarse de que el modal esté cerrado
+        if (authStatus) {
+            setShowAuthModal(false);
+        }
+    }, []);
+
+    // Verificar autenticación cuando el modal está abierto para cerrarlo si el usuario se autentica
+    useEffect(() => {
+        if (!isMounted || !showAuthModal) return;
+        
+        // Verificar autenticación periódicamente mientras el modal está abierto
+        const checkAuthInterval = setInterval(() => {
+            const authStatus = checkAuthentication();
+            if (authStatus) {
+                setIsAuthenticated(true);
+                setShowAuthModal(false);
+                clearInterval(checkAuthInterval);
+            }
+        }, 500); // Verificar cada 500ms mientras el modal está abierto
+
+        return () => clearInterval(checkAuthInterval);
+    }, [showAuthModal, isMounted]);
+
+    // Cerrar modal automáticamente si el usuario se autentica
+    useEffect(() => {
+        if (isMounted && showAuthModal && isAuthenticated) {
+            setShowAuthModal(false);
+        }
+    }, [showAuthModal, isMounted, isAuthenticated]);
+
+    // Función para sincronizar cambios pendientes
+    const syncPendingActions = async () => {
+        // Verificar autenticación antes de sincronizar
+        if (!checkAuthentication()) {
+            // Si no está autenticado, limpiar las acciones pendientes
+            setPendingActions([]);
+            pendingFavoriteActionsRef.current = [];
+            return;
+        }
+
+        // Obtener acciones desde sessionStorage
+        const actions = getPendingActions();
+        if (actions.length === 0 || isSyncingRef.current) {
+            return;
+        }
+
+        isSyncingRef.current = true;
+        // Limpiar storage inmediatamente para evitar duplicados
+        setPendingActions([]);
+        pendingFavoriteActionsRef.current = [];
+
+        try {
+            for (const { action, refaccionId } of actions) {
+                if (action === 'add') {
+                    await agregarFavoritoAction(refaccionId);
+                } else {
+                    await eliminarFavoritoAction(refaccionId);
+                }
+            }
+        } catch (error) {
+            console.error('Error sincronizando favoritos:', error);
+            // Re-agregar acciones fallidas a la cola solo si está autenticado
+            if (checkAuthentication()) {
+                const failedActions = [...actions, ...getPendingActions()];
+                setPendingActions(failedActions);
+                pendingFavoriteActionsRef.current = failedActions;
+            }
+        } finally {
+            isSyncingRef.current = false;
+        }
+    };
+
+    // Sincronizar cuando se navega a la página de favoritos
+    useEffect(() => {
+        if (pathname === '/cuenta/perfil/favoritos') {
+            syncPendingActions();
+        }
+    }, [pathname]);
+
+    // Sincronizar cambios pendientes cuando cambia la visibilidad de la pestaña
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                // Cuando la pestaña se oculta, sincronizar cambios pendientes
+                syncPendingActions();
             }
         };
-        
-        // Verificar después de que el componente se monte
-        if (typeof window !== 'undefined') {
-            // Verificar inmediatamente
-            checkAuth();
-            
-            // Verificar periódicamente (cada 2 segundos) para detectar cambios en cookies
-            const interval = setInterval(checkAuth, 2000);
-            
-            // Verificar cuando la página vuelve a tener foco (por si el usuario inició sesión en otra pestaña)
-            const handleFocus = () => {
-                checkAuth();
-            };
-            
-            window.addEventListener('focus', handleFocus);
-            
-            return () => {
-                clearInterval(interval);
-                window.removeEventListener('focus', handleFocus);
-            };
-        }
+
+        const handleBeforeUnload = () => {
+            // Sincronizar antes de salir de la página
+            if (pendingFavoriteActionsRef.current.length > 0) {
+                syncPendingActions();
+            }
+        };
+
+        // Interceptar clicks en enlaces de favoritos
+        const handleClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const link = target.closest('a[href*="/cuenta/perfil/favoritos"]');
+            if (link) {
+                // Sincronizar antes de navegar
+                syncPendingActions();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        document.addEventListener('click', handleClick, true); // Usar capture para interceptar antes
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            document.removeEventListener('click', handleClick, true);
+            // Sincronizar cualquier cambio pendiente al desmontar
+            syncPendingActions();
+        };
     }, []);
 
     // Transformar Refaccion a Product (Logica existente)
@@ -194,7 +315,8 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
             return;
         }
 
-        // Verificar autenticación
+        // Verificar autenticación solo cuando se hace click (sin petición al servidor)
+        const isAuthenticated = checkAuthentication();
         if (!isAuthenticated) {
             toast.error('Inicia sesión para continuar con la compra', {
                 style: { background: "#dc2626", color: "#fff" },
@@ -261,23 +383,105 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
         setQuantity(newQuantity);
     };
 
-    // Lógica de Favoritos
+    // Lógica de Favoritos - Actualiza solo el estado local y sincroniza cuando cambia de pestaña
     const toggleFavorite = () => {
-        if (!isAuthenticated) {
-            toast.error('Inicia sesión para agregar a favoritos', {
-                style: { background: "#dc2626", color: "#fff" },
-            });
-            router.push('/cuenta');
+        // Prevenir múltiples clicks simultáneos
+        if (isProcessingRef.current || isFavoriteLoading) {
             return;
         }
-        setIsFavorite(!isFavorite);
-        toast(isFavorite ? "Eliminado de favoritos" : "Agregado a favoritos", {
-            icon: isFavorite ? "💔" : "❤️",
-        });
+
+        // Validar autenticación solo cuando se hace click (sin petición al servidor)
+        const currentAuthStatus = checkAuthentication();
+        
+        // Actualizar estado de autenticación si cambió
+        if (currentAuthStatus !== isAuthenticated) {
+            setIsAuthenticated(currentAuthStatus);
+        }
+        
+        // Si no está autenticado, mostrar modal
+        if (!currentAuthStatus) {
+            setShowAuthModal(true);
+            return;
+        }
+        
+        // Si está autenticado, asegurarse de que el modal esté cerrado
+        if (currentAuthStatus && showAuthModal) {
+            setShowAuthModal(false);
+        }
+
+        if (!refaccion.id) {
+            toast.error('Error: ID de producto no válido', {
+                style: { background: "#dc2626", color: "#fff" },
+            });
+            return;
+        }
+
+        // Marcar como procesando brevemente para prevenir clicks rápidos
+        isProcessingRef.current = true;
+        setIsFavoriteLoading(true);
+        
+        // Optimistic update - actualizar UI inmediatamente
+        const previousFavoriteState = isFavorite;
+        const newFavoriteState = !previousFavoriteState;
+        setIsFavorite(newFavoriteState);
+
+        // Optimizar cola: si hay acciones opuestas consecutivas, cancelarlas
+        const currentActions = getPendingActions();
+        const lastAction = currentActions[currentActions.length - 1];
+        
+        let updatedActions: Array<{ action: 'add' | 'remove'; refaccionId: number }>;
+        
+        if (lastAction && lastAction.refaccionId === refaccion.id) {
+            // Si la última acción es opuesta, cancelarla en lugar de agregar otra
+            if ((lastAction.action === 'add' && !newFavoriteState) || 
+                (lastAction.action === 'remove' && newFavoriteState)) {
+                updatedActions = currentActions.slice(0, -1); // Cancelar acción anterior
+            } else {
+                // Misma acción, no agregar duplicado
+                setIsFavorite(previousFavoriteState); // Revertir cambio
+                setIsFavoriteLoading(false);
+                isProcessingRef.current = false;
+                return;
+            }
+        } else {
+            // Agregar nueva acción a la cola
+            if (newFavoriteState) {
+                updatedActions = [...currentActions, { action: 'add', refaccionId: refaccion.id }];
+            } else {
+                updatedActions = [...currentActions, { action: 'remove', refaccionId: refaccion.id }];
+            }
+        }
+        
+        // Actualizar ref y sessionStorage
+        pendingFavoriteActionsRef.current = updatedActions;
+        setPendingActions(updatedActions);
+
+        // Mostrar feedback al usuario
+        if (newFavoriteState) {
+            toast.success("Agregado a favoritos", {
+                icon: "❤️",
+                style: { background: "#0A3981", color: "#fff" },
+                duration: 2000,
+            });
+        } else {
+            toast.success("Eliminado de favoritos", {
+                icon: "💔",
+                style: { background: "#0A3981", color: "#fff" },
+                duration: 2000,
+            });
+        }
+
+        // Resetear estado después de un breve delay
+        setTimeout(() => {
+            setIsFavoriteLoading(false);
+            isProcessingRef.current = false;
+        }, 300);
     };
 
     // Manejar publicación de comentario
     const handleSubmitReview = () => {
+        // Verificar autenticación solo cuando se hace click (sin petición al servidor)
+        const isAuthenticated = checkAuthentication();
         if (!isAuthenticated) {
             toast.error('Inicia sesión para escribir un comentario', {
                 style: { background: "#dc2626", color: "#fff" },
@@ -333,6 +537,7 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
     };
 
     return (
+        <>
         <main className="min-h-screen bg-gray-50 font-sans">
             {/* --- Navegación Superior --- */}
             <section className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
@@ -403,14 +608,17 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={toggleFavorite}
-                                        className="p-2 rounded-full hover:bg-gray-100 transition text-gray-400 hover:text-red-500"
+                                        disabled={isFavoriteLoading}
+                                        className="p-2 rounded-full hover:bg-gray-100 transition text-gray-400 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        aria-label={isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}
+                                        aria-busy={isFavoriteLoading}
                                     >
                                         <Heart
-                                            className={`h-6 w-6 ${
+                                            className={`h-6 w-6 transition-colors ${
                                                 isFavorite
                                                     ? "fill-red-500 text-red-500"
                                                     : ""
-                                            }`}
+                                            } ${isFavoriteLoading ? "animate-pulse" : ""}`}
                                         />
                                     </button>
                                     <button className="p-2 rounded-full hover:bg-gray-100 transition text-gray-400 hover:text-[#1F509A]">
@@ -630,7 +838,7 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
 
                             {/* Formulario simple de review */}
                             <div className="mb-6 bg-[#D4EBF8]/20 p-4 rounded-xl">
-                                {!isAuthenticated ? (
+                                {!isMounted || !isAuthenticated ? (
                                     <div className="text-center py-4">
                                         <p className="text-sm font-medium text-gray-700 mb-3">
                                             Inicia sesión para escribir una opinión
@@ -699,5 +907,16 @@ export default function ProductDetailClient({ categoria, refaccion }: Props) {
                 </div>
             </div>
         </main>
+        
+        {/* Modal de autenticación requerida - Fuera del main para evitar problemas de z-index */}
+        {/* Solo mostrar modal si NO está autenticado, está montado Y showAuthModal es true */}
+        {/* Verificar autenticación directamente en el render para asegurar que no se muestre si está autenticado */}
+        {isMounted && !checkAuthentication() && showAuthModal && (
+            <AuthRequiredModal 
+                isOpen={showAuthModal} 
+                onCloseAction={() => setShowAuthModal(false)} 
+            />
+        )}
+        </>
     );
 }
