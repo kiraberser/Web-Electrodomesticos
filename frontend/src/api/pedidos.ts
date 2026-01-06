@@ -16,6 +16,7 @@ export interface PedidoItem {
     id: number;
     refaccion: number;
     refaccion_nombre: string;
+    refaccion_imagen?: string | null;
     cantidad: number;
     precio_unitario: string;
     subtotal: string;
