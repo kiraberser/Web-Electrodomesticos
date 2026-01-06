@@ -89,10 +89,35 @@ class PedidoListSerializer(serializers.ModelSerializer):
     usuario_nombre = serializers.SerializerMethodField()
     usuario_email = serializers.ReadOnlyField(source='usuario.email')
     metodo_pago = serializers.SerializerMethodField()
+    metodo_pago_display = serializers.SerializerMethodField()
+    pago_id = serializers.SerializerMethodField()
+    pago_status = serializers.SerializerMethodField()
+    pago_status_display = serializers.SerializerMethodField()
+    pago_status_detail = serializers.SerializerMethodField()
+    pago_payment_id = serializers.SerializerMethodField()
+    pago_fecha_creacion = serializers.SerializerMethodField()
+    pago_fecha_aprobacion = serializers.SerializerMethodField()
 
     class Meta:
         model = Pedido
-        fields = ['id', 'estado', 'total', 'fecha_creacion', 'items', 'usuario_nombre', 'usuario_email', 'metodo_pago']
+        fields = [
+            'id', 
+            'estado', 
+            'total', 
+            'fecha_creacion', 
+            'items', 
+            'usuario_nombre', 
+            'usuario_email', 
+            'metodo_pago',
+            'metodo_pago_display',
+            'pago_id',
+            'pago_status',
+            'pago_status_display',
+            'pago_status_detail',
+            'pago_payment_id',
+            'pago_fecha_creacion',
+            'pago_fecha_aprobacion',
+        ]
 
     def get_usuario_nombre(self, obj):
         """Retorna el nombre completo del usuario o username si no tiene nombre"""
@@ -102,6 +127,10 @@ class PedidoListSerializer(serializers.ModelSerializer):
         return obj.usuario.username
 
     def get_metodo_pago(self, obj):
+        """Retorna el método de pago formateado desde la relación con Pago (mantiene compatibilidad)"""
+        return self.get_metodo_pago_display(obj)
+
+    def get_metodo_pago_display(self, obj):
         """Retorna el método de pago formateado desde la relación con Pago"""
         try:
             pago = obj.pago
@@ -151,5 +180,56 @@ class PedidoListSerializer(serializers.ModelSerializer):
             return 'No especificado'
         except Exception:
             return 'No especificado'
+
+    def get_pago_id(self, obj):
+        """Retorna el ID del pago asociado"""
+        try:
+            return obj.pago.id if obj.pago else None
+        except Exception:
+            return None
+
+    def get_pago_status(self, obj):
+        """Retorna el status del pago"""
+        try:
+            return obj.pago.status if obj.pago else None
+        except Exception:
+            return None
+
+    def get_pago_status_display(self, obj):
+        """Retorna el status del pago formateado"""
+        try:
+            if obj.pago:
+                return obj.pago.get_status_display()
+            return None
+        except Exception:
+            return None
+
+    def get_pago_status_detail(self, obj):
+        """Retorna el detalle del status del pago"""
+        try:
+            return obj.pago.status_detail if obj.pago else None
+        except Exception:
+            return None
+
+    def get_pago_payment_id(self, obj):
+        """Retorna el payment_id de Mercado Pago"""
+        try:
+            return obj.pago.payment_id if obj.pago else None
+        except Exception:
+            return None
+
+    def get_pago_fecha_creacion(self, obj):
+        """Retorna la fecha de creación del pago"""
+        try:
+            return obj.pago.fecha_creacion if obj.pago else None
+        except Exception:
+            return None
+
+    def get_pago_fecha_aprobacion(self, obj):
+        """Retorna la fecha de aprobación del pago"""
+        try:
+            return obj.pago.fecha_aprobacion if obj.pago else None
+        except Exception:
+            return None
 
 
