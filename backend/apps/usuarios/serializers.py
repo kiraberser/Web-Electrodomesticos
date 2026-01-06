@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Direccion
+from apps.productos.models import Refaccion
+from apps.productos.serializers import RefaccionSerializer
 
 User = get_user_model()
 
@@ -230,4 +232,48 @@ class CreateDireccionSerializer(serializers.ModelSerializer):
         usuario = self.context['request'].user
         if Direccion.objects.filter(usuario=usuario).count() >= 3:
             raise serializers.ValidationError("No puedes tener más de 3 direcciones de envío")
+        return data
+
+
+class FavoritoListSerializer(serializers.Serializer):
+    """Serializer para listar productos favoritos"""
+    id = serializers.IntegerField()
+    codigo_parte = serializers.CharField()
+    nombre = serializers.CharField()
+    descripcion = serializers.CharField(allow_blank=True)
+    marca = serializers.CharField()
+    marca_nombre = serializers.CharField()
+    categoria = serializers.IntegerField()
+    categoria_nombre = serializers.CharField()
+    precio = serializers.DecimalField(max_digits=10, decimal_places=2)
+    existencias = serializers.IntegerField()
+    estado = serializers.CharField()
+    compatibilidad = serializers.CharField()
+    imagen = serializers.URLField(allow_blank=True, allow_null=True)
+    fecha_ingreso = serializers.DateTimeField()
+    ultima_actualizacion = serializers.DateTimeField()
+
+
+class AgregarFavoritoSerializer(serializers.Serializer):
+    """Serializer para agregar un producto a favoritos"""
+    refaccion_id = serializers.IntegerField()
+    
+    def validate_refaccion_id(self, value):
+        """Validar que el producto exista"""
+        try:
+            Refaccion.objects.get(pk=value)
+        except Refaccion.DoesNotExist:
+            raise serializers.ValidationError("El producto no existe")
+        return value
+    
+    def validate(self, data):
+        """Validar límite de favoritos"""
+        usuario = self.context['request'].user
+        if usuario.favoritos.count() >= 20:
+            raise serializers.ValidationError("No puedes tener más de 20 productos en favoritos")
+        
+        refaccion = Refaccion.objects.get(pk=data['refaccion_id'])
+        if usuario.favoritos.filter(pk=refaccion.pk).exists():
+            raise serializers.ValidationError("Este producto ya está en tus favoritos")
+        
         return data

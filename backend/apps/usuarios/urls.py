@@ -7,7 +7,9 @@ from .views import (
     GetUserData, 
     UpdateUserProfileView,
     DireccionesListView,
-    DireccionDetailView
+    DireccionDetailView,
+    FavoritosListView,
+    FavoritoDetailView
 )
 
 urlpatterns = [
@@ -21,4 +23,7 @@ urlpatterns = [
     # Endpoints de direcciones
     path('user-profile/direcciones/', DireccionesListView.as_view(), name='direcciones-list'),
     path('user-profile/direcciones/<int:pk>/', DireccionDetailView.as_view(), name='direccion-detail'),
+    # Endpoints de favoritos
+    path('user-profile/favoritos/', FavoritosListView.as_view(), name='favoritos-list'),
+    path('user-profile/favoritos/<int:refaccion_id>/', FavoritoDetailView.as_view(), name='favorito-detail'),
 ]

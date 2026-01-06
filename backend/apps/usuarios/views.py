@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 from .models import Usuario, Direccion
 from .serializers import (
@@ -11,8 +12,12 @@ from .serializers import (
     UserProfileSerializer, 
     UpdateUserProfileSerializer,
     DireccionSerializer,
-    CreateDireccionSerializer
+    CreateDireccionSerializer,
+    FavoritoListSerializer,
+    AgregarFavoritoSerializer
 )
+from apps.productos.models import Refaccion
+from apps.productos.serializers import RefaccionSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class RegistroUsuarioView(APIView):
@@ -251,5 +256,78 @@ class DireccionDetailView(APIView):
         direccion.delete()
         return Response(
             {'message': 'Dirección eliminada exitosamente'},
+            status=status.HTTP_200_OK
+        )
+
+
+class FavoritosListView(APIView):
+    """
+    Vista para listar y agregar productos favoritos del usuario autenticado
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Obtener todos los productos favoritos del usuario"""
+        favoritos = request.user.favoritos.all()
+        serializer = RefaccionSerializer(favoritos, many=True)
+        return Response({
+            'favoritos': serializer.data,
+            'total': favoritos.count()
+        }, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        """Agregar un producto a favoritos"""
+        serializer = AgregarFavoritoSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        
+        if serializer.is_valid():
+            refaccion_id = serializer.validated_data['refaccion_id']
+            refaccion = Refaccion.objects.get(pk=refaccion_id)
+            
+            try:
+                request.user.agregar_favorito(refaccion)
+                refaccion_serializer = RefaccionSerializer(refaccion)
+                return Response({
+                    'message': 'Producto agregado a favoritos exitosamente',
+                    'favorito': refaccion_serializer.data
+                }, status=status.HTTP_201_CREATED)
+            except DjangoValidationError as e:
+                return Response(
+                    {'detail': str(e)},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FavoritoDetailView(APIView):
+    """
+    Vista para eliminar un producto de favoritos
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def delete(self, request, refaccion_id):
+        """Eliminar un producto de favoritos"""
+        try:
+            refaccion = Refaccion.objects.get(pk=refaccion_id)
+        except Refaccion.DoesNotExist:
+            return Response(
+                {'detail': 'Producto no encontrado'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        if not request.user.favoritos.filter(pk=refaccion_id).exists():
+            return Response(
+                {'detail': 'Este producto no está en tus favoritos'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        request.user.eliminar_favorito(refaccion)
+        return Response(
+            {'message': 'Producto eliminado de favoritos exitosamente'},
             status=status.HTTP_200_OK
         )

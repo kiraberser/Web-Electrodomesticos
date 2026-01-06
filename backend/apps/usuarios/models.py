@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
+from apps.productos.models import Refaccion
 
 class Usuario(AbstractUser):
     # Campos adicionales personalizados
@@ -20,6 +21,14 @@ class Usuario(AbstractUser):
     
     # Campo legacy para compatibilidad (se puede eliminar después de migrar datos)
     address = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Favoritos - relación ManyToMany con Refaccion (máximo 20 productos)
+    favoritos = models.ManyToManyField(
+        Refaccion,
+        related_name='usuarios_favoritos',
+        blank=True,
+        verbose_name="Productos favoritos"
+    )
     
     # Puedes agregar más campos según necesites
     def __str__(self):
@@ -49,6 +58,18 @@ class Usuario(AbstractUser):
         if self.address_postal_code:
             parts.append(f"CP: {self.address_postal_code}")
         return ", ".join(parts) if parts else None
+    
+    def agregar_favorito(self, refaccion):
+        """Agregar un producto a favoritos con validación de límite"""
+        if self.favoritos.count() >= 20:
+            raise ValidationError("No puedes tener más de 20 productos en favoritos")
+        if self.favoritos.filter(pk=refaccion.pk).exists():
+            raise ValidationError("Este producto ya está en tus favoritos")
+        self.favoritos.add(refaccion)
+    
+    def eliminar_favorito(self, refaccion):
+        """Eliminar un producto de favoritos"""
+        self.favoritos.remove(refaccion)
 
 
 class Direccion(models.Model):
