@@ -4,7 +4,7 @@ from rest_framework import status, permissions
 
 from .serializers import CheckoutSerializer, PedidoListSerializer
 from .models import Pedido
-from .pagination import PedidoPagination
+from .pagination import PedidoPagination, PedidoPagadoPagination
 
 class CheckoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -22,6 +22,32 @@ class MisPedidosView(APIView):
         pedidos = Pedido.objects.filter(usuario=request.user).select_related('usuario', 'pago').prefetch_related('items__refaccion')
         data = PedidoListSerializer(pedidos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
+
+
+class MisPedidosPagadosView(APIView):
+    """Obtiene solo los pedidos del usuario que tienen un pago aprobado"""
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PedidoPagadoPagination
+
+    def get(self, request):
+        # Filtrar solo pedidos que tienen un pago aprobado
+        # Esto automáticamente excluye pedidos solo creados sin pago
+        pedidos = Pedido.objects.filter(
+            usuario=request.user,
+            pago__status='APR'  # Solo pedidos con pago aprobado
+        ).select_related('usuario', 'pago').prefetch_related('items__refaccion').order_by('-fecha_creacion')
+        
+        # Aplicar paginación
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(pedidos, request)
+        
+        if page is not None:
+            serializer = PedidoListSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
+        # Si no hay paginación, retornar todos (no debería pasar con paginación activa)
+        serializer = PedidoListSerializer(pedidos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 class AllPedidosView(APIView):
     permission_classes = [permissions.IsAdminUser]
