@@ -50,7 +50,7 @@ export function PerfilClient({ user }: PerfilClientProps) {
     const handleLogout = () => {
         // TODO: Implementar logout
         console.log("Logout clicked")
-        router.push("/cuenta")
+        router.push("/cuenta/login")
     }
 
     const handleDeleteAccount = () => {

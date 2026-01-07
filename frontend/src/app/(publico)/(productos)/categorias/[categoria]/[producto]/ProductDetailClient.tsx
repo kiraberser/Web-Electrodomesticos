@@ -321,7 +321,7 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
             toast.error('Inicia sesión para continuar con la compra', {
                 style: { background: "#dc2626", color: "#fff" },
             });
-            router.push('/cuenta');
+            router.push('/cuenta/login');
             return;
         }
 
@@ -486,7 +486,7 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
             toast.error('Inicia sesión para escribir un comentario', {
                 style: { background: "#dc2626", color: "#fff" },
             });
-            router.push('/cuenta');
+            router.push('/cuenta/login');
             return;
         }
 
@@ -845,7 +845,7 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
                                         </p>
                                         <Button
                                             className="w-full bg-[#1F509A] text-white text-xs py-2 h-auto"
-                                            onClick={() => router.push('/cuenta')}
+                                            onClick={() => router.push('/cuenta/login')}
                                         >
                                             Iniciar Sesión
                                         </Button>
