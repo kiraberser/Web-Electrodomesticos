@@ -20,7 +20,7 @@ export async function obtenerMisPedidosAction(page: number = 1): Promise<{
     try {
         const isAuthenticated = await checkAuth()
         if (!isAuthenticated) {
-            redirect('/cuenta')
+            redirect('/cuenta/login')
         }
         
         const data = await obtenerMisPedidos(page)

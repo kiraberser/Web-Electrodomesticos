@@ -16,7 +16,7 @@ export async function getFavoritosAction() {
     try {
         const isAuthenticated = await checkAuth()
         if (!isAuthenticated) {
-            redirect('/cuenta')
+            redirect('/cuenta/login')
         }
         
         const data = await getFavoritos()
