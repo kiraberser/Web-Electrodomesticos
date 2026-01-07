@@ -1,9 +1,8 @@
-import AuthPage from "./(auth)/login&register";
+import { redirect } from 'next/navigation';
 
 const Page = () => {
-    return (
-        <AuthPage />
-    )
+    // Redirigir a /cuenta/login por defecto
+    redirect('/cuenta/login');
 }
 
 export default Page;
