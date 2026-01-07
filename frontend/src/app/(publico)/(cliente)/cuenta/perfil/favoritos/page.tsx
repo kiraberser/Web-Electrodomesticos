@@ -17,14 +17,14 @@ export default async function FavoritosPage() {
     const username = cookieStore.get('username')?.value
     
     if (!username) {
-        redirect('/cuenta')
+        redirect('/cuenta/login')
     }
 
     // Obtener favoritos del servidor
     const result = await getFavoritosAction()
     
     if (!result.success) {
-        redirect('/cuenta')
+        redirect('/cuenta/login')
     }
 
     return (

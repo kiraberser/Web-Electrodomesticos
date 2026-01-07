@@ -14,7 +14,7 @@ export default async function PerfilPage() {
         const user = await getUser()
 
         if (!user) {
-            redirect("/cuenta")
+            redirect("/cuenta/login")
         }
 
         // Asegurar que el usuario tenga el tipo correcto
@@ -44,6 +44,6 @@ export default async function PerfilPage() {
         return <PerfilClient user={userProfile} />
     } catch (error) {
         console.error("Error loading user profile:", error)
-        redirect("/cuenta")
+        redirect("/cuenta/login")
     }
 }
