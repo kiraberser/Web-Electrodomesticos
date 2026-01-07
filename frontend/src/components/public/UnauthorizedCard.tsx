@@ -27,7 +27,7 @@ export function UnauthorizedCard() {
         <Link href="/" className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-200">
           Ir al inicio
         </Link>
-        <Link href="/cuenta" className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700">
+        <Link href="/cuenta/login" className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700">
           Iniciar sesión
         </Link>
       </div>

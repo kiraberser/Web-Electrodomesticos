@@ -16,7 +16,7 @@ export default function AuthRequiredModal({ isOpen, onCloseAction }: AuthRequire
 
     const handleGoToLogin = () => {
         onCloseAction()
-        router.push('/cuenta')
+        router.push('/cuenta/login')
     }
 
     return (
