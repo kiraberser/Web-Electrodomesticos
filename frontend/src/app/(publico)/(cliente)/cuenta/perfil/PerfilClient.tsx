@@ -8,6 +8,7 @@ import {
     ProfileInfo,
     ProfileActions,
     EditProfileModal,
+    ChangePasswordModal,
 } from "@/components/usuario"
 
 interface PerfilClientProps {
@@ -17,6 +18,7 @@ interface PerfilClientProps {
 export function PerfilClient({ user }: PerfilClientProps) {
     const router = useRouter()
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false)
     const [currentUser, setCurrentUser] = useState<UserProfile>(user)
     const lastUserUpdateRef = useRef<string>(JSON.stringify(user))
 
@@ -49,7 +51,6 @@ export function PerfilClient({ user }: PerfilClientProps) {
 
     const handleLogout = () => {
         // TODO: Implementar logout
-        console.log("Logout clicked")
         router.push("/cuenta/login")
     }
 
@@ -82,6 +83,7 @@ export function PerfilClient({ user }: PerfilClientProps) {
                         <ProfileActions
                             onLogout={handleLogout}
                             onDeleteAccount={handleDeleteAccount}
+                            onChangePassword={() => setIsChangePasswordModalOpen(true)}
                         />
                     </div>
                 </div>
@@ -93,6 +95,12 @@ export function PerfilClient({ user }: PerfilClientProps) {
                 onClose={() => setIsEditModalOpen(false)}
                 user={currentUser}
                 onSuccess={handleEditSuccess}
+            />
+
+            {/* Modal de Cambio de Contraseña */}
+            <ChangePasswordModal
+                isOpen={isChangePasswordModalOpen}
+                onClose={() => setIsChangePasswordModalOpen(false)}
             />
         </>
     )

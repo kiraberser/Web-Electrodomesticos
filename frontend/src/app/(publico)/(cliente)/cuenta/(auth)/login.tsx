@@ -94,7 +94,7 @@ function Login({ isSubmitting, showPassword, setShowPassword }: LoginProps) {
                             />
                             <span className="text-sm text-gray-600">Recordarme</span>
                         </label>
-                        <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                        <Link href="/cuenta/forgot-password" className="text-sm text-blue-600 hover:underline">
                             ¿Olvidaste tu contraseña?
                         </Link>
                     </div>
