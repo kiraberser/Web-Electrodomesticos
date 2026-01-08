@@ -4,6 +4,8 @@ import MisComprasClient from "./MisComprasClient"
 import { Package } from "lucide-react"
 import { Suspense } from "react"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'Mis Compras - Refaccionaria Vega',
     description: 'Historial de tus compras',

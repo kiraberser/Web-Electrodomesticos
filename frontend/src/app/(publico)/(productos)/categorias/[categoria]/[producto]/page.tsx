@@ -7,6 +7,8 @@ import type { Metadata } from "next"
 
 // generateMetadata removed to fix Next.js 16 build issue
 // Using static metadata instead
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'Producto - Refaccionaria Vega',
     description: 'Detalles del producto',

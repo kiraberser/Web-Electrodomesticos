@@ -6,6 +6,8 @@ import FavoritosList from "@/components/favoritos/FavoritosList"
 import FavoritosSync from "@/components/favoritos/FavoritosSync"
 import { Heart } from "lucide-react"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'Mis Favoritos - Refaccionaria Vega',
     description: 'Productos que te gustan',

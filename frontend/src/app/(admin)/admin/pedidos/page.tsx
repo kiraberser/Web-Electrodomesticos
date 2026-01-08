@@ -1,6 +1,8 @@
 import { getAllPedidos } from "@/api/pedidos"
 import PedidosClient from "./PedidosClient"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
     title: "Pedidos | Administración",
     description: "Gestiona todos los pedidos del sistema",

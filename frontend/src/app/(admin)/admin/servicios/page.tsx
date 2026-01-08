@@ -1,7 +1,7 @@
 import { getAllServices } from "@/api/services"
 import ServicesPageClient from "@/app/(admin)/admin/servicios/ServicesPageClient"
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 type PageProps = { searchParams: Promise<{ page?: string; q?: string }> }
 

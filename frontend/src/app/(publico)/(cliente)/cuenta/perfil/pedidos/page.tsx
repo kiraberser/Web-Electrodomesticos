@@ -4,6 +4,8 @@ import PedidosClient from "./PedidosClient"
 import { Package } from "lucide-react"
 import { Suspense } from "react"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'Mis Pedidos - Refaccionaria Vega',
     description: 'Gestiona tus pedidos',

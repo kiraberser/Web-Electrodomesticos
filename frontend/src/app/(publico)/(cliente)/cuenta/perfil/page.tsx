@@ -4,6 +4,8 @@ import { getUser } from "@/api/user"
 import type { UserProfile } from "@/types/user"
 import { PerfilClient } from "./PerfilClient"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: "Perfil - Refaccionaria Vega",
     description: "Gestiona tu perfil de usuario",

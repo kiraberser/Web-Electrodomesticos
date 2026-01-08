@@ -3,6 +3,8 @@ import { redirect } from "next/navigation"
 import { getDirecciones } from "@/api/user"
 import { DireccionesList } from "@/components/usuario"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'Mis Direcciones - Refaccionaria Vega',
     description: 'Gestiona tus direcciones de envío',
