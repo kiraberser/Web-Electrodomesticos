@@ -255,3 +255,104 @@ export const eliminarFavorito = async (refaccionId: number): Promise<void> => {
         throw error;
     }
 };
+
+// Funciones de Password Reset
+export interface PasswordResetRequestData {
+    email: string;
+    frontend_url?: string;
+}
+
+export interface PasswordResetConfirmData {
+    token: string;
+    uid: string;
+    password: string;
+    password_confirm: string;
+}
+
+export interface PasswordResetValidateData {
+    token: string;
+    uid: string;
+}
+
+export const requestPasswordReset = async (data: PasswordResetRequestData) => {
+    try {
+        const frontendUrl = data.frontend_url || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+        const response = await axios.post(
+            `${url}/user/password-reset/request/`,
+            {
+                email: data.email.toLowerCase().trim(),
+                frontend_url: frontendUrl
+            }
+        );
+        return response.data;
+    } catch (error: unknown) {
+        console.error("Error en requestPasswordReset:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const validatePasswordResetToken = async (data: PasswordResetValidateData) => {
+    try {
+        const response = await axios.post(
+            `${url}/user/password-reset/validate-token/`,
+            {
+                token: data.token,
+                uid: data.uid
+            }
+        );
+        return response.data;
+    } catch (error: unknown) {
+        console.error("Error en validatePasswordResetToken:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+export const confirmPasswordReset = async (data: PasswordResetConfirmData) => {
+    try {
+        const response = await axios.post(
+            `${url}/user/password-reset/confirm/`,
+            {
+                token: data.token,
+                uid: data.uid,
+                password: data.password,
+                password_confirm: data.password_confirm
+            }
+        );
+        return response.data;
+    } catch (error: unknown) {
+        console.error("Error en confirmPasswordReset:", getErrorLogMessage(error));
+        throw error;
+    }
+};
+
+// Funciones de cambio de contraseña desde perfil
+export interface ChangePasswordData {
+    current_password: string;
+    new_password: string;
+    new_password_confirm: string;
+}
+
+export const changePassword = async (data: ChangePasswordData) => {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get('access_cookie')?.value
+        const response = await axios.post(
+            `${url}/user/user-profile/change-password/`,
+            {
+                current_password: data.current_password,
+                new_password: data.new_password,
+                new_password_confirm: data.new_password_confirm
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error: unknown) {
+        console.error("Error en changePassword:", getErrorLogMessage(error));
+        throw error;
+    }
+};
