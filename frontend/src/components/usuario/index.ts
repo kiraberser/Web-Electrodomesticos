@@ -1,0 +1,10 @@
+export { InfoItem } from "./InfoItem"
+export { ProfileHeader } from "./ProfileHeader"
+export { ProfileInfo } from "./ProfileInfo"
+export { ProfileActions } from "./ProfileActions"
+export { EditProfileModal } from "./EditProfileModal"
+export { ChangePasswordModal } from "./ChangePasswordModal"
+export { DireccionCard } from "./DireccionCard"
+export { DireccionModal } from "./DireccionModal"
+export { DireccionesList } from "./DireccionesList"
+

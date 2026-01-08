@@ -16,6 +16,7 @@ export interface PedidoItem {
     id: number;
     refaccion: number;
     refaccion_nombre: string;
+    refaccion_imagen?: string | null;
     cantidad: number;
     precio_unitario: string;
     subtotal: string;
@@ -30,6 +31,14 @@ export interface Pedido {
     usuario_nombre: string;
     usuario_email: string;
     metodo_pago: string;
+    metodo_pago_display?: string;
+    pago_id?: number | null;
+    pago_status?: string | null;
+    pago_status_display?: string | null;
+    pago_status_detail?: string | null;
+    pago_payment_id?: string | null;
+    pago_fecha_creacion?: string | null;
+    pago_fecha_aprobacion?: string | null;
 }
 
 export interface PaginatedPedidosResponse {
@@ -97,6 +106,52 @@ export const updatePedidoEstado = async (pedidoId: number, estado: string): Prom
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             console.error("❌ Error al actualizar estado del pedido:", error.response.data);
+        } else {
+            console.error("Error desconocido:", error);
+        }
+        throw error;
+    }
+}
+
+/**
+ * Obtiene todos los pedidos del usuario autenticado con paginación
+ */
+export const obtenerMisPedidos = async (page: number = 1): Promise<PaginatedPedidosResponse> => {
+    try {
+        const response = await axios.get(
+            `${url}/pedidos/mis-pedidos/`,
+            { 
+                params: { page },
+                headers: { Authorization: `Bearer ${await getToken()}` } 
+            }
+        );
+        return response.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            console.error("❌ Error al obtener pedidos:", error.response.data);
+        } else {
+            console.error("Error desconocido:", error);
+        }
+        throw error;
+    }
+}
+
+/**
+ * Obtiene los pedidos pagados del usuario autenticado con paginación
+ */
+export const obtenerMisPedidosPagados = async (page: number = 1): Promise<PaginatedPedidosResponse> => {
+    try {
+        const response = await axios.get(
+            `${url}/pedidos/mis-pedidos-pagados/`,
+            { 
+                params: { page },
+                headers: { Authorization: `Bearer ${await getToken()}` } 
+            }
+        );
+        return response.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            console.error("❌ Error al obtener pedidos pagados:", error.response.data);
         } else {
             console.error("Error desconocido:", error);
         }

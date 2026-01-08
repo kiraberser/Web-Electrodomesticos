@@ -125,13 +125,13 @@ const AccountModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                                 </div>
 
                                 <div className="space-y-4">
-                                    <Link href="/cuenta" onClick={onClose}>
+                                    <Link href="/cuenta/login" onClick={onClose}>
                                         <Button className="w-full bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">
                                             Iniciar Sesión
                                         </Button>
                                     </Link>
 
-                                    <Link href="/cuenta" onClick={onClose}>
+                                    <Link href="/cuenta/register" onClick={onClose}>
                                         <Button variant="outline" className="w-full cursor-pointer">
                                             Crear Cuenta Nueva
                                         </Button>

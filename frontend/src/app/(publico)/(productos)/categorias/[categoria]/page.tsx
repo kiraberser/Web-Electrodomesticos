@@ -41,7 +41,7 @@ export default async function CategoriaPage({
 }: {
     params: { categoria: string }
 }) {
-    const { categoria } = params
+    const { categoria } = await params
     const categoryParam = decodeURIComponent(categoria ?? "")
     const category = CATEGORIES.find((c) => c.key === categoryParam)
     

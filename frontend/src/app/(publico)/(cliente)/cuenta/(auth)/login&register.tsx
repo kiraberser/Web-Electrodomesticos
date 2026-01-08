@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 
 import Login from './login';
 import Register from './register';
@@ -13,10 +14,34 @@ import { Separator } from '@/components/ui/display/Separator';
 import { ArrowLeft } from 'lucide-react';
 
 const AuthPage = () => {
+    const pathname = usePathname();
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState('login');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Sincronizar el tab activo con la URL
+    useEffect(() => {
+        if (pathname === '/cuenta/register' || pathname?.endsWith('/register')) {
+            setActiveTab('register');
+        } else if (pathname === '/cuenta/login' || pathname?.endsWith('/login')) {
+            setActiveTab('login');
+        } else {
+            // Si está en /cuenta sin especificar, establecer login por defecto
+            setActiveTab('login');
+        }
+    }, [pathname]);
+
+    // Manejar cambio de tab y navegar a la ruta correspondiente
+    const handleTabChange = (value: string) => {
+        setActiveTab(value);
+        if (value === 'login') {
+            router.push('/cuenta/login');
+        } else if (value === 'register') {
+            router.push('/cuenta/register');
+        }
+    };
 
     return (
         <div className="min-h-screen">
@@ -43,7 +68,7 @@ const AuthPage = () => {
                             <p className="text-gray-600">Reparamos lo que no se ve, pero es necesario</p>
                         </CardHeader>
                         <CardContent>
-                            <Tabs value={activeTab} onValueChange={setActiveTab}>
+                            <Tabs value={activeTab} onValueChange={handleTabChange}>
                                 <TabsList className="grid w-full grid-cols-2">
                                     <TabsTrigger value="login" className='cursor-pointer '>Iniciar Sesión</TabsTrigger>
                                     <TabsTrigger value="register" className='cursor-pointer'>Registrarse</TabsTrigger>

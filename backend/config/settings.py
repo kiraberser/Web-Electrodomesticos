@@ -134,6 +134,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
+# Password reset configuration
+PASSWORD_RESET_TIMEOUT = 3600  # 1 hora en segundos
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 

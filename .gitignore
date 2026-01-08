@@ -50,10 +50,6 @@ __pycache__/
 # Entorno virtual de Python
 backend/venv/
 
-<<<<<<< HEAD
-backend/deploy/
-
-=======
 # Deploy
 backend/deploy/
->>>>>>> feature/admin/ventas
+bash.exe.stackdump
