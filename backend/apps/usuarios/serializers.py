@@ -277,3 +277,95 @@ class AgregarFavoritoSerializer(serializers.Serializer):
             raise serializers.ValidationError("Este producto ya está en tus favoritos")
         
         return data
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Serializer para solicitar recuperación de contraseña"""
+    email = serializers.EmailField(required=True)
+    
+    def validate_email(self, value):
+        """Validar formato de email"""
+        if not value:
+            raise serializers.ValidationError("El correo electrónico es requerido")
+        return value.lower().strip()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Serializer para confirmar y cambiar la contraseña"""
+    token = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'},
+        min_length=8,
+        help_text="La contraseña debe tener al menos 8 caracteres"
+    )
+    password_confirm = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'}
+    )
+    
+    def validate_password(self, value):
+        """Validación básica de contraseña (validaciones detalladas en frontend con Zod)"""
+        if len(value) < 8:
+            raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres")
+        return value
+    
+    def validate(self, data):
+        """Validar que las contraseñas coincidan"""
+        password = data.get('password')
+        password_confirm = data.get('password_confirm')
+        
+        if password and password_confirm and password != password_confirm:
+            raise serializers.ValidationError({
+                'password_confirm': 'Las contraseñas no coinciden'
+            })
+        
+        return data
+
+
+class PasswordResetTokenValidateSerializer(serializers.Serializer):
+    """Serializer para validar un token de recuperación"""
+    token = serializers.CharField(required=True)
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """Serializer para cambiar contraseña desde el perfil (requiere contraseña actual)"""
+    current_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'},
+        help_text="Tu contraseña actual"
+    )
+    new_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'},
+        min_length=8,
+        help_text="La nueva contraseña debe tener al menos 8 caracteres"
+    )
+    new_password_confirm = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'},
+        help_text="Confirma tu nueva contraseña"
+    )
+    
+    def validate_new_password(self, value):
+        """Validación básica de contraseña (validaciones detalladas en frontend con Zod)"""
+        if len(value) < 8:
+            raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres")
+        return value
+    
+    def validate(self, data):
+        """Validar que las nuevas contraseñas coincidan"""
+        new_password = data.get('new_password')
+        new_password_confirm = data.get('new_password_confirm')
+        
+        if new_password and new_password_confirm and new_password != new_password_confirm:
+            raise serializers.ValidationError({
+                'new_password_confirm': 'Las contraseñas no coinciden'
+            })
+        
+        return data
