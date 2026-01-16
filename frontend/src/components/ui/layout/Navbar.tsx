@@ -4,7 +4,7 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Search, ShoppingCart, Menu, X, User, ChevronDown, MapPin, Heart, Package, ShoppingBag } from "lucide-react"
 import Link from "next/link"
-import { redirect } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
 
 import { Button } from "@/components/ui/forms/Button"
 import { Badge } from "@/components/ui/feedback/Badge"
@@ -36,6 +36,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
 
     // Scroll behavior states
 
+    const pathname = usePathname()
     const searchInputRef = useRef<HTMLInputElement>(null)
     const userDropdownRef = useRef<HTMLDivElement>(null)
     const { getTotalItems } = useCart()
@@ -84,6 +85,16 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
         document.addEventListener("mousedown", handleClickOutside)
         return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [isMenuOpen, isUserDropdownOpen])
+
+    useEffect(() => {
+        if (pathname?.startsWith("/categorias")) {
+            if (checkAuthentication()) {
+                setIsCartOpen(true)
+            }
+        } else {
+            setIsCartOpen(false)
+        }
+    }, [pathname])
 
     // Keyboard shortcuts
     useEffect(() => {
