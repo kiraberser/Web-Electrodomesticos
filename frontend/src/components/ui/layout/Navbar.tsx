@@ -19,6 +19,7 @@ import { categories } from "@/data/category"
 import { company } from "@/data/company"
 import LogOutButton from "@/components/user/LogOutButton"
 import { LayoutDashboard } from "lucide-react"
+import { checkAuthentication } from "@/lib/cookies"
 
 
 interface NavbarProps {
@@ -46,6 +47,20 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
             const query = searchQuery.trim()
             setSearchQuery("")
             redirect(`/productos?search${encodeURIComponent(query)}`)
+        }
+    }
+
+    const handleCartClick = () => {
+        if (!checkAuthentication()) {
+            redirect("/cuenta/login")
+        }
+        setIsCartOpen(true)
+    }
+
+    const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (!checkAuthentication()) {
+            e.preventDefault()
+            redirect("/cuenta/login")
         }
     }
 
@@ -101,6 +116,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                             href="/"
                             className="flex items-center space-x-3 group flex-shrink-0 cursor-pointer"
                             aria-label="Ir a página principal"
+                            onClick={handleLogoClick}
                         >
                             {/* <div className="relative">
                                 <Image
@@ -271,10 +287,10 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                             </div>
 
                             {/* Shopping Cart */}
-                            <Button
+                        <Button
                                 variant="outline"
                                 className="relative flex items-center space-x-2 px-3 py-2 rounded-lg border-2 hover:bg-gray-50 transition-all duration-200 bg-transparent cursor-pointer"
-                                onClick={() => setIsCartOpen(true)}
+                            onClick={handleCartClick}
                                 aria-label={`Carrito de compras, ${getTotalItems()} artículos`}
                             >
                                 <ShoppingCart className="w-4 h-4" />
