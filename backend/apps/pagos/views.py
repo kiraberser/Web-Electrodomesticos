@@ -11,7 +11,6 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.permissions import AllowAny
 
-
 from .models import Pago
 from apps.pedidos.models import Pedido
 from apps.pedidos.services import procesar_pedido_pagado
@@ -60,8 +59,6 @@ class CrearPreferenciaPagoView(APIView):
                 })
             
             debug_backend_url = os.getenv('BACKEND_URL')
-            
-            # Pon aquí http://localhost:3000 o tu URL local
             debug_frontend_url = os.getenv('FRONTEND_URL')
 
             final_back_urls = {
@@ -84,16 +81,10 @@ class CrearPreferenciaPagoView(APIView):
                 "expires": True,
             }
             # 4. Crear preferencia en MP
-            import json
-            print("\n" + "="*50)
-            print("DATOS ENVIADOS A MERCADO PAGO:")
-            print(json.dumps(preference_data, indent=2, default=str))
-            print("="*50 + "\n")
             preference_response = sdk.preference().create(preference_data)
             
             # Debugging si falla MP
             if preference_response["status"] not in [200, 201]:
-                print("Error MP:", preference_response)
                 pago.delete() # Limpiamos el pago fallido
                 return Response(
                     {'error': 'Error en Mercado Pago', 'detail': preference_response}, 
@@ -106,7 +97,7 @@ class CrearPreferenciaPagoView(APIView):
             pago.preference_id = preference['id']
             pago.mp_data = preference # Guardamos el JSON para debug futuro
             pago.save()
-
+            
             return Response({
                 'preference_id': preference['id'],
                 'init_point': preference['init_point'],
@@ -159,7 +150,6 @@ class WebhookView(APIView):
                     local_sha = hmac_obj.hexdigest()
 
                     if local_sha != v1_hash:
-                        print(f"⚠️ FIRMA INVÁLIDA para Pago {data_id}")
                         return Response({'error': 'Firma inválida'}, status=status.HTTP_403_FORBIDDEN)
 
             # 3. CONSULTA A MERCADO PAGO

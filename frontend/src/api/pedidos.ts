@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getToken } from '@/lib/utilscookies';
-
+    
 export interface CheckoutItem {
     refaccion: number;
     cantidad: number;
@@ -59,8 +59,8 @@ export const crearPedido = async (items: CheckoutItem[]): Promise<CheckoutRespon
         );
         return response.data;
     } catch (error: unknown) {
-
         if (axios.isAxiosError(error) && error.response) {
+            
             console.error("❌ Error de validación del Backend:", error.response.data);
         } else {
             console.error("Error desconocido:", error);
