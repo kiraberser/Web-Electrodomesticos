@@ -1,6 +1,8 @@
 'use client'
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, ReactNode, useCallback } from 'react';
+import { checkAuthentication } from '@/lib/cookies';
+import { getCartAction, removeCartItemAction, clearCartAction, setCartItemQuantityAction } from '@/actions/cart';
 
 // Tipos
 type CartItem = {
@@ -21,6 +23,7 @@ type CartContextType = {
     removeItem: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
+    clearLocalCart: () => void;
     getTotalItems: () => number;
     getTotalPrice: () => number;
     getItemCount: (productId: string) => number;
@@ -96,13 +99,37 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         items: []
     });
 
-    // Load cart from localStorage on component mount
-    useEffect(() => {
-        const savedCart = localStorage.getItem('electromart-cart');
-        if (savedCart) {
-            dispatch({ type: 'LOAD_CART', payload: JSON.parse(savedCart) });
+    const syncCart = useCallback(async () => {
+        const isAuthenticated = checkAuthentication();
+        if (!isAuthenticated) {
+            localStorage.removeItem('electromart-cart');
+            dispatch({ type: 'LOAD_CART', payload: [] });
+            return;
+        }
+        try {
+            const response = await getCartAction();
+            const mapped = response.cart.map((item) => ({
+                id: String(item.refaccion.id),
+                name: item.refaccion.nombre,
+                price: Number(item.refaccion.precio),
+                image: item.refaccion.imagen || "/placeholder.svg",
+                quantity: item.cantidad,
+            }));
+            dispatch({ type: 'LOAD_CART', payload: mapped });
+        } catch (error) {
+            console.error('Error cargando carrito desde backend:', error);
         }
     }, []);
+
+    // Load cart on mount and when auth state changes only
+    useEffect(() => {
+        syncCart();
+        const handleAuthEvent = () => syncCart();
+        window.addEventListener('cart-auth-changed', handleAuthEvent as EventListener);
+        return () => {
+            window.removeEventListener('cart-auth-changed', handleAuthEvent as EventListener);
+        };
+    }, [syncCart]);
 
     // Save cart to localStorage whenever it changes
     useEffect(() => {
@@ -114,14 +141,33 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     };
 
     const removeItem = (productId: string) => {
+        if (checkAuthentication()) {
+            removeCartItemAction(Number(productId)).catch((error) => {
+                console.error('Error eliminando carrito en backend:', error);
+            });
+        }
         dispatch({ type: 'REMOVE_ITEM', payload: productId });
     };
 
     const updateQuantity = (productId: string, quantity: number) => {
+        if (checkAuthentication()) {
+            setCartItemQuantityAction(Number(productId), quantity).catch((error) => {
+                console.error('Error actualizando cantidad en backend:', error);
+            });
+        }
         dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
     };
 
     const clearCart = () => {
+        if (checkAuthentication()) {
+            clearCartAction().catch((error) => {
+                console.error('Error limpiando carrito en backend:', error);
+            });
+        }
+        dispatch({ type: 'CLEAR_CART' });
+    };
+
+    const clearLocalCart = () => {
         dispatch({ type: 'CLEAR_CART' });
     };
 
@@ -144,6 +190,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         removeItem,
         updateQuantity,
         clearCart,
+        clearLocalCart,
         getTotalItems,
         getTotalPrice,
         getItemCount
