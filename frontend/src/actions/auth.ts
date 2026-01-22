@@ -3,6 +3,8 @@
 import { cookies } from "next/headers"
 import { loginUser, createUser, updateUserProfile, getDirecciones, createDireccion, updateDireccion, deleteDireccion } from "@/api/user"
 import { redirect } from "next/navigation"
+import { createDireccionSchema, direccionExtraInfoSchema, updateDireccionSchema } from "@/lib/validations/direccion"
+import { ZodError } from "zod"
 
 import { LoginUserType, CreateUserType, UpdateUserProfileInput, CreateDireccionInput, UpdateDireccionInput, Direccion } from "@/types/user"
 
@@ -58,6 +60,19 @@ export const actionLogOutUser = async () => {
     cookieStore.delete('refresh_cookie')
     cookieStore.delete('username')
     redirect('/')
+}
+
+// Helper function to convert Zod errors to ActionState error format
+function formatZodErrors(error: ZodError): Record<string, { _errors: string[] }> {
+    const formattedErrors: Record<string, { _errors: string[] }> = {}
+    error.errors.forEach((err) => {
+        const path = err.path.join('.')
+        if (!formattedErrors[path]) {
+            formattedErrors[path] = { _errors: [] }
+        }
+        formattedErrors[path]._errors.push(err.message)
+    })
+    return formattedErrors
 }
 
 // Helper function to safely extract error message
@@ -222,65 +237,29 @@ export const createDireccionAction = async (
     formData: FormData
 ): Promise<ActionState & { data?: Direccion }> => {
     try {
-        const nombre = (formData.get("nombre") as string)?.trim() || ""
-        const street = (formData.get("street") as string)?.trim() || ""
-        const colony = (formData.get("colony") as string)?.trim() || ""
-        const city = (formData.get("city") as string)?.trim() || ""
-        const state = (formData.get("state") as string)?.trim() || ""
-        const postal_code = (formData.get("postal_code") as string)?.trim() || ""
-        const references = (formData.get("references") as string)?.trim() || ""
-        const is_primary = formData.get("is_primary") === "true"
-
-        // Validaciones
-        const fieldErrors: Record<string, { _errors: string[] }> = {}
-
-        if (!nombre) {
-            fieldErrors.nombre = { _errors: ["El nombre de la dirección es requerido"] }
+        // Extract form data
+        const rawData = {
+            nombre: (formData.get("nombre") as string)?.trim() || "",
+            street: (formData.get("street") as string)?.trim() || "",
+            colony: (formData.get("colony") as string)?.trim() || "",
+            city: (formData.get("city") as string)?.trim() || "",
+            state: (formData.get("state") as string)?.trim() || "",
+            postal_code: (formData.get("postal_code") as string)?.trim() || "",
+            references: (formData.get("references") as string)?.trim() || undefined,
+            is_primary: formData.get("is_primary") === "true",
         }
 
-        if (!street) {
-            fieldErrors.street = { _errors: ["La calle y número son requeridos"] }
-        }
+        // Validate with Zod
+        const validationResult = createDireccionSchema.safeParse(rawData)
 
-        if (!colony) {
-            fieldErrors.colony = { _errors: ["La colonia es requerida"] }
-        }
-
-        if (!city) {
-            fieldErrors.city = { _errors: ["La ciudad es requerida"] }
-        }
-
-        if (!state) {
-            fieldErrors.state = { _errors: ["El estado es requerido"] }
-        }
-
-        if (!postal_code) {
-            fieldErrors.postal_code = { _errors: ["El código postal es requerido"] }
-        } else {
-            const cleaned = postal_code.replace(/\s|-/g, '')
-            if (!/^\d{5}$/.test(cleaned)) {
-                fieldErrors.postal_code = { _errors: ["El código postal debe tener 5 dígitos"] }
-            }
-        }
-
-        if (Object.keys(fieldErrors).length > 0) {
+        if (!validationResult.success) {
             return {
                 success: false,
-                error: fieldErrors
+                error: formatZodErrors(validationResult.error)
             }
         }
 
-        const direccionData: CreateDireccionInput = {
-            nombre,
-            street,
-            colony,
-            city,
-            state,
-            postal_code: postal_code.replace(/\s|-/g, ''),
-            references: references || undefined,
-            is_primary
-        }
-
+        const direccionData = validationResult.data
         const direccion = await createDireccion(direccionData)
 
         return {
@@ -303,65 +282,38 @@ export const updateDireccionAction = async (
     formData: FormData
 ): Promise<ActionState & { data?: Direccion }> => {
     try {
-        const nombre = (formData.get("nombre") as string)?.trim() || ""
-        const street = (formData.get("street") as string)?.trim() || ""
-        const colony = (formData.get("colony") as string)?.trim() || ""
-        const city = (formData.get("city") as string)?.trim() || ""
-        const state = (formData.get("state") as string)?.trim() || ""
-        const postal_code = (formData.get("postal_code") as string)?.trim() || ""
-        const references = (formData.get("references") as string)?.trim() || ""
-        const is_primary = formData.get("is_primary") === "true"
+        // Extract form data
+        const rawData: Record<string, unknown> = {}
+        
+        const nombre = (formData.get("nombre") as string)?.trim()
+        const street = (formData.get("street") as string)?.trim()
+        const colony = (formData.get("colony") as string)?.trim()
+        const city = (formData.get("city") as string)?.trim()
+        const state = (formData.get("state") as string)?.trim()
+        const postal_code = (formData.get("postal_code") as string)?.trim()
+        const references = (formData.get("references") as string)?.trim()
+        const is_primary = formData.get("is_primary")
 
-        // Validaciones
-        const fieldErrors: Record<string, { _errors: string[] }> = {}
+        if (nombre) rawData.nombre = nombre
+        if (street) rawData.street = street
+        if (colony) rawData.colony = colony
+        if (city) rawData.city = city
+        if (state) rawData.state = state
+        if (postal_code) rawData.postal_code = postal_code
+        if (references) rawData.references = references
+        if (is_primary !== null) rawData.is_primary = is_primary === "true"
 
-        if (!nombre) {
-            fieldErrors.nombre = { _errors: ["El nombre de la dirección es requerido"] }
-        }
+        // Validate with Zod (partial update)
+        const validationResult = updateDireccionSchema.safeParse(rawData)
 
-        if (!street) {
-            fieldErrors.street = { _errors: ["La calle y número son requeridos"] }
-        }
-
-        if (!colony) {
-            fieldErrors.colony = { _errors: ["La colonia es requerida"] }
-        }
-
-        if (!city) {
-            fieldErrors.city = { _errors: ["La ciudad es requerida"] }
-        }
-
-        if (!state) {
-            fieldErrors.state = { _errors: ["El estado es requerido"] }
-        }
-
-        if (!postal_code) {
-            fieldErrors.postal_code = { _errors: ["El código postal es requerido"] }
-        } else {
-            const cleaned = postal_code.replace(/\s|-/g, '')
-            if (!/^\d{5}$/.test(cleaned)) {
-                fieldErrors.postal_code = { _errors: ["El código postal debe tener 5 dígitos"] }
-            }
-        }
-
-        if (Object.keys(fieldErrors).length > 0) {
+        if (!validationResult.success) {
             return {
                 success: false,
-                error: fieldErrors
+                error: formatZodErrors(validationResult.error)
             }
         }
 
-        const direccionData: UpdateDireccionInput = {
-            nombre,
-            street,
-            colony,
-            city,
-            state,
-            postal_code: postal_code.replace(/\s|-/g, ''),
-            references: references || undefined,
-            is_primary
-        }
-
+        const direccionData = validationResult.data
         const direccion = await updateDireccion(id, direccionData)
 
         return {
@@ -374,6 +326,89 @@ export const updateDireccionAction = async (
         return {
             success: false,
             error: getErrorMessage(error, "Error al actualizar la dirección")
+        }
+    }
+}
+
+export const updateDireccionExtraInfoAction = async (
+    id: number,
+    prevState: ActionState,
+    formData: FormData
+): Promise<ActionState & { data?: Direccion }> => {
+    try {
+        // Extract form data for extra info
+        const rawData: Record<string, unknown> = {}
+
+        const tipo_lugar = formData.get("tipo_lugar") as string
+        const barrio_privado = formData.get("barrio_privado")
+        const conserjeria = formData.get("conserjeria")
+        const nombre_lugar = (formData.get("nombre_lugar") as string)?.trim()
+        const horario_apertura = (formData.get("horario_apertura") as string)?.trim()
+        const horario_cierre = (formData.get("horario_cierre") as string)?.trim()
+        const horario_24hs = formData.get("horario_24hs")
+        const horarios_adicionales_json = formData.get("horarios_adicionales") as string
+
+        if (tipo_lugar && tipo_lugar !== "") {
+            rawData.tipo_lugar = tipo_lugar
+        }
+        if (barrio_privado !== null) {
+            rawData.barrio_privado = barrio_privado === "true" || barrio_privado === "on"
+        }
+        if (conserjeria !== null) {
+            rawData.conserjeria = conserjeria === "true" || conserjeria === "on"
+        }
+        if (nombre_lugar) {
+            rawData.nombre_lugar = nombre_lugar || null
+        }
+        const horario_24hs_value = horario_24hs === "true" || horario_24hs === "on"
+        
+        // Always set horario_24hs
+        rawData.horario_24hs = horario_24hs_value
+        
+        // Only include horario_apertura and horario_cierre if not 24hs
+        if (!horario_24hs_value) {
+            if (horario_apertura) {
+                rawData.horario_apertura = horario_apertura
+            }
+            if (horario_cierre) {
+                rawData.horario_cierre = horario_cierre
+            }
+        } else {
+            // If 24hs, set to null/undefined
+            rawData.horario_apertura = null
+            rawData.horario_cierre = null
+        }
+        if (horarios_adicionales_json) {
+            try {
+                rawData.horarios_adicionales = JSON.parse(horarios_adicionales_json)
+            } catch {
+                // Invalid JSON, skip
+            }
+        }
+
+        // Validate with Zod
+        const validationResult = direccionExtraInfoSchema.safeParse(rawData)
+
+        if (!validationResult.success) {
+            return {
+                success: false,
+                error: formatZodErrors(validationResult.error)
+            }
+        }
+
+        const extraInfoData = validationResult.data
+        const direccion = await updateDireccion(id, extraInfoData)
+
+        return {
+            success: true,
+            error: null,
+            data: direccion
+        }
+    } catch (error: unknown) {
+        console.error("Error updating direccion extra info:", error)
+        return {
+            success: false,
+            error: getErrorMessage(error, "Error al actualizar la información extra de la dirección")
         }
     }
 }
