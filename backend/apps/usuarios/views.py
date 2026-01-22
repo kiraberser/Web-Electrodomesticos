@@ -2,19 +2,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.conf import settings
-from django.utils import timezone
-from datetime import timedelta
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 import brevo_python
 from brevo_python.rest import ApiException
 
-from .models import Usuario, Direccion
+from .models import Usuario, Direccion, Cart, CartItem
 from .serializers import (
     RegistroSerializer, 
     LoginSerializer, 
@@ -22,8 +19,9 @@ from .serializers import (
     UpdateUserProfileSerializer,
     DireccionSerializer,
     CreateDireccionSerializer,
-    FavoritoListSerializer,
     AgregarFavoritoSerializer,
+    AgregarCartSerializer,
+    CartItemSerializer,
     PasswordResetRequestSerializer,
     PasswordResetConfirmSerializer,
     PasswordResetTokenValidateSerializer,
@@ -342,6 +340,90 @@ class FavoritoDetailView(APIView):
         request.user.eliminar_favorito(refaccion)
         return Response(
             {'message': 'Producto eliminado de favoritos exitosamente'},
+            status=status.HTTP_200_OK
+        )
+
+
+class CartListView(APIView):
+    """
+    Vista para listar, agregar y vaciar productos del carrito del usuario
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        """Obtener todos los productos del carrito del usuario"""
+        cart, _ = Cart.objects.get_or_create(usuario=request.user)
+        cart_items = cart.items.select_related('refaccion').all()
+        serializer = CartItemSerializer(cart_items, many=True)
+        return Response({
+            'cart': serializer.data,
+            'total': cart_items.count()
+        }, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        """Agregar un producto al carrito"""
+        serializer = AgregarCartSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        if serializer.is_valid():
+            refaccion_id = serializer.validated_data['refaccion_id']
+            cantidad = serializer.validated_data.get('cantidad', 1)
+            refaccion = Refaccion.objects.get(pk=refaccion_id)
+            cart, _ = Cart.objects.get_or_create(usuario=request.user)
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart,
+                refaccion=refaccion,
+                defaults={'cantidad': cantidad}
+            )
+            if not created:
+                cart_item.cantidad += cantidad
+                cart_item.save()
+            refaccion_serializer = CartItemSerializer(cart_item)
+            return Response({
+                'message': 'Producto agregado al carrito exitosamente',
+                'item': refaccion_serializer.data
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        """Vaciar carrito"""
+        cart, _ = Cart.objects.get_or_create(usuario=request.user)
+        cart.items.all().delete()
+        return Response(
+            {'message': 'Carrito vaciado exitosamente'},
+            status=status.HTTP_200_OK
+        )
+
+
+class CartDetailView(APIView):
+    """
+    Vista para eliminar un producto del carrito
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, refaccion_id):
+        """Eliminar un producto del carrito"""
+        try:
+            refaccion = Refaccion.objects.get(pk=refaccion_id)
+        except Refaccion.DoesNotExist:
+            return Response(
+                {'detail': 'Producto no encontrado'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        cart, _ = Cart.objects.get_or_create(usuario=request.user)
+        if not cart.items.filter(refaccion_id=refaccion_id).exists():
+            return Response(
+                {'detail': 'Este producto no está en tu carrito'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        cart.items.filter(refaccion=refaccion).delete()
+        return Response(
+            {'message': 'Producto eliminado del carrito exitosamente'},
             status=status.HTTP_200_OK
         )
 

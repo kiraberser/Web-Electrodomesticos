@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Direccion
+from .models import Direccion, Cart, CartItem
 from apps.productos.models import Refaccion
 from apps.productos.serializers import RefaccionSerializer
 
@@ -67,6 +67,14 @@ class DireccionSerializer(serializers.ModelSerializer):
             'references',
             'is_primary',
             'full_address',
+            'tipo_lugar',
+            'barrio_privado',
+            'conserjeria',
+            'nombre_lugar',
+            'horario_apertura',
+            'horario_cierre',
+            'horario_24hs',
+            'horarios_adicionales',
             'created_at',
             'updated_at',
         ]
@@ -99,6 +107,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer para obtener los datos del perfil del usuario"""
     full_address = serializers.SerializerMethodField()
     primary_address = serializers.SerializerMethodField()
+    cart_items = serializers.SerializerMethodField()
     
     class Meta:
         model = User
@@ -111,6 +120,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'phone',
             'bio',
             'avatar',
+            'cart_items',
             # Campos legacy de dirección (deprecados, usar Direccion model)
             'address_street',
             'address_colony',
@@ -126,7 +136,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'is_staff',
             'is_superuser',
         ]
-        read_only_fields = ['id', 'date_joined', 'is_staff', 'is_superuser', 'full_address', 'primary_address']
+        read_only_fields = ['id', 'date_joined', 'is_staff', 'is_superuser', 'full_address', 'primary_address', 'cart_items']
     
     def get_full_address(self, obj):
         """Retorna la dirección completa formateada desde Direccion principal o campos legacy"""
@@ -138,6 +148,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if primary:
             return DireccionSerializer(primary).data
         return None
+
+    def get_cart_items(self, obj):
+        """Retorna los items del carrito con cantidades"""
+        try:
+            cart = obj.cart
+        except Cart.DoesNotExist:
+            return []
+        return CartItemSerializer(cart.items.all(), many=True).data
 
 
 class UpdateUserProfileSerializer(serializers.ModelSerializer):
@@ -215,6 +233,14 @@ class CreateDireccionSerializer(serializers.ModelSerializer):
             'postal_code',
             'references',
             'is_primary',
+            'tipo_lugar',
+            'barrio_privado',
+            'conserjeria',
+            'nombre_lugar',
+            'horario_apertura',
+            'horario_cierre',
+            'horario_24hs',
+            'horarios_adicionales',
         ]
     
     def validate_postal_code(self, value):
@@ -276,6 +302,34 @@ class AgregarFavoritoSerializer(serializers.Serializer):
         if usuario.favoritos.filter(pk=refaccion.pk).exists():
             raise serializers.ValidationError("Este producto ya está en tus favoritos")
         
+        return data
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    refaccion = RefaccionSerializer(read_only=True)
+
+    class Meta:
+        model = CartItem
+        fields = ['id', 'refaccion', 'cantidad', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class AgregarCartSerializer(serializers.Serializer):
+    """Serializer para agregar un producto al carrito"""
+    refaccion_id = serializers.IntegerField()
+    cantidad = serializers.IntegerField(required=False, min_value=1, default=1)
+
+    def validate_refaccion_id(self, value):
+        """Validar que el producto exista"""
+        try:
+            Refaccion.objects.get(pk=value)
+        except Refaccion.DoesNotExist:
+            raise serializers.ValidationError("El producto no existe")
+        return value
+
+    def validate(self, data):
+        """Evitar duplicados en carrito"""
+        usuario = self.context['request'].user
         return data
 
 

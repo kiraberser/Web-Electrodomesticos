@@ -10,6 +10,8 @@ from .views import (
     DireccionDetailView,
     FavoritosListView,
     FavoritoDetailView,
+    CartListView,
+    CartDetailView,
     PasswordResetRequestView,
     PasswordResetConfirmView,
     PasswordResetTokenValidateView,
@@ -35,4 +37,7 @@ urlpatterns = [
     # Endpoints de favoritos
     path('user-profile/favoritos/', FavoritosListView.as_view(), name='favoritos-list'),
     path('user-profile/favoritos/<int:refaccion_id>/', FavoritoDetailView.as_view(), name='favorito-detail'),
+    # Endpoints de carrito
+    path('user-profile/cart/', CartListView.as_view(), name='cart-list'),
+    path('user-profile/cart/<int:refaccion_id>/', CartDetailView.as_view(), name='cart-detail'),
 ]
