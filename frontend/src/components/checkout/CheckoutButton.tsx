@@ -1,24 +1,27 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import { Button } from '../ui/forms/Button';
+
 import { useRouter } from 'next/navigation';
+import { CreditCard, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+
+import { getToken } from '@/lib/utilscookies';
 import { useCart } from '@/context/CartContext';
 import { crearPreferenciaPago } from '@/api/pagos'; 
 import { crearPedido } from '@/api/pedidos'; // Asegúrate de importar esto
-import toast from 'react-hot-toast';
-import { getToken } from '@/lib/utilscookies';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import { Button } from '../ui/forms/Button';
-import { CreditCard, Loader2 } from 'lucide-react';
 
 interface CheckoutButtonProps {
     className?: string;
     buttonLabel?: string; 
+    onBeforeCheckout?: () => void | Promise<void>;
 }
 
-const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel = 'Pagar ahora' }) => {
+const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel = 'Pagar ahora', onBeforeCheckout }) => {
     const router = useRouter();
-    const { items } = useCart(); 
+    const { items, clearCart } = useCart(); 
     const [loading, setLoading] = useState(false);
     const [preferenciaId, setPreferenciaId] = useState<string | null>(null);
     
@@ -38,6 +41,8 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
             return;
         }
 
+        const itemsCopy = [...items];
+
         const token = await getToken();
         if (!token) {
             toast.error('Inicia sesión para continuar');
@@ -45,12 +50,16 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
             return;
         }
 
+        if (onBeforeCheckout) {
+            await onBeforeCheckout();
+        }
+
         setLoading(true);
 
         try {
             // --- PASO 1: CREAR PEDIDO EN DJANGO (Backend) ---
             // Mapeamos los items para tu API de pedidos (solo IDs y cantidades)
-            const itemsParaPedido = items.map(item => ({
+            const itemsParaPedido = itemsCopy.map(item => ({
                 refaccion: Number(item.id), // Convertir string a number
                 cantidad: item.quantity,
             }));
@@ -65,7 +74,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
             }
 
             // Construir items para la preferencia de pago
-            const itemsParaPreferencia = items.map(item => ({
+            const itemsParaPreferencia = itemsCopy.map(item => ({
                 title: item.name,
                 quantity: item.quantity,
                 unit_price: item.price,
@@ -93,7 +102,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
 
         } catch (error: unknown) {
             console.error('Error en el proceso de checkout:', error);
-            const msg = error.response?.data?.message || error.message || 'Error al procesar la solicitud.';
+            const msg =  (error as Error).message || 'Error al procesar la solicitud.';
             toast.error(msg);
             setPreferenciaId(null);
         } finally {
@@ -128,9 +137,11 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ className, buttonLabel 
                     <div className="mb-2 text-center text-sm text-green-600 font-medium">
                         ¡Pedido creado! Completa tu pago abajo:
                     </div>
-                    <Wallet 
-                        initialization={{ preferenceId: preferenciaId, redirectMode: 'blank' }}
-                    />
+                    <Button onClick={() => clearCart()}>
+                        <Wallet 
+                            initialization={{ preferenceId: preferenciaId, redirectMode: 'blank' }}
+                        />
+                    </Button>
                     <button 
                         onClick={() => setPreferenciaId(null)}
                         className="text-xs text-gray-400 underline w-full text-center mt-3 hover:text-gray-600"

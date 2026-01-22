@@ -86,16 +86,6 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
         return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [isMenuOpen, isUserDropdownOpen])
 
-    useEffect(() => {
-        if (pathname?.startsWith("/categorias")) {
-            if (checkAuthentication()) {
-                setIsCartOpen(true)
-            }
-        } else {
-            setIsCartOpen(false)
-        }
-    }, [pathname])
-
     // Keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
