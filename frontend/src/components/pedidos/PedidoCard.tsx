@@ -19,6 +19,7 @@ import {
 import type { Pedido } from "@/api/pedidos"
 import { useCart } from '@/context/CartContext'
 import toast from 'react-hot-toast'
+import { addCartItemAction } from "@/actions/cart"
 
 interface PedidoCardProps {
     pedido: Pedido
@@ -72,12 +73,13 @@ export default function PedidoCard({ pedido, isRecent = false }: PedidoCardProps
         return null
     }
 
-    const handleRecomprar = () => {
+    const handleRecomprar = async () => {
         let addedCount = 0
         let failedCount = 0
 
-        pedido.items.forEach((item) => {
+        for (const item of pedido.items) {
             try {
+                await addCartItemAction(Number(item.refaccion), item.cantidad)
                 addItem({
                     id: String(item.refaccion),
                     name: item.refaccion_nombre,
@@ -89,7 +91,7 @@ export default function PedidoCard({ pedido, isRecent = false }: PedidoCardProps
             } catch (error) {
                 failedCount++
             }
-        })
+        }
 
         if (addedCount > 0) {
             toast.success(
