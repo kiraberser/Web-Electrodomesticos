@@ -10,6 +10,7 @@ import { useCart } from '@/context/CartContext'
 import toast from 'react-hot-toast'
 import { eliminarFavoritoAction } from "@/actions/favoritos"
 import { useState } from "react"
+import { addCartItemAction } from "@/actions/cart"
 
 interface FavoritoCardProps {
     favorito: Refaccion
@@ -20,7 +21,20 @@ export default function FavoritoCard({ favorito, onRemove }: FavoritoCardProps) 
     const { addItem } = useCart()
     const [isRemoving, setIsRemoving] = useState(false)
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
+        try {
+            await addCartItemAction(favorito.id, 1)
+        } catch (error) {
+            console.error("Error al sincronizar carrito:", error)
+            toast.error('No se pudo agregar al carrito', {
+                style: {
+                    background: '#dc2626',
+                    color: '#fff',
+                },
+            })
+            return
+        }
+
         addItem({
             id: String(favorito.id),
             name: favorito.nombre,

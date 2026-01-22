@@ -29,6 +29,8 @@ class Usuario(AbstractUser):
         blank=True,
         verbose_name="Productos favoritos"
     )
+
+    # El carrito vive en el modelo Cart (con cantidades por item)
     
     # Puedes agregar más campos según necesites
     def __str__(self):
@@ -74,6 +76,13 @@ class Usuario(AbstractUser):
 
 class Direccion(models.Model):
     """Modelo para direcciones de envío de usuarios"""
+    TIPO_LUGAR_CHOICES = [
+        ('casa', 'Casa'),
+        ('edificio', 'Edificio'),
+        ('abarrotes', 'Abarrotes'),
+        ('otro', 'Otro'),
+    ]
+    
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='direcciones')
     nombre = models.CharField(max_length=100, verbose_name="Nombre de la dirección")
     street = models.CharField(max_length=255, verbose_name="Calle y número")
@@ -83,6 +92,23 @@ class Direccion(models.Model):
     postal_code = models.CharField(max_length=10, verbose_name="Código Postal")
     references = models.TextField(blank=True, null=True, verbose_name="Referencias adicionales")
     is_primary = models.BooleanField(default=False, verbose_name="Dirección principal")
+    
+    # Campos extra para información de entrega
+    tipo_lugar = models.CharField(
+        max_length=20, 
+        choices=TIPO_LUGAR_CHOICES, 
+        blank=True, 
+        null=True,
+        verbose_name="Tipo de lugar"
+    )
+    barrio_privado = models.BooleanField(default=False, verbose_name="Se encuentra en un barrio privado o centro comercial")
+    conserjeria = models.BooleanField(default=False, verbose_name="Se pueden dejar paquetes en conserjería")
+    nombre_lugar = models.CharField(max_length=255, blank=True, null=True, verbose_name="Nombre del lugar")
+    horario_apertura = models.TimeField(blank=True, null=True, verbose_name="Horario de apertura")
+    horario_cierre = models.TimeField(blank=True, null=True, verbose_name="Horario de cierre")
+    horario_24hs = models.BooleanField(default=False, verbose_name="Atención 24 horas")
+    horarios_adicionales = models.JSONField(default=dict, blank=True, verbose_name="Horarios adicionales por día")
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -122,3 +148,28 @@ class Direccion(models.Model):
         if self.postal_code:
             parts.append(f"CP: {self.postal_code}")
         return ", ".join(parts) if parts else ""
+
+
+class Cart(models.Model):
+    """Carrito principal del usuario"""
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='cart')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Carrito de {self.usuario.username}"
+
+
+class CartItem(models.Model):
+    """Item de carrito con cantidad"""
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    refaccion = models.ForeignKey(Refaccion, on_delete=models.CASCADE, related_name='cart_items')
+    cantidad = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('cart', 'refaccion')
+
+    def __str__(self):
+        return f"{self.refaccion.nombre} x{self.cantidad}"

@@ -5,9 +5,12 @@ import { Button } from "../ui/forms/Button"
 import { Badge } from "../ui"
 import { Zap, Shield } from "@/components/icons"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import type { Product } from "@/data/products"
 import { useCart } from '@/context/CartContext';
 import toast from 'react-hot-toast';
+import { checkAuthentication } from "@/lib/cookies"
+import { addCartItemAction } from "@/actions/cart";
 
 const ShoppingCartIcon = () => (
     <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,8 +27,28 @@ export default function ProductCard({
     product
 }: Props) {
     const { addItem } = useCart();
+    const router = useRouter();
 
-    const handleAddToCart = (product: Product) => {
+    const handleAddToCart = async (product: Product) => {
+        const authStatus = checkAuthentication();
+        if (!authStatus) {
+            toast.error('Inicia sesión para agregar productos al carrito', {
+                style: { background: "#dc2626", color: "#fff" },
+            });
+            router.push('/cuenta/login');
+            return;
+        }
+
+        try {
+            await addCartItemAction(Number(product.id), 1);
+        } catch (error) {
+            console.error("Error al sincronizar carrito:", error);
+            toast.error("No se pudo agregar al carrito", {
+                style: { background: "#dc2626", color: "#fff" },
+            });
+            return;
+        }
+
         addItem(product);
         toast.success(`${product.name} agregado al carrito`, {
             duration: 3000,

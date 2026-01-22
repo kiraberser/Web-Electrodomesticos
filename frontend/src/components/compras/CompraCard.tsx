@@ -20,6 +20,7 @@ import {
 import type { Pedido } from "@/api/pedidos"
 import { useCart } from '@/context/CartContext'
 import toast from 'react-hot-toast'
+import { addCartItemAction } from "@/actions/cart"
 
 interface CompraCardProps {
     compra: Pedido
@@ -79,12 +80,13 @@ export default function CompraCard({ compra }: CompraCardProps) {
         }).format(Number(amount))
     }
 
-    const handleRecomprar = () => {
+    const handleRecomprar = async () => {
         let addedCount = 0
         let failedCount = 0
 
-        compra.items.forEach((item) => {
+        for (const item of compra.items) {
             try {
+                await addCartItemAction(Number(item.refaccion), item.cantidad)
                 addItem({
                     id: String(item.refaccion),
                     name: item.refaccion_nombre,
@@ -96,7 +98,7 @@ export default function CompraCard({ compra }: CompraCardProps) {
             } catch (error) {
                 failedCount++
             }
-        })
+        }
 
         if (addedCount > 0) {
             toast.success(

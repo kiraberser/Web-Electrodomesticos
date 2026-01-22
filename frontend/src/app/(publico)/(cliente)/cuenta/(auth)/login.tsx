@@ -42,6 +42,9 @@ function Login({ isSubmitting, showPassword, setShowPassword }: LoginProps) {
             duration: 9000,
             isClosable: true,
         })
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('cart-auth-changed'))
+        }
         redirect('/')
     }
 

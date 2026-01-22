@@ -11,6 +11,7 @@ import { Card, CardContent } from '../ui/display/Card';
 import { Badge } from '../ui';
 import { useCart } from '@/context/CartContext';
 import { products, type Product } from '@/data/products';
+import { addCartItemAction } from '@/actions/cart';
 
 const FeaturedProducts = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,9 +19,10 @@ const FeaturedProducts = () => {
     const [error, setError] = useState<string | null>(null);
     const { addItem } = useCart();
 
-    const handleAddToCart = (product: Product) => {
+    const handleAddToCart = async (product: Product) => {
         setLoading(true);
         try {
+            await addCartItemAction(Number(product.id), 1);
             addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 });
             toast.success(`${product.name} agregado al carrito`, {
                 duration: 3000,

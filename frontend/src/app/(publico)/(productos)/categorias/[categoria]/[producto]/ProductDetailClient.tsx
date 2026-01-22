@@ -12,6 +12,7 @@ import CheckoutButton from "@/components/checkout/CheckoutButton";
 import { agregarFavoritoAction, eliminarFavoritoAction } from "@/actions/favoritos";
 import AuthRequiredModal from "@/components/favoritos/AuthRequiredModal";
 import { checkAuthentication } from "@/lib/cookies";
+import { addCartItemAction } from "@/actions/cart";
 // Iconos modernos (reemplaza los anteriores si es necesario)
 import {
     ArrowLeft,
@@ -245,7 +246,30 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
     }, [items, product.id]);
 
     // Lógica de Carrito con cantidad
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
+        const authStatus = checkAuthentication();
+        if (!authStatus) {
+            toast.error('Inicia sesión para agregar productos al carrito', {
+                style: { background: "#dc2626", color: "#fff" },
+            });
+            router.push('/cuenta/login');
+            return;
+        }
+
+        try {
+            const refaccionId = Number(product.id) || refaccion.id;
+            if (!refaccionId) {
+                throw new Error("ID de producto inválido");
+            }
+            await addCartItemAction(refaccionId, quantity);
+        } catch (error) {
+            console.error("Error al sincronizar carrito:", error);
+            toast.error('No se pudo agregar al carrito', {
+                style: { background: "#dc2626", color: "#fff" },
+            });
+            return;
+        }
+
         if (!product.inStock) {
             toast.error("Este producto no está disponible", {
                 style: { background: "#dc2626", color: "#fff" },
@@ -307,7 +331,7 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
     };
 
     // Manejar compra directa
-    const handleBuyNow = () => {
+    const handleBuyNow = async () => {
         if (!product.inStock) {
             toast.error("Este producto no está disponible", {
                 style: { background: "#dc2626", color: "#fff" },
@@ -322,6 +346,21 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
                 style: { background: "#dc2626", color: "#fff" },
             });
             router.push('/cuenta/login');
+            return;
+        }
+
+        // Sincronizar carrito backend (ignorar si ya existe)
+        try {
+            const refaccionId = Number(product.id) || refaccion.id;
+            if (!refaccionId) {
+                throw new Error("ID de producto inválido");
+            }
+            await addCartItemAction(refaccionId, quantity);
+        } catch (error) {
+            console.error("Error al sincronizar carrito:", error);
+            toast.error('No se pudo agregar al carrito', {
+                style: { background: "#dc2626", color: "#fff" },
+            });
             return;
         }
 

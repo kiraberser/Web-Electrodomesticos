@@ -59,6 +59,7 @@ class CrearPreferenciaPagoView(APIView):
                 })
             
             debug_backend_url = os.getenv('BACKEND_URL')
+            print(debug_backend_url)
             debug_frontend_url = os.getenv('FRONTEND_URL')
 
             final_back_urls = {
@@ -92,6 +93,7 @@ class CrearPreferenciaPagoView(APIView):
                 )
 
             preference = preference_response['response']
+            print(preference)
 
             # 5. Actualizar el Pago con el ID de preferencia generado
             pago.preference_id = preference['id']

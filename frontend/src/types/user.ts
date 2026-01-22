@@ -59,6 +59,14 @@ export type Direccion = {
     references: string | null
     is_primary: boolean
     full_address: string
+    tipo_lugar?: 'casa' | 'edificio' | 'abarrotes' | 'otro' | null
+    barrio_privado?: boolean
+    conserjeria?: boolean
+    nombre_lugar?: string | null
+    horario_apertura?: string | null
+    horario_cierre?: string | null
+    horario_24hs?: boolean
+    horarios_adicionales?: Record<string, { apertura: string; cierre: string }>
     created_at: string
     updated_at: string
 }
@@ -72,6 +80,14 @@ export type CreateDireccionInput = {
     postal_code: string
     references?: string
     is_primary?: boolean
+    tipo_lugar?: 'casa' | 'edificio' | 'abarrotes' | 'otro'
+    barrio_privado?: boolean
+    conserjeria?: boolean
+    nombre_lugar?: string
+    horario_apertura?: string
+    horario_cierre?: string
+    horario_24hs?: boolean
+    horarios_adicionales?: Record<string, { apertura: string; cierre: string }>
 }
 
 export type UpdateDireccionInput = Partial<CreateDireccionInput>
