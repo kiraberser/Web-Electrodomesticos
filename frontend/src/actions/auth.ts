@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 import { createDireccionSchema, direccionExtraInfoSchema, updateDireccionSchema } from "@/lib/validations/direccion"
 import { ZodError } from "zod"
 
-import { LoginUserType, CreateUserType, UpdateUserProfileInput, CreateDireccionInput, UpdateDireccionInput, Direccion } from "@/types/user"
+import { LoginUserType, CreateUserType, UpdateUserProfileInput, Direccion } from "@/types/user"
 
 export type ActionState = {
     success: boolean
@@ -16,14 +16,13 @@ export type ActionState = {
 
 export const actionLoginUser = async (formData: LoginUserType) => {
     const response = await loginUser(formData)
-    console.log(response)
     const cookieStore = await cookies()
     
     cookieStore.set({
         name: 'username',
         value: response['usuario'],
         path: '/',
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60 * 24,
         secure: true,
         sameSite: 'lax'
     })
@@ -43,7 +42,7 @@ export const actionLoginUser = async (formData: LoginUserType) => {
         path: '/',
         secure: true,
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7
+        maxAge: 60 * 60 * 24
     })
 
     return { success: true }
