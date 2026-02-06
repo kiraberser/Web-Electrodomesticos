@@ -1,3 +1,5 @@
+'use server'
+
 import axios from 'axios';
 import { getToken } from '@/lib/utilscookies';
 

@@ -1,3 +1,5 @@
+'use server'
+
 import axios from 'axios';
 import { CreateUserType, LoginUserType, UpdateUserProfileInput, Direccion, CreateDireccionInput, UpdateDireccionInput } from '@/types/user';
 import { cookies } from 'next/headers';
