@@ -99,7 +99,6 @@ export default function RefaccionesClient({ initialRefacciones }: RefaccionesCli
 
     const handleViewRefaccion = (refaccion: Refaccion) => {
         setSelectedRefaccion(refaccion)
-        console.log("Refaccion selected:", refaccion)   
         setDrawerOpen(true)
     }
 

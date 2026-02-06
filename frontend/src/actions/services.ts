@@ -46,7 +46,6 @@ export const createService = async (prevState: ActionState, formData: FormData):
     const data = Object.fromEntries(formData.entries())
 
     const parsedData = serviceSchema.safeParse(data)
-    console.log("Parsed data:", parsedData)
 
     if (!parsedData.success) {
         console.error("Validation errors found:", parsedData.error.format())
@@ -60,7 +59,6 @@ export const createService = async (prevState: ActionState, formData: FormData):
         ...parsedData.data,
         noDeServicio: Number(parsedData.data.noDeServicio),
     }
-    console.log("Creating service:", newService)
     try {
         await postService(newService)
         return { success: true, error: null }

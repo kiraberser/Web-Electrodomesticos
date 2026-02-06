@@ -67,7 +67,6 @@ export const createMarcaAction = async (prevState: ActionState, formData: FormDa
         if (logoFile && logoFile.size > 0) {
             try {
                 logoUrl = await uploadImage(logoFile)
-                console.log("Logo uploaded successfully:", logoUrl)
             } catch (uploadError) {
                 console.error("Error uploading logo:", uploadError)
                 return { 
@@ -128,7 +127,6 @@ export const updateMarcaAction = async (prevState: ActionState, formData: FormDa
         if (logoFile && logoFile.size > 0) {
             try {
                 logoUrl = await uploadImage(logoFile)
-                console.log("Logo uploaded successfully:", logoUrl)
             } catch (uploadError) {
                 console.error("Error uploading logo:", uploadError)
                 return { 
@@ -186,7 +184,6 @@ export const createCategoriaAction = async (prevState: ActionState, formData: Fo
         if (imagenFile && imagenFile.size > 0) {
             try {
                 imagenUrl = await uploadImage(imagenFile)
-                console.log("Image uploaded successfully:", imagenUrl)
             } catch (uploadError) {
                 console.error("Error uploading image:", uploadError)
                 return { 
@@ -247,7 +244,6 @@ export const updateCategoriaAction = async (prevState: ActionState, formData: Fo
         if (imagenFile && imagenFile.size > 0) {
             try {
                 imagenUrl = await uploadImage(imagenFile)
-                console.log("Image uploaded successfully:", imagenUrl)
             } catch (uploadError) {
                 console.error("Error uploading image:", uploadError)
                 return { 
@@ -322,7 +318,6 @@ export const createProveedorAction = async (prevState: ActionState, formData: Fo
         if (logoFile && logoFile.size > 0) {
             try {
                 logoUrl = await uploadImage(logoFile)
-                console.log("Logo uploaded successfully:", logoUrl)
             } catch (uploadError) {
                 console.error("Error uploading logo:", uploadError)
                 return { 
@@ -413,7 +408,6 @@ export const updateProveedorAction = async (prevState: ActionState, formData: Fo
         if (logoFile && logoFile.size > 0) {
             try {
                 logoUrl = await uploadImage(logoFile)
-                console.log("Logo uploaded successfully:", logoUrl)
             } catch (uploadError) {
                 console.error("Error uploading logo:", uploadError)
                 return { 
@@ -513,7 +507,6 @@ export const createRefaccionAction = async (prevState: ActionState, formData: Fo
         if (imagenFile && imagenFile.size > 0) {
             try {
                 imagenUrl = await uploadImage(imagenFile)
-                console.log("Image uploaded successfully:", imagenUrl)
             } catch (uploadError) {
                 console.error("Error uploading image:", uploadError)
                 return { 

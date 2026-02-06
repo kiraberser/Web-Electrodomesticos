@@ -14,7 +14,6 @@ export const subscribeNewsletterAction = async (prevState: ActionState, formData
         return { success: false, error: 'Email es requerido' }
     }
     const res = await subscribeNewsletter(email)
-    console.log("Res:", res)
     if (!res.success) {
         const message = res.data?.errors?.email?.[0] || res.data?.email || 'No fue posible suscribirse'
         return { success: false, error: message }

@@ -57,7 +57,6 @@ export function PerfilClient({ user }: PerfilClientProps) {
     const handleDeleteAccount = () => {
         // TODO: Implementar eliminación de cuenta con confirmación
         if (confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) {
-            console.log("Delete account clicked")
             // Implementar llamada a API para eliminar cuenta
         }
     }

@@ -28,7 +28,6 @@ export function ServiceQuickActions({
     const generateReport = () => {
         // TODO: Implement report generation
         // eslint-disable-next-line no-console
-        console.log("Generating report for service:", serviceId)
     }
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
