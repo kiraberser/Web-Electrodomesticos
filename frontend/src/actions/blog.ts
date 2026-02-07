@@ -22,8 +22,8 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
     const content = ((formData.get("content") as string) || "").trim()
     const category = ((formData.get("category") as string) || "").trim()
 
-    if (image === null) {
-        return new Error('No se ha seleccionado una imagen')
+    if (image === null || !(image instanceof File) || image.size === 0) {
+        return { success: false, message: 'No se ha seleccionado una imagen' }
     }
 
     const fieldErrors: BlogActionState["fieldErrors"] = {}
@@ -35,18 +35,14 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
         return { success: false, message: "Revisa los campos marcados", fieldErrors }
     }
 
-    const errors = []
-
     let imageUrl;
 
     try {
-        console.log('esta es la imagen', image)
         imageUrl = await uploadImage(image)
-    } catch (error){
-        console.error( 'Error al subir la imagen', error)
-        errors.push('Error al subir la imagen')
+    } catch (error) {
+        console.error('Error al subir la imagen', error)
+        return { success: false, message: 'Error al subir la imagen' }
     }
-
 
     const newPost = {
         title: title,
@@ -59,10 +55,12 @@ export async function createPost(prevState: BlogActionState, formData: FormData)
         slug: slug
     }
 
-
-    await postBlog(newPost)
-
-    console.log('Post creado con exito')
+    try {
+        await postBlog(newPost)
+    } catch (error) {
+        console.error('Error al crear el post', error)
+        return { success: false, message: 'Error al crear el post' }
+    }
 
     revalidatePath('/blog')
     redirect('/')

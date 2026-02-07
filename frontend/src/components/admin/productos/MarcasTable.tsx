@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/admin/ui"
+import { Button } from "@/components/admin/ui/Button"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Marca } from "@/api/productos"
 import { deleteMarca } from "@/api/productos"

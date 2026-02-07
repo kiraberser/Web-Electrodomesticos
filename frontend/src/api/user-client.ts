@@ -10,12 +10,10 @@ const url = process.env.NEXT_PUBLIC_BASE_URL_API
 function getTokenFromCookies(): string | null {
     if (typeof document === 'undefined') return null
     const cookies = document.cookie.split(';')
-    for (let cookie of cookies) {
-        const [name, value] = cookie.trim().split('=')
-        console.log(name, value)
-        if (value === 'username') {
-            console.log('username', value)
-            return decodeURIComponent(value)
+    for (const cookie of cookies) {
+        const [name, ...rest] = cookie.trim().split('=')
+        if (name === 'access_cookie') {
+            return decodeURIComponent(rest.join('='))
         }
     }
     return null

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card } from "@/components/admin/ui";
+import { Card } from "@/components/admin/ui/Card";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 
 export const KPI: React.FC<{

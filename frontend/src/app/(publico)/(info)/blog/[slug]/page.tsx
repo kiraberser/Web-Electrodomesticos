@@ -22,14 +22,12 @@ type BlogPost = {
 }
 
 const BlogPost = () => {
-    console.log(TOKEN)
     const params = useParams()
     const [post, setPost] = useState<BlogPost | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        console.log('Fetching post with slug:', params)
         const fetchPost = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/api/v1/blog/post/${params.slug}/`)

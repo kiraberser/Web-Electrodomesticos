@@ -1,3 +1,5 @@
+'use server'
+
 import axios from 'axios';
 import { getToken } from '@/lib/utilscookies';
 
@@ -88,13 +90,11 @@ export const crearPreferenciaPago = async (
     data: PreferenciaPagoRequest
 ): Promise<PreferenciaPagoResponse> => {
     try {
-        console.log("data", data);
         const response = await axios.post(
             `${url}/pagos/crear-preferencia/`,
             data,
             { headers: { Authorization: `Bearer ${await getToken()}` } }
         );
-        console.log(response.data);
         return response.data;
     } catch (error: unknown) {
         console.error("Error en crearPreferenciaPago:", getErrorLogMessage(error));

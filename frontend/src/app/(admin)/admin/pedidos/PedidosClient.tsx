@@ -9,7 +9,7 @@ import PedidoDrawer from "@/components/admin/pedidos/PedidoDrawer"
 import Pagination from "@/components/ui/navigation/Pagination"
 import { ShoppingCart, Search } from "lucide-react"
 import { Input } from "@/components/ui/forms/InputField"
-import { Badge } from "@/components/ui"
+import { Badge } from "@/components/ui/feedback/Badge"
 
 interface PedidosClientProps {
     initialPedidos?: Pedido[]

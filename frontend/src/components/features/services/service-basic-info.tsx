@@ -1,7 +1,7 @@
 "use client"
 
 import { Phone, Calendar, Package, User } from "lucide-react"
-import { Badge } from "@/components/ui"
+import { Badge } from "@/components/ui/feedback/Badge"
 import type { ServiceDetail } from "@/types/service"
 
 interface ServiceBasicInfoProps {

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useMemo, ReactNode, useCallback } from 'react';
 import { checkAuthentication } from '@/lib/cookies';
 import { getCartAction, removeCartItemAction, clearCartAction, setCartItemQuantityAction } from '@/actions/cart';
 
@@ -136,55 +136,55 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         localStorage.setItem('electromart-cart', JSON.stringify(state.items));
     }, [state.items]);
 
-    const addItem = (product: CartItem) => {
+    const addItem = useCallback((product: CartItem) => {
         dispatch({ type: 'ADD_ITEM', payload: product });
-    };
+    }, []);
 
-    const removeItem = (productId: string) => {
+    const removeItem = useCallback((productId: string) => {
         if (checkAuthentication()) {
             removeCartItemAction(Number(productId)).catch((error) => {
                 console.error('Error eliminando carrito en backend:', error);
             });
         }
         dispatch({ type: 'REMOVE_ITEM', payload: productId });
-    };
+    }, []);
 
-    const updateQuantity = (productId: string, quantity: number) => {
+    const updateQuantity = useCallback((productId: string, quantity: number) => {
         if (checkAuthentication()) {
             setCartItemQuantityAction(Number(productId), quantity).catch((error) => {
                 console.error('Error actualizando cantidad en backend:', error);
             });
         }
         dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
-    };
+    }, []);
 
-    const clearCart = () => {
+    const clearCart = useCallback(() => {
         if (checkAuthentication()) {
             clearCartAction().catch((error) => {
                 console.error('Error limpiando carrito en backend:', error);
             });
         }
         dispatch({ type: 'CLEAR_CART' });
-    };
+    }, []);
 
-    const clearLocalCart = () => {
+    const clearLocalCart = useCallback(() => {
         dispatch({ type: 'CLEAR_CART' });
-    };
+    }, []);
 
-    const getTotalItems = () => {
+    const getTotalItems = useCallback(() => {
         return state.items.reduce((total, item) => total + item.quantity, 0);
-    };
+    }, [state.items]);
 
-    const getTotalPrice = () => {
+    const getTotalPrice = useCallback(() => {
         return state.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-    };
+    }, [state.items]);
 
-    const getItemCount = (productId: string) => {
+    const getItemCount = useCallback((productId: string) => {
         const item = state.items.find(item => item.id === productId);
         return item ? item.quantity : 0;
-    };
+    }, [state.items]);
 
-    const value: CartContextType = {
+    const value: CartContextType = useMemo(() => ({
         items: state.items,
         addItem,
         removeItem,
@@ -194,7 +194,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         getTotalItems,
         getTotalPrice,
         getItemCount
-    };
+    }), [state.items, addItem, removeItem, updateQuantity, clearCart, clearLocalCart, getTotalItems, getTotalPrice, getItemCount]);
 
     return (
         <CartContext.Provider value={value}>

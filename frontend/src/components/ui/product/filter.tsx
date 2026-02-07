@@ -5,7 +5,9 @@ import { Badge } from "../feedback"
 import { Input } from "../forms/InputField"
 import { Button } from "../forms/Button"
 import type { Brand } from "@/data/products"
-import { Tag, DollarSign, X } from "@/components/icons"
+import Tag from "@/components/icons/Tag"
+import DollarSign from "@/components/icons/DollarSign"
+import X from "@/components/icons/X"
 
 
 interface Props {

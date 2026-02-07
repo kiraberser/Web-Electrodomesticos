@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { Button } from "@/components/admin/ui"
-import { Badge } from "../ui"
+import { Button } from "@/components/admin/ui/Button"
+import { Badge } from "@/components/ui/feedback/Badge"
 import type { Product } from "@/data/products"
 import { X, Shield, Truck, Zap, Wrench, Pencil } from "lucide-react"
 import Link from "next/link"

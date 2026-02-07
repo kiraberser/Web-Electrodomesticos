@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import HeroSection from '@/components/ui/layout/Hero';
-import FeaturedProducts from '@/components/product/FeaturedProducts';
 import Categories from '@/components/product/Categories';
 import Brands from '@/components/product/Brands';
-import { Carousel } from '@/components/features/home/carousel';
 import Features from '@/components/features/home/Features';
-import { Reviews } from '@/components/features/reviews/Reviews';
+
+const FeaturedProducts = dynamic(() => import('@/components/product/FeaturedProducts'), {
+  loading: () => <section className="py-16 bg-gray-50"><div className="container mx-auto px-4"><div className="h-96 animate-pulse rounded-xl bg-gray-200" /></div></section>,
+});
+
+const Carousel = dynamic(() => import('@/components/features/home/carousel').then(m => ({ default: m.Carousel })), {
+  loading: () => <div className="h-64 animate-pulse bg-gray-100" />,
+});
+
+const Reviews = dynamic(() => import('@/components/features/reviews/Reviews').then(m => ({ default: m.Reviews })), {
+  loading: () => <section className="py-16 bg-gray-900"><div className="container mx-auto px-4"><div className="h-80 animate-pulse rounded-xl bg-gray-800" /></div></section>,
+});
 
 export const metadata = {
   title: 'Refaccionaria Vega - Electrodomésticos y Refacciones',

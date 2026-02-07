@@ -8,7 +8,7 @@ import { Star, ShoppingCart, Heart, Loader2 } from 'lucide-react';
 
 import { Button } from '../ui/forms/Button';
 import { Card, CardContent } from '../ui/display/Card';
-import { Badge } from '../ui';
+import { Badge } from '../ui/feedback/Badge';
 import { useCart } from '@/context/CartContext';
 import { products, type Product } from '@/data/products';
 import { addCartItemAction } from '@/actions/cart';

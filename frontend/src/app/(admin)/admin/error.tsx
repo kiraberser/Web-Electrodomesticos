@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { RefreshCw, Home, AlertTriangle } from "lucide-react";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
-import { Button } from "@/components/admin/ui";
+import { Button } from "@/components/admin/ui/Button";
 
 export default function AdminError({
     error,

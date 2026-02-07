@@ -3,9 +3,9 @@
 
 import { useActionState, useEffect } from "react"
 import { useFormStatus } from "react-dom"
-import { Button } from "@/components/admin/ui"
+import { Button } from "@/components/admin/ui/Button"
 import { Input } from "@/components/admin/ui/Input"
-import { ImageUpload } from "@/components/admin/ui"
+import { ImageUpload } from "@/components/admin/ui/ImageUpload"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import { createProveedorAction, updateProveedorAction } from "@/actions/productos"
 import { X, Plus } from "lucide-react"

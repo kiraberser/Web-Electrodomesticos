@@ -3,8 +3,8 @@
 import type React from "react"
 
 import { useMemo, useState } from "react"
-import { Button } from "@/components/admin/ui"
-import { Badge } from "../ui"
+import { Button } from "@/components/admin/ui/Button"
+import { Badge } from "@/components/ui/feedback/Badge"
 import type { Product } from "@/data/products"
 import { ChevronDown, ChevronUp, Eye, Package, Tag } from "lucide-react"
 

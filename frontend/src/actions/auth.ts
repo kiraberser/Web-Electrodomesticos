@@ -15,8 +15,10 @@ export type ActionState = {
 }
 
 export const actionLoginUser = async (formData: LoginUserType) => {
-    const response = await loginUser(formData)
-    const cookieStore = await cookies()
+    const [response, cookieStore] = await Promise.all([
+        loginUser(formData),
+        cookies()
+    ])
     
     cookieStore.set({
         name: 'username',

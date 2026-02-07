@@ -3,11 +3,12 @@
 import '@/styles/index.css';
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Sidebar, Topbar } from "@/components/admin/layout";
-import { Toaster } from "@/components/admin/ui";
-import { useToasts } from "@/components/admin/hooks";
+import Sidebar from "@/components/admin/layout/Sidebar";
+import Topbar from "@/components/admin/layout/Topbar";
+import { Toaster } from "@/components/admin/ui/Toaster";
+import { useToasts } from "@/components/admin/hooks/useToasts";
 import { AdminThemeProvider } from "@/components/admin/hooks/useAdminTheme";
-import type { DateRange, SectionKey, NavItem } from "@/components/admin/utils";
+import type { DateRange, SectionKey, NavItem } from "@/components/admin/utils/types";
 import { LayoutDashboard, Package, ShoppingCart, Server, Book, Box, Store } from "lucide-react";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

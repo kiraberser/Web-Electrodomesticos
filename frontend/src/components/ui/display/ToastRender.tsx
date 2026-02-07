@@ -12,7 +12,6 @@ interface Toast {
 
 export function ToastViewport() {
     const { toasts, dismiss } = useToast()
-    console.log(toasts)
     
     if (!toasts || toasts.length === 0) return null
 

@@ -1,4 +1,4 @@
-import { HeroSection } from "@/components/ui";
+import HeroSection from "@/components/ui/layout/Hero";
 
 const UnauthorizedPage = () => {
     return <div className="min-h-screen"    >

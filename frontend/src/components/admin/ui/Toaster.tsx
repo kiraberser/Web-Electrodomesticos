@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Toast } from "@/components/admin/ui";
+import { Toast } from "@/components/admin/ui/Toast";
 
 export const Toaster: React.FC<{ toasts: Array<{ id: string; type?: "success" | "error" | "info"; title: string; description?: string }>; onRemove: (id: string) => void }>
   = ({ toasts, onRemove }) => (

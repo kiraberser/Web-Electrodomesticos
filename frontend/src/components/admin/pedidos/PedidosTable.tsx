@@ -2,8 +2,8 @@
 
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Pedido } from "@/api/pedidos"
-import { Badge } from "@/components/ui"
-import { Button } from "@/components/admin/ui"
+import { Badge } from "@/components/ui/feedback/Badge"
+import { Button } from "@/components/admin/ui/Button"
 import { Eye, ShoppingCart } from "lucide-react"
 
 interface PedidosTableProps {

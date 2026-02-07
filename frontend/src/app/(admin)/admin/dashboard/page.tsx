@@ -1,8 +1,13 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
-import { OverviewSection, ProductosSection, AjustesSection, PedidosSection } from "@/components/admin/sections";
+
+const OverviewSection = dynamic(() => import("@/components/admin/sections/OverviewSection").then(m => ({ default: m.OverviewSection })));
+const ProductosSection = dynamic(() => import("@/components/admin/sections/ProductosSection").then(m => ({ default: m.ProductosSection })));
+const AjustesSection = dynamic(() => import("@/components/admin/sections/AjustesSection").then(m => ({ default: m.AjustesSection })));
+const PedidosSection = dynamic(() => import("@/components/admin/sections/PedidosSection").then(m => ({ default: m.PedidosSection })));
 
 type LocalSection = "overview" | "productos" | "ajustes" | "pedidos";
 

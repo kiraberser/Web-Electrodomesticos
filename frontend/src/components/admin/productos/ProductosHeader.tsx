@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
-import { Badge } from "@/components/ui"
+import { Badge } from "@/components/ui/feedback/Badge"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import { Package, Tag, Layers, Truck, Box, Search } from "lucide-react"
 import { Input } from "@/components/ui/forms/InputField"

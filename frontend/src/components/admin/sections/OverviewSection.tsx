@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { Card, Button } from "@/components/admin/ui";
+import { Card } from "@/components/admin/ui/Card";
+import { Button } from "@/components/admin/ui/Button";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 import { KPI, EmptyState } from "@/components/admin/sections/common";
-import { formatCurrency, formatNumber } from "@/components/admin/utils";
+import { formatCurrency, formatNumber } from "@/components/admin/utils/format";
 
 export const OverviewSection: React.FC = () => {
   const { dark } = useAdminTheme();

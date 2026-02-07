@@ -1,7 +1,7 @@
 "use client"
 import { Menu, Moon, Sun, Bell, Search, User, Calendar } from "lucide-react"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
-import type { DateRange } from "@/components/admin/utils"
+import type { DateRange } from "@/components/admin/utils/types"
 
 type TopbarProps = {
   onOpenSidebarAction: () => void

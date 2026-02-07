@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URL_API
 
@@ -49,15 +50,15 @@ export interface Refaccion {
     categoria_nombre?: string;
 }
 
-// Helper para obtener token
-async function getAuthHeaders() {
+// Helper para obtener token (cached per-request to avoid redundant cookies() calls)
+const getAuthHeaders = cache(async () => {
     const cookieStore = await cookies()
     const token = cookieStore.get('access_cookie')?.value
     return {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
     }
-}
+})
 
 // ========== MARCAS ==========
 
