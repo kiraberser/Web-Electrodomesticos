@@ -30,12 +30,22 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
     
     const [formState, formAction, isPending] = useActionState(createComentarioAction, null)
     const hasProcessedFormState = useRef(false)
+    const reloadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     // Inicializar estado del cliente
     useEffect(() => {
         setIsMounted(true)
         setIsAuthenticated(checkAuthentication())
         setCurrentUsername(getCookieValue('username'))
+    }, [])
+
+    // Limpiar timeouts al desmontar
+    useEffect(() => {
+        return () => {
+            if (reloadTimeoutRef.current) {
+                clearTimeout(reloadTimeoutRef.current)
+            }
+        }
     }, [])
 
     // Cargar comentarios al montar
@@ -86,7 +96,7 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
             setUserRating(0)
             
             // Recargar comentarios después de un breve delay
-            setTimeout(async () => {
+            reloadTimeoutRef.current = setTimeout(async () => {
                 const allComentarios = await getComentariosProductoClient(productId)
                 setAllComentarios(allComentarios)
                 setComentarios(allComentarios.slice(0, 5))
@@ -147,7 +157,7 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
                 })
                 
                 // Recargar comentarios
-                setTimeout(async () => {
+                reloadTimeoutRef.current = setTimeout(async () => {
                     const allComentarios = await getComentariosProductoClient(productId)
                     setAllComentarios(allComentarios)
                     setComentarios(allComentarios.slice(0, 5))

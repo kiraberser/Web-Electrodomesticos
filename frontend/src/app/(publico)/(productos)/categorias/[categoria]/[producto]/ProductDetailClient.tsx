@@ -105,21 +105,26 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
         }
     }, []);
 
-    // Verificar autenticación cuando el modal está abierto para cerrarlo si el usuario se autentica
+    // Verificar autenticación cuando el usuario regresa de la pestaña de login
     useEffect(() => {
         if (!isMounted || !showAuthModal) return;
-        
-        // Verificar autenticación periódicamente mientras el modal está abierto
-        const checkAuthInterval = setInterval(() => {
+
+        const checkAuth = () => {
             const authStatus = checkAuthentication();
             if (authStatus) {
                 setIsAuthenticated(true);
                 setShowAuthModal(false);
-                clearInterval(checkAuthInterval);
             }
-        }, 500); // Verificar cada 500ms mientras el modal está abierto
+        };
 
-        return () => clearInterval(checkAuthInterval);
+        // Check auth when user returns from login tab/window
+        window.addEventListener('focus', checkAuth);
+        document.addEventListener('visibilitychange', checkAuth);
+
+        return () => {
+            window.removeEventListener('focus', checkAuth);
+            document.removeEventListener('visibilitychange', checkAuth);
+        };
     }, [showAuthModal, isMounted]);
 
     // Cerrar modal automáticamente si el usuario se autentica
