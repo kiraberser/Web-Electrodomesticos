@@ -15,9 +15,13 @@ node_modules/
 # Testing
 /coverage
 
-# Archivos de configuración de editor
+# Archivos de configuración de editor / herramientas
 .DS_Store
 *.pem
+.claude/
+.agents/
+.cursor/
+CLAUDE.md
 
 # Archivos de depuración
 npm-debug.log*
