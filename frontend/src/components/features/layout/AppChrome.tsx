@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { Navbar, Footer } from "@/components/ui";
+import Navbar from "@/components/ui/layout/Navbar";
+import Footer from "@/components/ui/layout/Footer";
 
 export function AppChrome({ children, username }: { children: React.ReactNode; username?: string }) {
   const pathname = usePathname();

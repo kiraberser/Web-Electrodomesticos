@@ -31,7 +31,7 @@ import {
     ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/forms/Button"; // Tu componente existente
-import { Badge } from "@/components/ui"; // Tu componente existente
+import { Badge } from "@/components/ui/feedback/Badge";
 
 interface Props {
     categoria: string;

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import type { TableColumn } from "@/components/admin/utils";
+import type { TableColumn } from "@/components/admin/utils/types";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 
 export const StickyTable = <T extends Record<string, unknown>>({

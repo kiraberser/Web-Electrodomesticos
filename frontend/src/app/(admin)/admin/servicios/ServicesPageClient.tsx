@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { Plus, Search, Filter } from "lucide-react"
 import { Button, Input } from "@/components/ui/forms"
-import { Badge } from "@/components/ui"
+import { Badge } from "@/components/ui/feedback/Badge"
 import ServicesTable from "@/components/features/services/services-table"
 import { DeleteServiceModal, AddServiceModal } from "@/components/features/services"
 import { deleteServiceAction } from "@/actions/services"

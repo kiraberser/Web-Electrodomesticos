@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@/components/admin/ui"
-import { Badge } from "@/components/ui"
+import { Button } from "@/components/admin/ui/Button"
+import { Badge } from "@/components/ui/feedback/Badge"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Venta, VentaRefaccion, VentaServicio, Devolucion } from "@/api/ventas"
 import { X, Store, Wrench, Calendar, DollarSign, Package, User, FileText } from "lucide-react"

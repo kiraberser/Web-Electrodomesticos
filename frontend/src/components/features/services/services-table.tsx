@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Edit, Trash2, Eye, Phone, Calendar, Package, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/forms/Button"
-import { Badge } from "@/components/ui"
+import { Badge } from "@/components/ui/feedback/Badge"
 import Link from "next/link"
 import Pagination from "@/components/ui/navigation/Pagination"
 import type { AdminServicePageItem as Service, PaginationInfo } from "@/types/service"

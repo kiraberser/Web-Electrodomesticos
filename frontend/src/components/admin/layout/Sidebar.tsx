@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
-import type { NavItem, SectionKey } from "@/components/admin/utils";
+import type { NavItem, SectionKey } from "@/components/admin/utils/types";
 
 type SidebarProps = {
   open: boolean;

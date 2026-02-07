@@ -1,10 +1,15 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Button, Input, Select, Card, StickyTable, Modal } from "@/components/admin/ui";
+import { Button } from "@/components/admin/ui/Button";
+import { Input } from "@/components/admin/ui/Input";
+import { Select } from "@/components/admin/ui/Select";
+import { Card } from "@/components/admin/ui/Card";
+import { StickyTable } from "@/components/admin/ui/StickyTable";
+import { Modal } from "@/components/admin/ui/Modal";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 
-import type { ProductRow, TableColumn } from "@/components/admin/utils";
-import { formatCurrency } from "@/components/admin/utils";
+import type { ProductRow, TableColumn } from "@/components/admin/utils/types";
+import { formatCurrency } from "@/components/admin/utils/format";
 
 export const ProductosSection: React.FC<{ onToastAction: (t: { type?: "success" | "error" | "info"; title: string; description?: string }) => void }>
   = ({ onToastAction }) => {

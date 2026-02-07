@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Card, Button, Input } from "@/components/admin/ui";
+import { Card } from "@/components/admin/ui/Card";
+import { Button } from "@/components/admin/ui/Button";
+import { Input } from "@/components/admin/ui/Input";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 
 
-import { PRIMARY, SECONDARY } from "@/components/admin/utils";
+import { PRIMARY, SECONDARY } from "@/components/admin/utils/format";
 
 export const AjustesSection: React.FC<{ onToastAction: (t: { type?: "success" | "error" | "info"; title: string; description?: string }) => void; onToggleThemeAction: () => void; dark: boolean }>
   = ({ onToastAction, onToggleThemeAction, dark }) => {

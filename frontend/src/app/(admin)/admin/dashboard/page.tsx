@@ -2,7 +2,10 @@
 
 import React from "react";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
-import { OverviewSection, ProductosSection, AjustesSection, PedidosSection } from "@/components/admin/sections";
+import { OverviewSection } from "@/components/admin/sections/OverviewSection";
+import { ProductosSection } from "@/components/admin/sections/ProductosSection";
+import { AjustesSection } from "@/components/admin/sections/AjustesSection";
+import { PedidosSection } from "@/components/admin/sections/PedidosSection";
 
 type LocalSection = "overview" | "productos" | "ajustes" | "pedidos";
 

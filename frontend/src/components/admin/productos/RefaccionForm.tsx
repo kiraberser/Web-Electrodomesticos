@@ -2,10 +2,10 @@
 
 import { useEffect, useActionState } from "react"
 import { useFormStatus } from "react-dom"
-import { Button } from "@/components/admin/ui"
+import { Button } from "@/components/admin/ui/Button"
 import { Input } from "@/components/admin/ui/Input"
 import { Select } from "@/components/admin/ui/Select"
-import { ImageUpload } from "@/components/admin/ui"
+import { ImageUpload } from "@/components/admin/ui/ImageUpload"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import {
     createRefaccionAction,

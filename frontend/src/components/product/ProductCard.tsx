@@ -2,8 +2,9 @@
 
 import Image from "next/image"
 import { Button } from "../ui/forms/Button"
-import { Badge } from "../ui"
-import { Zap, Shield } from "@/components/icons"
+import { Badge } from "@/components/ui/feedback/Badge"
+import Zap from "@/components/icons/Zap"
+import Shield from "@/components/icons/Shield"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { Product } from "@/data/products"

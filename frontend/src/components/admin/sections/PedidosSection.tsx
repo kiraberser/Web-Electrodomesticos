@@ -1,11 +1,14 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Chip, Button, StickyTable, Modal } from "@/components/admin/ui";
+import { Chip } from "@/components/admin/ui/Chip";
+import { Button } from "@/components/admin/ui/Button";
+import { StickyTable } from "@/components/admin/ui/StickyTable";
+import { Modal } from "@/components/admin/ui/Modal";
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme";
 
-import type { OrderRow, OrderStatus, TableColumn } from "@/components/admin/utils";
-import { formatCurrency, formatDate } from "@/components/admin/utils";
-import { exportRowsToCsv } from "@/components/admin/utils";
+import type { OrderRow, OrderStatus, TableColumn } from "@/components/admin/utils/types";
+import { formatCurrency, formatDate } from "@/components/admin/utils/format";
+import { exportRowsToCsv } from "@/components/admin/utils/exportCsv";
 import { EyeIcon, PencilIcon } from "lucide-react";
 
 export const PedidosSection: React.FC<{ onToastAction: (t: { type?: "success" | "error" | "info"; title: string; description?: string }) => void }>

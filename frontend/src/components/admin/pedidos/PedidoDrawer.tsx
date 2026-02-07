@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/admin/ui"
-import { Badge } from "@/components/ui"
+import { Button } from "@/components/admin/ui/Button"
+import { Badge } from "@/components/ui/feedback/Badge"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import type { Pedido } from "@/api/pedidos"
 import { updatePedidoEstado } from "@/api/pedidos"

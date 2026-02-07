@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import { Button } from "@/components/admin/ui"
+import { Button } from "@/components/admin/ui/Button"
 import { Modal } from "@/components/admin/ui/Modal"
 import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
 import { Plus } from "lucide-react"

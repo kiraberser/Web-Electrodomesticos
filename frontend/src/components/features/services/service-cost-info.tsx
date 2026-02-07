@@ -1,7 +1,7 @@
 "use client"
 
 import { DollarSign } from "lucide-react"
-import { Badge } from "@/components/ui"
+import { Badge } from "@/components/ui/feedback/Badge"
 import type { ServiceDetail } from "@/types/service"
 
 interface ServiceCostInfoProps {
