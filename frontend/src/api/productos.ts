@@ -329,6 +329,21 @@ export interface RefaccionesPorCategoriaResponse {
     total: number;
 }
 
+// ========== COMENTARIOS DE PRODUCTOS ==========
+
+export interface ComentarioProducto {
+    id?: number;
+    refaccion: number;
+    usuario?: number;
+    usuario_nombre?: string;
+    usuario_email?: string;
+    calificacion: number;
+    comentario: string;
+    activo?: boolean;
+    created_at?: string;
+    updated_at?: string;
+}
+
 /**
  * Obtiene todas las refacciones (productos) de una categoría específica
  * @param id_category - ID de la categoría
@@ -360,5 +375,79 @@ export const getRefaccionesByCategoria = async (
 } catch (error) {
         console.error('Error fetching refacciones by categoria:', error)
         throw error
+    }
+}
+
+/**
+ * Obtiene comentarios de un producto específico
+ * @param refaccionId - ID del producto
+ * @param limit - Límite de comentarios a obtener (opcional)
+ * @returns Lista de comentarios
+ */
+export const getComentariosProducto = async (refaccionId: number, limit?: number): Promise<ComentarioProducto[]> => {
+    try {
+        const params = new URLSearchParams()
+        params.append('refaccion_id', String(refaccionId))
+        if (limit) {
+            params.append('limit', String(limit))
+        }
+        
+        const url = `${URL}/productos/comentarios/?${params.toString()}`
+        const response = await fetch(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            next: { revalidate: 60 }, // Cache por 60 segundos
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch comentarios')
+        }
+        
+        const data = await response.json()
+        const comentarios = data.results || data
+        
+        // Si hay un límite, aplicar aquí también por si acaso
+        if (limit && Array.isArray(comentarios)) {
+            return comentarios.slice(0, limit)
+        }
+        
+        return Array.isArray(comentarios) ? comentarios : []
+    } catch (error) {
+        console.error('Error fetching comentarios:', error)
+        return []
+    }
+}
+
+/**
+ * Crea un comentario para un producto
+ * @param comentarioData - Datos del comentario
+ * @returns Comentario creado
+ */
+export const createComentarioProducto = async (comentarioData: Omit<ComentarioProducto, 'id' | 'usuario' | 'usuario_nombre' | 'usuario_email' | 'created_at' | 'updated_at'>): Promise<ComentarioProducto> => {
+    const headers = await getAuthHeaders()
+    const url = `${URL}/productos/comentarios/`
+
+    const response = await axios.post(url, comentarioData, { headers })
+
+    if (response.status !== 201) {
+        throw new Error('Failed to create comentario')
+    }
+
+    return response.data
+}
+
+/**
+ * Elimina un comentario de un producto
+ * @param comentarioId - ID del comentario a eliminar
+ */
+export const deleteComentarioProducto = async (comentarioId: number): Promise<void> => {
+    const headers = await getAuthHeaders()
+    const url = `${URL}/productos/comentarios/${comentarioId}/`
+
+    const response = await axios.delete(url, { headers })
+
+    if (response.status !== 204 && response.status !== 200) {
+        throw new Error('Failed to delete comentario')
     }
 }

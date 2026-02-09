@@ -1,9 +1,11 @@
+"use client"
+
 /**
- * Utility functions for working with cookies in the client-side
+ * Utility functions for working with cookies
  */
 
 /**
- * Gets the value of a cookie by name
+ * Gets the value of a cookie by name (client-side only)
  * @param name - The name of the cookie to retrieve
  * @returns The cookie value or null if not found
  */
@@ -30,7 +32,7 @@ export function getCookieValue(name: string): string | null {
 }
 
 /**
- * Checks if the user is authenticated by verifying username cookie
+ * Checks if the user is authenticated by verifying username cookie (client-side only)
  * Note: access_cookie is HttpOnly and cannot be accessed from JavaScript for security reasons
  * If username exists, it means the user successfully logged in
  * @returns true if username cookie exists, false otherwise
@@ -43,8 +45,6 @@ export function checkAuthentication(): boolean {
     // Solo verificar username ya que access_cookie es HttpOnly y no es accesible desde JavaScript
     // Si username existe, significa que el usuario hizo login exitosamente
     const username = getCookieValue('username');
-    const result = !!username;
-    
-    return result;
+    return !!username;
 }
 

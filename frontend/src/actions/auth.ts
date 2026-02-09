@@ -20,21 +20,24 @@ export const actionLoginUser = async (formData: LoginUserType) => {
         cookies()
     ])
     
+    // Determinar si estamos en desarrollo
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    
     cookieStore.set({
         name: 'username',
         value: response['usuario'],
         path: '/',
         maxAge: 60 * 60 * 24,
-        secure: true,
-        sameSite: 'lax'
+        secure: !isDevelopment, // false en desarrollo, true en producción
+        sameSite: isDevelopment ? 'lax' : 'lax'
     })
     cookieStore.set({
         name: 'access_cookie',
         value: response['access'],
         httpOnly: true,
         path: '/',
-        secure: true,
-        sameSite: 'lax',
+        secure: !isDevelopment, // false en desarrollo, true en producción
+        sameSite: isDevelopment ? 'lax' : 'lax',
         maxAge: 60 * 15
     })
     cookieStore.set({
@@ -42,8 +45,8 @@ export const actionLoginUser = async (formData: LoginUserType) => {
         value: response['refresh'],
         httpOnly: true,
         path: '/',
-        secure: true,
-        sameSite: 'lax',
+        secure: !isDevelopment, // false en desarrollo, true en producción
+        sameSite: isDevelopment ? 'lax' : 'lax',
         maxAge: 60 * 60 * 24
     })
 
