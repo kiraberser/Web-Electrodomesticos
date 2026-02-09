@@ -5,6 +5,7 @@ from .views import (
     CategoriaViewSet, 
     RefaccionViewSet, 
     ProveedorViewSet,
+    ComentarioProductoViewSet,
     refacciones_por_categoria,
 )
 
@@ -14,6 +15,7 @@ router.register(r'marcas', MarcaViewSet)
 router.register(r'categorias', CategoriaViewSet)
 router.register(r'refacciones', RefaccionViewSet)
 router.register(r'proveedores', ProveedorViewSet)
+router.register(r'comentarios', ComentarioProductoViewSet, basename='comentario-producto')
 
 urlpatterns = [ 
     # Las URLs base que manejan los ViewSets

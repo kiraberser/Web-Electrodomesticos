@@ -5,12 +5,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.db.models.deletion import ProtectedError
 from django.db import models, transaction
-from .models import Marca, Categoria, Refaccion, Proveedor
+from .models import Marca, Categoria, Refaccion, Proveedor, ComentarioProducto
 from .serializers import (
     MarcaSerializer, 
     CategoriaSerializer, 
     RefaccionSerializer, 
-    ProveedorSerializer, 
+    ProveedorSerializer,
+    ComentarioProductoSerializer,
 )
 from apps.inventario.models import Inventario
 
@@ -132,3 +133,79 @@ def refacciones_por_categoria(request, categoria_id):
         return Response({
             'error': f'Error al obtener refacciones: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ComentarioProductoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar comentarios/opiniones de productos
+    """
+    serializer_class = ComentarioProductoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created_at', 'calificacion']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        """
+        Filtra comentarios por producto si se proporciona refaccion_id
+        Solo muestra comentarios activos para usuarios no autenticados
+        """
+        queryset = ComentarioProducto.objects.select_related('usuario', 'refaccion').all()
+        
+        # Filtrar por producto si se proporciona
+        refaccion_id = self.request.query_params.get('refaccion_id', None)
+        if refaccion_id:
+            try:
+                refaccion_id_int = int(refaccion_id)
+                queryset = queryset.filter(refaccion_id=refaccion_id_int)
+            except (ValueError, TypeError):
+                # Si no se puede convertir a int, ignorar el filtro
+                pass
+        
+        # Solo mostrar comentarios activos (para todos los usuarios en listado público)
+        if self.action == 'list':
+            queryset = queryset.filter(activo=True)
+        
+        return queryset
+
+    def get_permissions(self):
+        """
+        Define permisos por acción:
+        - list/retrieve: acceso público (solo comentarios activos)
+        - create/update/destroy: requiere autenticación
+        """
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [permissions.AllowAny]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
+        return [p() for p in permission_classes]
+
+    def perform_create(self, serializer):
+        """
+        Asigna automáticamente el usuario autenticado al comentario
+        """
+        serializer.save(usuario=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        """
+        Solo permite que el usuario edite sus propios comentarios
+        """
+        instance = self.get_object()
+        if instance.usuario != request.user:
+            return Response(
+                {'error': 'No tienes permiso para editar este comentario'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Solo permite que el usuario elimine sus propios comentarios
+        """
+        instance = self.get_object()
+        if instance.usuario != request.user:
+            return Response(
+                {'error': 'No tienes permiso para eliminar este comentario'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().destroy(request, *args, **kwargs)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Marca, Categoria, Refaccion, Proveedor
+from .models import Marca, Categoria, Refaccion, Proveedor, ComentarioProducto
 from apps.inventario.services import registrar_entrada_inicial_refaccion
 
 class MarcaSerializer(serializers.ModelSerializer):
@@ -44,3 +44,28 @@ class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proveedor
         fields = ['id', 'nombre', 'contacto', 'telefono', 'correo_electronico', 'direccion', 'logo']
+
+
+class ComentarioProductoSerializer(serializers.ModelSerializer):
+    usuario_nombre = serializers.ReadOnlyField(source='usuario.username')
+    usuario_email = serializers.ReadOnlyField(source='usuario.email')
+
+    class Meta:
+        model = ComentarioProducto
+        fields = [
+            'id', 'refaccion', 'usuario', 'usuario_nombre', 'usuario_email',
+            'calificacion', 'comentario', 'activo', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'usuario']
+        extra_kwargs = {
+            'refaccion': {'write_only': True},
+            'activo': {'required': False}
+        }
+
+    def create(self, validated_data):
+        # El usuario se asigna automáticamente desde el request
+        validated_data['usuario'] = self.context['request'].user
+        # Asegurar que activo sea True por defecto
+        if 'activo' not in validated_data:
+            validated_data['activo'] = True
+        return super().create(validated_data)

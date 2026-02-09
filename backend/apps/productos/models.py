@@ -1,8 +1,9 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 from decimal import Decimal
 
 class Marca(models.Model):
@@ -86,5 +87,41 @@ class Proveedor(models.Model):
 
     class Meta:
         verbose_name_plural = "Proveedores"
+
+
+class ComentarioProducto(models.Model):
+    """Modelo para comentarios/opiniones de productos"""
+    refaccion = models.ForeignKey(
+        Refaccion,
+        on_delete=models.CASCADE,
+        related_name='comentarios'
+    )
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comentarios_productos'
+    )
+    calificacion = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text="Calificación de 1 a 5 estrellas"
+    )
+    comentario = models.TextField()
+    activo = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Comentario de Producto"
+        verbose_name_plural = "Comentarios de Productos"
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['refaccion', '-created_at']),
+        ]
+        # Evitar comentarios duplicados del mismo usuario para el mismo producto
+        unique_together = [['refaccion', 'usuario']]
+
+    def __str__(self):
+        return f'Comentario de {self.usuario.username} en {self.refaccion.nombre}'
 
 # La lógica de creación de movimiento inicial se movió a un servicio

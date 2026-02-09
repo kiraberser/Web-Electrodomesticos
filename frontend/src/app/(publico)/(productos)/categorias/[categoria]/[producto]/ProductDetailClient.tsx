@@ -13,6 +13,9 @@ import { agregarFavoritoAction, eliminarFavoritoAction } from "@/actions/favorit
 import AuthRequiredModal from "@/components/favoritos/AuthRequiredModal";
 import { checkAuthentication } from "@/lib/cookies";
 import { addCartItemAction } from "@/actions/cart";
+import ProductComments from "@/components/productos/ProductComments";
+import ProductSpecs from "@/components/productos/ProductSpecs";
+
 // Iconos modernos (reemplaza los anteriores si es necesario)
 import {
     ArrowLeft,
@@ -48,10 +51,9 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
     // Estados para interactividad local
     const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
     const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
-    const [userRating, setUserRating] = useState(0);
-    const [reviewText, setReviewText] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [showCheckout, setShowCheckout] = useState(false);
+    
     // Inicializar isAuthenticated basado en cookies si estamos en el cliente
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -522,64 +524,6 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
         }, 300);
     };
 
-    // Manejar publicación de comentario
-    const handleSubmitReview = () => {
-        // Verificar autenticación solo cuando se hace click (sin petición al servidor)
-        const isAuthenticated = checkAuthentication();
-        if (!isAuthenticated) {
-            toast.error('Inicia sesión para escribir un comentario', {
-                style: { background: "#dc2626", color: "#fff" },
-            });
-            router.push('/cuenta/login');
-            return;
-        }
-
-        if (!reviewText.trim()) {
-            toast.error('Por favor escribe un comentario', {
-                style: { background: "#dc2626", color: "#fff" },
-            });
-            return;
-        }
-
-        if (userRating === 0) {
-            toast.error('Por favor selecciona una calificación', {
-                style: { background: "#dc2626", color: "#fff" },
-            });
-            return;
-        }
-
-        // Aquí iría la lógica para enviar el comentario al backend
-        toast.success("¡Gracias por tu opinión!", {
-            style: { background: "#0A3981", color: "#fff" },
-        });
-        setReviewText("");
-        setUserRating(0);
-    };
-
-    // Renderizado de Estrellas
-    const renderStars = (rating: number, interactive = false) => {
-        return (
-            <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                        key={star}
-                        size={18}
-                        className={`${
-                            star <= rating
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-gray-300"
-                        } ${
-                            interactive
-                                ? "cursor-pointer hover:scale-110 transition-transform"
-                                : ""
-                        }`}
-                        onClick={() => interactive && setUserRating(star)}
-                    />
-                ))}
-            </div>
-        );
-    };
-
     return (
         <>
         <main className="min-h-screen bg-gray-50 font-sans">
@@ -677,7 +621,15 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
 
                             {/* Rating Summary */}
                             <div className="flex items-center gap-2 mt-3">
-                                {renderStars(4)}
+                                <div className="flex gap-1">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star
+                                            key={star}
+                                            size={18}
+                                            className={star <= 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                                        />
+                                    ))}
+                                </div>
                                 <span className="text-sm text-gray-500">
                                     (24 opiniones)
                                 </span>
@@ -829,125 +781,14 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
                 {/* --- Sección Inferior: Descripción y Reviews --- */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
                     {/* Descripción Detallada (2/3 ancho) */}
-                    <div className="lg:col-span-2 space-y-8">
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                            <h2 className="text-xl font-bold text-[#0A3981] mb-4 flex items-center gap-2">
-                                <Wrench className="h-5 w-5" />{" "}
-                                Descripción del Producto
-                            </h2>
-                            <div className="prose prose-blue max-w-none text-gray-600 leading-relaxed">
-                                <p>
-                                    {product.shortDescription ||
-                                        "Este producto cuenta con los más altos estándares de calidad..."}
-                                </p>
-                                <p className="mt-4">
-                                    Ideal para mantenimiento preventivo y
-                                    correctivo. Fabricado con materiales
-                                    resistentes que aseguran una larga vida
-                                    útil. Compatible con los modelos
-                                    especificados en la ficha técnica.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Ficha Técnica Completa */}
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                            <h3 className="text-lg font-bold text-[#0A3981] mb-4">
-                                Especificaciones Técnicas
-                            </h3>
-                            <div className="divide-y divide-gray-100">
-                                {product.specs.map((s, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="grid grid-cols-3 py-3"
-                                    >
-                                        <span className="text-gray-500 font-medium">
-                                            {s.label}
-                                        </span>
-                                        <span className="col-span-2 text-gray-900">
-                                            {s.value}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                    <ProductSpecs product={product} description={refaccion.descripcion} />
 
                     {/* Sección de Comentarios / Reviews (1/3 ancho) */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
-                            <h3 className="text-lg font-bold text-[#0A3981] mb-4">
-                                Opiniones
-                            </h3>
-
-                            {/* Formulario simple de review */}
-                            <div className="mb-6 bg-[#D4EBF8]/20 p-4 rounded-xl">
-                                {!isMounted || !isAuthenticated ? (
-                                    <div className="text-center py-4">
-                                        <p className="text-sm font-medium text-gray-700 mb-3">
-                                            Inicia sesión para escribir una opinión
-                                        </p>
-                                        <Button
-                                            className="w-full bg-[#1F509A] text-white text-xs py-2 h-auto"
-                                            onClick={() => router.push('/cuenta/login')}
-                                        >
-                                            Iniciar Sesión
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <p className="text-sm font-medium text-gray-700 mb-2">
-                                            Escribe una opinión
-                                        </p>
-                                        <div className="mb-3">
-                                            {renderStars(userRating, true)}
-                                        </div>
-                                        <textarea
-                                            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#1F509A] focus:border-transparent outline-none"
-                                            rows={3}
-                                            placeholder="¿Qué te pareció el producto?"
-                                            value={reviewText}
-                                            onChange={(e) =>
-                                                setReviewText(e.target.value)}
-                                        />
-                                        <Button
-                                            className="w-full mt-2 bg-[#1F509A] text-white text-xs py-2 h-auto"
-                                            onClick={handleSubmitReview}
-                                            disabled={!reviewText.trim() || userRating === 0}
-                                        >
-                                            Publicar Opinión
-                                        </Button>
-                                    </>
-                                )}
-                            </div>
-
-                            {/* Lista de Reviews (Ejemplo estático) */}
-                            <div className="space-y-4">
-                                {[1, 2].map((review) => (
-                                    <div
-                                        key={review}
-                                        className="border-b border-gray-100 pb-4 last:border-0"
-                                    >
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="font-bold text-gray-900 text-sm">
-                                                Usuario Verificado
-                                            </span>
-                                            <span className="text-xs text-gray-400">
-                                                Hace 2 días
-                                            </span>
-                                        </div>
-                                        <div className="mb-2">
-                                            {renderStars(5)}
-                                        </div>
-                                        <p className="text-sm text-gray-600">
-                                            Excelente refacción, llegó a tiempo
-                                            y funciona perfecto en mi vehículo.
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
+                    {refaccion?.id && (
+                        <div className="lg:col-span-1">
+                            <ProductComments productId={refaccion.id} />
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </main>
