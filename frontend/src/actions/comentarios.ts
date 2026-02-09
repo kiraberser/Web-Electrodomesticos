@@ -115,8 +115,13 @@ export async function createComentarioAction(
 
         if (error && typeof error === 'object' && 'response' in error) {
             const response = error.response as any
-            if (response?.data) {
-                // Manejar errores de validación del backend
+            const statusCode = response?.status
+
+            // Unique constraint violation: usuario + refaccion (DB IntegrityError → 500)
+            if (statusCode === 500) {
+                errorMessage = 'Solo puedes publicar un comentario por producto'
+            } else if (response?.data) {
+                // Manejar errores de validación del backend (400)
                 if (response.data.refaccion) {
                     errorMessage = 'Producto no encontrado'
                 } else if (response.data.non_field_errors) {
