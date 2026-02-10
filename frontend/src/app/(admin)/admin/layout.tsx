@@ -73,20 +73,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       ? "blog"
       : pathname?.includes("/inventario")
       ? "inventario"
-      : pathname?.includes("/dashboard")
-      ? "dashboard"
       : "overview";
 
     const navItems: NavItem[] = [
-      { key: "overview", label: "Overview", icon: LayoutDashboard },
+      { key: "overview", label: "Dashboard", icon: LayoutDashboard },
       { key: "pedidos", label: "Pedidos", icon: ShoppingCart },
       { key: "productos", label: "Productos", icon: Package },
       { key: "ventas", label: "Ventas", icon: Store },
       { key: "servicios", label: "Servicios", icon: Server },
       { key: "blog", label: "Blog", icon: Book },
-      { key: "inventario", label: "Inventario", icon: Box},
-      { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-
+      { key: "inventario", label: "Inventario", icon: Box },
     ];
 
     const handleNavigate = (key: SectionKey) => {
@@ -97,11 +93,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       if (key === "servicios") router.push("/admin/servicios");
       if (key === "blog") router.push("/admin/blog/create");
       if (key === "inventario") router.push("/admin/inventario");
-      if (key === "dashboard") router.push("/admin/dashboard");
     };
 
     return (
-      <html lang="en">
+      <html lang="es">
         <body>
         <AdminThemeProvider value={{
           dark,
@@ -115,8 +110,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           },
           toggle: () => handleToggleTheme(),
         }}>
-        <div className={`${dark ? "bg-[#0B1220]" : ""} min-h-screen  font-sans text-gray-200`}>
-          <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[18rem_1fr]">
+        <div className={`${dark ? "bg-slate-950" : "bg-slate-100"} min-h-screen font-sans antialiased ${dark ? "text-slate-200" : "text-slate-800"}`}>
+          <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[16rem_1fr]">
             <Sidebar
               open={sidebarOpen}
               onCloseAction={() => setSidebarOpen(false)}
@@ -136,7 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   }
                 }}
               />
-              <main className={`mx-auto w-full  flex-1 space-y-3 p-3 md:p-4 lg:p-6 xl:p-8 ${dark ? "" : ""}`}>{children}</main>
+              <main className="mx-auto w-full flex-1 p-4 md:p-6 lg:p-8">{children}</main>
             </div>
           </div>
             <Toaster toasts={toasts} onRemove={remove} />

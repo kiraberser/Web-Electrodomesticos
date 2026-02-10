@@ -7,8 +7,7 @@ export type SectionKey =
   | "servicios"
   | "productos"
   | "blog"
-  | "inventario"
-  | "dashboard";
+  | "inventario";
 
 export type DateRange = {
   from: string; // ISO
