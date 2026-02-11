@@ -60,7 +60,8 @@ class Refaccion(models.Model):
     )
     
     compatibilidad = models.TextField(help_text="Modelos de electrodomésticos compatibles")
-    
+    ubicacion_estante = models.CharField(max_length=50, blank=True, null=True, help_text="Numero de estante/anaquel")
+
     fecha_ingreso = models.DateTimeField(auto_now_add=True)
     ultima_actualizacion = models.DateTimeField(auto_now=True)
 

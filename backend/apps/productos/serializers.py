@@ -21,7 +21,7 @@ class RefaccionSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'codigo_parte', 'nombre', 'descripcion', 
             'marca', 'marca_nombre', 'categoria', 'categoria_nombre',
-            'precio', 'existencias', 'estado', 'compatibilidad',
+            'precio', 'existencias', 'estado', 'compatibilidad', 'ubicacion_estante',
             'fecha_ingreso', 'ultima_actualizacion', 'proveedor', 'imagen'
         ]
 

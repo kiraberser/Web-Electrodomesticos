@@ -23,7 +23,8 @@ class Inventario(models.Model):
         max_length=3,
         choices=TipoMovimientoChoices.choices
     )
-    fecha = models.DateTimeField(auto_now_add=True)  # <- esto estaba faltando para que ordering funcione
+    fecha = models.DateTimeField(auto_now_add=True)
+    observaciones = models.TextField(blank=True, default='')
 
     def __str__(self):
         return f"{self.refaccion} - {self.tipo_movimiento} - {self.cantidad}"

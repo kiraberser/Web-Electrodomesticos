@@ -4,6 +4,7 @@ from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Inventario
 from .serializer import (
@@ -21,12 +22,18 @@ class InventarioViewSet(viewsets.ModelViewSet):
     serializer_class = InventarioSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [
-        filters.SearchFilter, 
-        filters.OrderingFilter
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
     ]
-    filterset_fields = ['refaccion', 'tipo_movimiento']
+    filterset_fields = {
+        'refaccion': ['exact'],
+        'tipo_movimiento': ['exact'],
+        'fecha': ['gte', 'lte'],
+    }
     search_fields = ['observaciones']
-    ordering_fields = ['fecha']
+    ordering_fields = ['fecha', 'cantidad', 'precio_unitario']
+    ordering = ['-fecha']
 
     def perform_create(self, serializer):
         """

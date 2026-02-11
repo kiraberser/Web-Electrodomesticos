@@ -43,6 +43,7 @@ export interface Refaccion {
     existencias: number;
     estado: 'NVO' | 'UBS' | 'REC';
     compatibilidad: string;
+    ubicacion_estante?: string;
     imagen?: string;
     fecha_ingreso?: string;
     ultima_actualizacion?: string;

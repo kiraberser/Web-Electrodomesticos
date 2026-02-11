@@ -15,7 +15,7 @@ class InventarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Inventario
-        fields = ['id', 'refaccion', 'refaccion_nombre', 'cantidad', 'precio_unitario', 'marca', 'categoria', 'tipo_movimiento']
+        fields = ['id', 'refaccion', 'refaccion_nombre', 'cantidad', 'precio_unitario', 'marca', 'categoria', 'tipo_movimiento', 'fecha', 'observaciones']
         read_only_fields = ['precio_unitario', 'marca', 'categoria']
 
     def create(self, validated_data):
@@ -47,6 +47,7 @@ class RegistrarEntradaSerializer(serializers.Serializer):
     refaccion = serializers.PrimaryKeyRelatedField(queryset=Refaccion.objects.all())
     cantidad = serializers.IntegerField(min_value=1)
     precio_unitario = serializers.DecimalField(required=False, max_digits=10, decimal_places=2)
+    observaciones = serializers.CharField(required=False, allow_blank=True, default='')
 
     def create(self, validated_data):
         try:
@@ -55,6 +56,9 @@ class RegistrarEntradaSerializer(serializers.Serializer):
                 cantidad=validated_data['cantidad'],
                 precio_unitario=validated_data.get('precio_unitario'),
             )
+            if validated_data.get('observaciones'):
+                movimiento.observaciones = validated_data['observaciones']
+                movimiento.save(update_fields=['observaciones'])
             return movimiento
         except DjangoValidationError as e:
             raise serializers.ValidationError(e.message_dict if hasattr(e, 'message_dict') else {'detail': e.messages})
@@ -68,6 +72,7 @@ class RegistrarDevolucionSerializer(serializers.Serializer):
     precio_unitario = serializers.DecimalField(required=False, max_digits=10, decimal_places=2)
     venta_id = serializers.IntegerField(required=False)
     motivo = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    observaciones = serializers.CharField(required=False, allow_blank=True, default='')
 
     def create(self, validated_data):
         try:
@@ -76,6 +81,9 @@ class RegistrarDevolucionSerializer(serializers.Serializer):
                 cantidad=validated_data['cantidad'],
                 precio_unitario=validated_data.get('precio_unitario'),
             )
+            if validated_data.get('observaciones'):
+                movimiento.observaciones = validated_data['observaciones']
+                movimiento.save(update_fields=['observaciones'])
             # Registrar la devolución en ventas
             venta = None
             venta_id = validated_data.get('venta_id')
