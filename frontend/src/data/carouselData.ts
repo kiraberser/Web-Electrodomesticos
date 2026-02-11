@@ -1,21 +1,39 @@
+export interface HeroSlide {
+  id: number
+  image: string
+  title: string
+  subtitle: string
+  ctaText: string
+  ctaHref: string
+  bgColor: string
+}
 
-export const slides = [
+export const slides: HeroSlide[] = [
   {
     id: 1,
     image: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?q=80&w=1920',
-    title: 'Repuestos originales',
-    description: 'Garantía y calidad para tus electrodomésticos.'
+    title: 'Ofertas de Temporada',
+    subtitle: 'Hasta 30% de descuento en refacciones y electrodomésticos seleccionados.',
+    ctaText: 'Ver ofertas',
+    ctaHref: '/categorias',
+    bgColor: '#0A3981',
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1748347687685-5613deb470ec?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=1920',
-    title: 'Técnicos certificados',
-    description: 'Servicio profesional y confiable.'
-},
-{
+    image: 'https://images.unsplash.com/photo-1748347687685-5613deb470ec?q=80&w=1920',
+    title: 'Repuestos Originales',
+    subtitle: 'Garantía y calidad para tus electrodomésticos. Más de 500 productos disponibles.',
+    ctaText: 'Explorar catálogo',
+    ctaHref: '/categorias',
+    bgColor: '#1a4a8f',
+  },
+  {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=1920',
-    title: 'Entrega rápida',
-    description: 'Envíos seguros y rápidos a todo México.'
-  }
+    image: 'https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=1920',
+    title: 'Envío Gratis',
+    subtitle: 'En compras mayores a $800. Envíos seguros a toda la república.',
+    ctaText: 'Comprar ahora',
+    ctaHref: '/categorias',
+    bgColor: '#E38E49',
+  },
 ]
