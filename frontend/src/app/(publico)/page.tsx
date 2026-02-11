@@ -1,39 +1,51 @@
-import React, { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import HeroSection from '@/components/ui/layout/Hero';
-import Categories from '@/components/product/Categories';
-import Brands from '@/components/product/Brands';
-import Features from '@/components/features/home/Features';
+import dynamic from 'next/dynamic'
+import { slides } from '@/data/carouselData'
+import { getDealProducts, getBestSellers, getNewArrivals } from '@/data/products'
+import CategoryStrip from '@/components/home/CategoryStrip'
+import DealsSection from '@/components/home/DealsSection'
+import ProductRow from '@/components/home/ProductRow'
+import TrustBar from '@/components/home/TrustBar'
+import Brands from '@/components/product/Brands'
 
-const FeaturedProducts = dynamic(() => import('@/components/product/FeaturedProducts'), {
-  loading: () => <section className="py-16 bg-gray-50"><div className="container mx-auto px-4"><div className="h-96 animate-pulse rounded-xl bg-gray-200" /></div></section>,
-});
+const HeroCarousel = dynamic(
+  () => import('@/components/home/HeroCarousel'),
+  { loading: () => <div className="h-[280px] md:h-[420px] lg:h-[480px] animate-pulse bg-gray-100" /> },
+)
 
-const Carousel = dynamic(() => import('@/components/features/home/carousel').then(m => ({ default: m.Carousel })), {
-  loading: () => <div className="h-64 animate-pulse bg-gray-100" />,
-});
-
-const Reviews = dynamic(() => import('@/components/features/reviews/Reviews').then(m => ({ default: m.Reviews })), {
-  loading: () => <section className="py-16 bg-gray-900"><div className="container mx-auto px-4"><div className="h-80 animate-pulse rounded-xl bg-gray-800" /></div></section>,
-});
+const Reviews = dynamic(
+  () => import('@/components/features/reviews/Reviews').then((m) => ({ default: m.Reviews })),
+  { loading: () => <section className="py-12"><div className="container mx-auto px-4"><div className="h-64 animate-pulse bg-gray-100 rounded-xl" /></div></section> },
+)
 
 export const metadata = {
   title: 'Refaccionaria Vega - Electrodomésticos y Refacciones',
   description: 'Encuentra las mejores refacciones y electrodomésticos para tu hogar. Calidad garantizada y envíos a toda la república mexicana.',
-};
+}
 
-const HomePage = () => {
+export default function HomePage() {
+  const deals = getDealProducts()
+  const bestSellers = getBestSellers()
+  const newArrivals = getNewArrivals()
+
   return (
-    <div>
-      <HeroSection />
-      <Categories />
-      <Carousel />
-      <FeaturedProducts />
-      <Features />
-      <Reviews/>
+    <main>
+      <HeroCarousel slides={slides} />
+      <CategoryStrip />
+      <DealsSection products={deals} />
+      <ProductRow
+        title="Más Vendidos"
+        products={bestSellers}
+        viewAllHref="/categorias"
+      />
+      <ProductRow
+        title="Recién Llegados"
+        products={newArrivals}
+        viewAllHref="/categorias"
+        badge="Nuevo"
+      />
+      <TrustBar />
+      <Reviews />
       <Brands />
-    </div>
-  );
-};
-
-export default HomePage;
+    </main>
+  )
+}
