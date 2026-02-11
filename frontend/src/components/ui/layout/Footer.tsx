@@ -1,144 +1,216 @@
 "use client";
 
-import { Button } from '../forms/Button';
-import { Separator } from '../display/Separator';
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
-import { company } from '@/data/company';
-import { categories } from '@/data/category';
-import Link from 'next/link';
-import { subscribeNewsletterAction } from '@/actions/newsletter';
-import { useActionState } from 'react';
+import { Clock, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { company } from "@/data/company";
+import { categories } from "@/data/category";
+import Link from "next/link";
+import Newsletter from "@/components/public/Newsletter";
 
 const Footer = ({ username }: { username: string | undefined }) => {
-  const initialState = { success: false, error: null as string | null, data: undefined as unknown };
-  const [state, formAction] = useActionState(subscribeNewsletterAction, initialState);
   return (
-    <footer className="bg-gray-900 text-white">
-      {/* Newsletter Section */}
+    <footer className="bg-[#0A3981]">
+      {/* Newsletter Banner */}
       {!username && (
-        <>
-        <form action={formAction}>
-        <div className="bg-blue-600 py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h3 className="text-2xl font-bold mb-4">
-                Suscríbete a nuestro newsletter
-              </h3>
-              <p className="text-blue-100 mb-6">
-                Recibe las mejores ofertas y novedades directamente en tu correo
-              </p>
-              <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Tu correo electrónico"
-                  className="flex-1 px-4 py-3 rounded-lg bg-white border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-                <Button type="submit" className="bg-orange-500 hover:bg-orange-600 px-6 py-3">
-                  Suscribirse
-                </Button>
-              </div>
-              {state?.error && (
-                <p className="mt-4 text-sm text-red-100" aria-live="polite">{String(state.error)}</p>
-              )}
-              {state?.success && !state?.error && (
-                <p className="mt-4 text-sm text-green-100" aria-live="polite">¡Suscripción exitosa! Revisa tu correo.</p>
-              )}
-            </div>
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#E38E49] to-[#d47a35]">
+          {/* Decorative background elements */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute -top-8 -left-8 w-40 h-40 border-[3px] border-white rounded-full" />
+            <div className="absolute -bottom-12 -right-12 w-56 h-56 border-[3px] border-white rounded-full" />
+            <div className="absolute top-1/2 left-1/3 w-24 h-24 border-[2px] border-white rounded-full" />
           </div>
+
+          <Newsletter />
         </div>
-        </form>
-        </>
       )}
 
       {/* Main Footer */}
-      <div className="py-12">
+      <div className="py-12 text-white">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            {/* Company Info */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold">{company?.name || 'ElectroMart'}</h3>
-              <p className="text-sm text-gray-400">{company?.tagline || 'Tu hogar, nuestra pasión'}</p>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                {company?.description || 'Más de 20 años ofreciendo los mejores electrodomésticos con la mejor calidad y servicio.'}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6">
+            {/* Logo & Company */}
+            <div className="col-span-2 md:col-span-3 lg:col-span-1 space-y-4">
+              <div>
+                <h3 className="text-xl font-bold text-white">{company.name}</h3>
+                <p className="text-sm text-white/50 mt-1 italic">
+                  {company.tagline}
+                </p>
+              </div>
+              <p className="text-white/60 text-sm leading-relaxed max-w-xs">
+                {company.description}
               </p>
-              <div className="flex space-x-4">
-                <Facebook className="w-5 h-5 text-gray-400 hover:text-blue-500 cursor-pointer transition-colors" />
-                <Instagram className="w-5 h-5 text-gray-400 hover:text-pink-500 cursor-pointer transition-colors" />
-                <Twitter className="w-5 h-5 text-gray-400 hover:text-blue-400 cursor-pointer transition-colors" />
-                <Youtube className="w-5 h-5 text-gray-400 hover:text-red-500 cursor-pointer transition-colors" />
+              <div className="flex items-center gap-3 pt-1">
+                <a
+                  href="#"
+                  aria-label="Facebook"
+                  className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                >
+                  <Facebook className="w-4 h-4 text-white/70" />
+                </a>
+                <a
+                  href="#"
+                  aria-label="Instagram"
+                  className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                >
+                  <Instagram className="w-4 h-4 text-white/70" />
+                </a>
               </div>
             </div>
 
-            {/* Categories */}
+            {/* Categorías */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">Categorías</h4>
-              <ul className="space-y-2">
-                {categories.slice(0, 6).map((category) => (
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Categorías
+              </h4>
+              <ul className="space-y-2.5">
+                {categories.slice(0, 7).map((category) => (
                   <li key={category.id}>
-                    <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+                    <Link
+                      href={`/categorias/${encodeURIComponent(category.key)}`}
+                      className="text-white/50 hover:text-white text-sm transition-colors"
+                    >
                       {category.label}
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link
+                    href="/categorias"
+                    className="text-[#E38E49] hover:text-[#E38E49]/80 text-sm font-medium transition-colors"
+                  >
+                    Ver todas
+                  </Link>
+                </li>
               </ul>
             </div>
 
-            {/* Services */}
+            {/* Soporte */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">Servicios</h4>
-              <ul className="space-y-2 text-sm">
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Soporte
+              </h4>
+              <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Entrega e instalación
+                  <Link
+                    href="/contacto"
+                    className="text-white/50 hover:text-white transition-colors"
+                  >
+                    Contacto
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Servicio técnico
+                  <Link
+                    href="/politicas-envio"
+                    className="text-white/50 hover:text-white transition-colors"
+                  >
+                    Políticas de envío
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Garantía extendida
+                  <Link
+                    href="/faq"
+                    className="text-white/50 hover:text-white transition-colors"
+                  >
+                    Preguntas frecuentes
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Link
+                    href="/about-us"
+                    className="text-white/50 hover:text-white transition-colors"
+                  >
+                    Sobre nosotros
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Información Legal */}
+            <div>
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Legal
+              </h4>
+              <ul className="space-y-2.5 text-sm">
+                <li>
+                  <Link
+                    href="/terms-conditions"
+                    className="text-white/50 hover:text-white transition-colors"
+                  >
+                    Términos y condiciones
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/privacy-policy"
+                    className="text-white/50 hover:text-white transition-colors"
+                  >
+                    Política de privacidad
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/shipping-returns"
+                    className="text-white/50 hover:text-white transition-colors"
+                  >
                     Devoluciones
                   </Link>
                 </li>
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Soporte
-                  </Link>
-                </li>
               </ul>
             </div>
 
-            {/* Contact Info */}
+            {/* Horarios & Contacto */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">Contacto</h4>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center space-x-3">
-                  <Phone className="w-4 h-4 text-blue-500" />
-                  <span className="text-gray-400">{company?.phone || '+52 55 1234 5678'}</span>
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Horarios
+              </h4>
+              <div className="space-y-4">
+                <div className="bg-white/5 rounded-lg p-3.5 border border-white/10">
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <Clock className="w-4 h-4 text-[#E38E49]" />
+                    <span className="text-xs font-semibold text-white/80 uppercase tracking-wide">
+                      Atención
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/50">Lun - Vie</span>
+                      <span className="text-white/80 font-medium">
+                        9:00 - 19:00
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/50">Sábado</span>
+                      <span className="text-white/80 font-medium">
+                        9:00 - 14:00
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/50">Domingo</span>
+                      <span className="text-white/40">Cerrado</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Mail className="w-4 h-4 text-blue-500" />
-                  <span className="text-gray-400">{company?.email || 'info@electromart.com'}</span>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <MapPin className="w-4 h-4 text-blue-500 mt-1" />
-                  <span className="text-gray-400">{company?.address || 'Av. Insurgentes Sur 123, Ciudad de México'}</span>
-                </div>
-              </div>
-              <div className="mt-4 p-4 bg-gray-800 rounded-lg">
-                <h5 className="font-semibold text-sm mb-2">Horarios de atención</h5>
-                <div className="text-xs text-gray-400 space-y-1">
-                  <div>Lun - Vie: 9:00 AM - 7:00 PM</div>
-                  <div>Sábado: 9:00 AM - 5:00 PM</div>
-                  <div>Domingo: 10:00 AM - 4:00 PM</div>
+
+                <div className="space-y-2.5 text-sm">
+                  <a
+                    href={`tel:${company.phone}`}
+                    className="flex items-center gap-2 text-white/50 hover:text-white transition-colors"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-[#E38E49]" />
+                    <span>{company.phone}</span>
+                  </a>
+                  <a
+                    href={`mailto:${company.email}`}
+                    className="flex items-center gap-2 text-white/50 hover:text-white transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-[#E38E49]" />
+                    <span className="truncate">{company.email}</span>
+                  </a>
+                  <div className="flex items-start gap-2 text-white/50">
+                    <MapPin className="w-3.5 h-3.5 text-[#E38E49] mt-0.5 flex-shrink-0" />
+                    <span className="text-xs leading-relaxed">
+                      {company.address}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -146,26 +218,17 @@ const Footer = ({ username }: { username: string | undefined }) => {
         </div>
       </div>
 
-      <Separator className="bg-gray-700" />
-
-      {/* Bottom Footer */}
-      <div className="py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © 2024 {company?.name || 'ElectroMart'}. Todos los derechos reservados.
+      {/* Bottom Bar */}
+      <div className="border-t border-white/10">
+        <div className="container mx-auto px-4 py-5">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p className="text-white/40 text-xs">
+              &copy; {new Date().getFullYear()}{" "}
+              {company.name}. Todos los derechos reservados.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Términos y condiciones
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Política de privacidad
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Aviso legal
-              </Link>
-            </div>
+            <p className="text-white/30 text-xs">
+              Martínez de la Torre, Veracruz, México
+            </p>
           </div>
         </div>
       </div>
