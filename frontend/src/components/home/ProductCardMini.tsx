@@ -73,7 +73,7 @@ export default function ProductCardMini({ product, showDiscount = false }: Produ
 
             {/* Price */}
             <div className="mb-1">
-              <span className="text-xl font-bold text-[#E38E49]">
+              <span className="text-xl font-bold text-[#0A3981]">
                 ${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
               </span>
             </div>

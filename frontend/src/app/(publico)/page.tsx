@@ -14,7 +14,7 @@ const HeroCarousel = dynamic(
 
 const CategoryStrip = dynamic(
   () => import('@/components/home/CategoryStrip'),
-  { loading: () => <div className="h-40 animate-pulse bg-gray-50" /> },
+  { loading: () => <div className="h-80 animate-pulse bg-gray-50" /> },
 )
 
 const DealsSection = dynamic(
@@ -79,6 +79,10 @@ export default async function HomePage() {
       {/* 1. Banners promocionales */}
       <HeroCarousel slides={slides} />
 
+      <FadeInSection>
+        <TrustBar />
+      </FadeInSection>
+
       {/* 2. Categorías — carousel infinito */}
       <FadeInSection>
         <CategoryStrip />
@@ -106,20 +110,6 @@ export default async function HomePage() {
       {/* 7. Blog — editorial layout */}
       <FadeInSection>
         <RepairBlogSection />
-      </FadeInSection>
-
-      <FadeInSection>
-        <TrustBar />
-      </FadeInSection>
-
-      {/* 8. Novedades — carousel */}
-      <FadeInSection>
-        <ProductRow
-          title="Recién Llegados"
-          products={newArrivals}
-          viewAllHref="/categorias"
-          badge="Nuevo"
-        />
       </FadeInSection>
 
       {/* 9. Marcas */}
