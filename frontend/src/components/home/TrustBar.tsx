@@ -9,7 +9,7 @@ const features = [
 
 export default function TrustBar() {
   return (
-    <section className="py-8 bg-slate-50 border-y border-gray-100">
+    <section className="py-8 bg-[#0A3981] border-y border-gray-100">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {features.map((f) => (
@@ -18,8 +18,8 @@ export default function TrustBar() {
                 <f.icon className="w-5 h-5 text-[#0A3981]" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">{f.title}</p>
-                <p className="text-xs text-gray-500">{f.desc}</p>
+                <p className="text-sm font-semibold text-[#E38E49]">{f.title}</p>
+                <p className="text-xs text-gray-300">{f.desc}</p>
               </div>
             </div>
           ))}

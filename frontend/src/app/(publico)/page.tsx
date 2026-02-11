@@ -102,13 +102,14 @@ export default async function HomePage() {
       </FadeInSection>
 
       {/* 6. Beneficios */}
-      <FadeInSection>
-        <TrustBar />
-      </FadeInSection>
 
       {/* 7. Blog — editorial layout */}
       <FadeInSection>
         <RepairBlogSection />
+      </FadeInSection>
+
+      <FadeInSection>
+        <TrustBar />
       </FadeInSection>
 
       {/* 8. Novedades — carousel */}

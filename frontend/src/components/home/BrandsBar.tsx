@@ -24,9 +24,6 @@ export default function BrandsBar() {
                   className="object-contain p-2"
                 />
               </div>
-              <span className="text-[10px] text-gray-400 font-medium tracking-wide uppercase">
-                {brand.name}
-              </span>
             </div>
           ))}
         </div>
