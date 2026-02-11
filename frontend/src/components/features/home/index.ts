@@ -1,2 +1,1 @@
-export { Carousel } from './carousel'
-export { FeaturesGrid } from './featuresGrid'
+export { default as InformationBar } from './InformationBar'
