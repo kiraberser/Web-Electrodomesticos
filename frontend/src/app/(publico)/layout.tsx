@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google';
 // Navbar y Footer se inyectan vía AppChrome según la ruta
 import { CartProvider } from '@/context/CartContext';
 import RouteModalGate from '@/components/public/RouteModalGate';
+import WhatsAppButton from '@/components/public/WhatsAppButton';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             {children}
           </AppChrome>
           <RouteModalGate />
+          <WhatsAppButton />
         </CartProvider>
       </body>
     </html>
