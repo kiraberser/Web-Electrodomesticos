@@ -40,23 +40,27 @@ export default function SloganBanner() {
   }, [])
 
   return (
-    <section className="bg-[#0A3981] overflow-hidden">
-      <div className="container mx-auto px-0 md:px-4">
-        <div className="grid md:grid-cols-2 min-h-[280px] md:min-h-[320px]">
-          {/* Image half */}
-          <div className="relative hidden md:block">
-            <Image
-              src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=1920"
-              alt="Taller de refacciones"
-              fill
-              sizes="50vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A3981]/80" />
-          </div>
+    <section className="relative bg-[#0A3981] overflow-hidden">
+      {/* Background image — visible on all screen sizes */}
+      <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=1920"
+          alt="Taller de refacciones"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        {/* Mobile: full overlay to keep text readable. Desktop: gradient from right */}
+        <div className="absolute inset-0 bg-[#0A3981]/80 md:bg-gradient-to-r md:from-transparent md:to-[#0A3981]/90" />
+      </div>
+
+      <div className="relative container mx-auto px-4">
+        <div className="grid md:grid-cols-2 min-h-[240px] md:min-h-[300px]">
+          {/* Spacer for the image half on desktop */}
+          <div className="hidden md:block" />
 
           {/* Text half */}
-          <div className="flex items-center justify-center px-8 py-12 md:py-0">
+          <div className="flex items-center justify-center px-4 py-10 md:py-0">
             <div className="text-center md:text-left max-w-md">
               <p className="text-[#E38E49] text-sm font-semibold uppercase tracking-widest mb-4">
                 Refaccionaria Vega
@@ -78,7 +82,7 @@ export default function SloganBanner() {
                   <button
                     key={i}
                     onClick={() => setCurrent(i)}
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none ${
                       i === current ? 'bg-[#E38E49] w-4' : 'bg-white/30 hover:bg-white/50'
                     }`}
                     aria-label={`Frase ${i + 1}`}

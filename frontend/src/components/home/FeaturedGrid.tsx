@@ -39,7 +39,7 @@ function RankedCard({ product, rank }: { product: Product; rank: number }) {
           }`}
         >
           {/* Rank number watermark */}
-          <span className="absolute top-3 left-4 text-[64px] font-black leading-none text-gray-100 select-none z-0">
+          <span className="absolute top-3 left-3 md:left-4 text-[40px] md:text-[64px] font-black leading-none text-gray-100 select-none z-0">
             {String(rank).padStart(2, '0')}
           </span>
 
@@ -52,7 +52,7 @@ function RankedCard({ product, rank }: { product: Product; rank: number }) {
           <button
             onClick={toggleFavorite}
             disabled={isLoading}
-            className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center transition-colors ${
+            className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center transition-colors focus-visible:ring-2 focus-visible:ring-[#E38E49] focus-visible:outline-none ${
               isFavorite ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
             } ${isLoading ? 'opacity-50' : ''}`}
             aria-label={isFavorite ? 'Eliminar de favoritos' : 'Agregar a favoritos'}
@@ -100,7 +100,7 @@ function RankedCard({ product, rank }: { product: Product; rank: number }) {
               </span>
               <button
                 onClick={handleAddToCart}
-                className="w-9 h-9 rounded-full bg-[#E38E49] flex items-center justify-center text-white hover:bg-[#d07d3a] transition-colors duration-200"
+                className="w-9 h-9 rounded-full bg-[#E38E49] flex items-center justify-center text-white hover:bg-[#d07d3a] transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[#0A3981] focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label="Agregar al carrito"
               >
                 <ShoppingBag className="w-4 h-4" />
@@ -116,7 +116,7 @@ function RankedCard({ product, rank }: { product: Product; rank: number }) {
 
 export default function FeaturedGrid({ title, products, viewAllHref }: FeaturedGridProps) {
   return (
-    <section className="py-12">
+    <section className="py-10">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

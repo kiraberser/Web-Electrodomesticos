@@ -32,7 +32,7 @@ export default function ProductCardMini({ product, showDiscount = false }: Produ
 
   return (
     <>
-      <div className="flex-shrink-0 w-[260px] snap-start group">
+      <div className="flex-shrink-0 w-full snap-start group">
         <div className="rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md overflow-hidden flex flex-col h-full">
           {/* Image */}
           <Link
@@ -43,7 +43,7 @@ export default function ProductCardMini({ product, showDiscount = false }: Produ
               src={product.image}
               alt={product.name}
               fill
-              sizes="260px"
+              sizes="(max-width: 768px) 50vw, 25vw"
               className="object-contain p-4 transition-transform duration-200 group-hover:scale-105"
             />
             {hasDiscount ? (
@@ -54,7 +54,7 @@ export default function ProductCardMini({ product, showDiscount = false }: Produ
             <button
               onClick={toggleFavorite}
               disabled={isLoading}
-              className={`absolute top-2 right-2 w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center transition-colors ${
+              className={`absolute top-2 right-2 w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center transition-colors focus-visible:ring-2 focus-visible:ring-[#E38E49] focus-visible:outline-none ${
                 isFavorite ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
               } ${isLoading ? 'opacity-50' : ''}`}
               aria-label={isFavorite ? 'Eliminar de favoritos' : 'Agregar a favoritos'}
@@ -94,7 +94,7 @@ export default function ProductCardMini({ product, showDiscount = false }: Produ
             {/* Add to cart button */}
             <button
               onClick={handleAddToCart}
-              className="mt-auto w-full py-2.5 bg-[#E38E49] hover:bg-[#d07d3a] text-white text-sm font-bold rounded-lg transition-colors duration-200 uppercase tracking-wide"
+              className="mt-auto w-full py-2.5 bg-[#E38E49] hover:bg-[#d07d3a] text-white text-sm font-bold rounded-lg transition-colors duration-200 uppercase tracking-wide focus-visible:ring-2 focus-visible:ring-[#0A3981] focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               Agregar al carrito
             </button>

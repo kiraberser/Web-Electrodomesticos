@@ -7,7 +7,7 @@ export default function RepairBlogSection() {
   const [hero, ...rest] = blogPosts.slice(0, 4)
 
   return (
-    <section className="py-14 bg-white">
+    <section className="py-10 bg-white">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-end justify-between mb-10">
@@ -82,10 +82,6 @@ export default function RepairBlogSection() {
                       sizes="96px"
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    {/* Rank number */}
-                    <div className="absolute top-1 left-1 w-5 h-5 rounded-full bg-[#0A3981] flex items-center justify-center">
-                      <span className="text-[10px] font-bold text-white">{i + 2}</span>
-                    </div>
                   </div>
 
                   {/* Content */}

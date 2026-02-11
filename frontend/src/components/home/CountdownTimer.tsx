@@ -26,10 +26,14 @@ function pad(n: number): string {
 }
 
 export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
-  const [time, setTime] = useState<TimeLeft>(() => getTimeLeft(targetDate))
+  // Initialize with null to avoid hydration mismatch (Date.now() differs server vs client)
+  const [time, setTime] = useState<TimeLeft | null>(null)
   const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
+    // Set initial time only on client
+    setTime(getTimeLeft(targetDate))
+
     const start = () => {
       intervalRef.current = setInterval(() => {
         setTime(getTimeLeft(targetDate))
@@ -56,6 +60,22 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
       document.removeEventListener('visibilitychange', handleVisibility)
     }
   }, [targetDate])
+
+  // Show placeholder during SSR / before hydration
+  if (!time) {
+    return (
+      <div className="flex items-center gap-1">
+        <span className="text-xs text-gray-500 mr-1">Termina en</span>
+        <div className="flex items-center gap-1">
+          <span className="bg-[#E38E49] text-white text-sm font-bold px-2 py-0.5 rounded">--</span>
+          <span className="text-gray-400 font-bold">:</span>
+          <span className="bg-[#E38E49] text-white text-sm font-bold px-2 py-0.5 rounded">--</span>
+          <span className="text-gray-400 font-bold">:</span>
+          <span className="bg-[#E38E49] text-white text-sm font-bold px-2 py-0.5 rounded">--</span>
+        </div>
+      </div>
+    )
+  }
 
   const expired = time.hours === 0 && time.minutes === 0 && time.seconds === 0
 
