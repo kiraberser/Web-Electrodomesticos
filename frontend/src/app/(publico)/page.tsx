@@ -3,7 +3,6 @@ import { slides } from '@/data/carouselData'
 import { getDealProducts, getBestSellers, getNewArrivals } from '@/data/products'
 import TrustBar from '@/components/home/TrustBar'
 import RepairBlogSection from '@/components/home/RepairBlogSection'
-import Brands from '@/components/product/Brands'
 
 const HeroCarousel = dynamic(
   () => import('@/components/home/HeroCarousel'),
@@ -20,14 +19,19 @@ const DealsSection = dynamic(
   { loading: () => <div className="h-96 animate-pulse bg-gray-50" /> },
 )
 
-const ProductRow = dynamic(
-  () => import('@/components/home/ProductRow'),
-  { loading: () => <div className="h-96 animate-pulse bg-white" /> },
-)
-
 const SloganBanner = dynamic(
   () => import('@/components/home/SloganBanner'),
   { loading: () => <div className="h-[280px] md:h-[320px] animate-pulse bg-[#0A3981]" /> },
+)
+
+const FeaturedGrid = dynamic(
+  () => import('@/components/home/FeaturedGrid'),
+  { loading: () => <div className="h-96 animate-pulse bg-white" /> },
+)
+
+const ProductRow = dynamic(
+  () => import('@/components/home/ProductRow'),
+  { loading: () => <div className="h-96 animate-pulse bg-white" /> },
 )
 
 export const metadata = {
@@ -42,24 +46,38 @@ export default function HomePage() {
 
   return (
     <main>
+      {/* 1. Primera impresión — banners promocionales */}
       <HeroCarousel slides={slides} />
+
+      {/* 2. Navegación rápida — categorías */}
       <CategoryStrip />
+
+      {/* 3. Urgencia — ofertas con countdown */}
       <DealsSection products={deals} />
-      <ProductRow
+
+      {/* 4. Identidad de marca — rompe la monotonía */}
+      <SloganBanner />
+
+      {/* 5. Social proof — grid asimétrico (1 grande + 3 chicos) */}
+      <FeaturedGrid
         title="Los Más Vendidos"
         products={bestSellers}
         viewAllHref="/categorias"
       />
+
+      {/* 6. Contenido educativo — separa secciones de productos */}
+      <RepairBlogSection />
+
+      {/* 7. Descubrimiento — carousel de novedades */}
       <ProductRow
         title="Recién Llegados"
         products={newArrivals}
         viewAllHref="/categorias"
         badge="Nuevo"
       />
-      <SloganBanner />
-      <RepairBlogSection />
+
+      {/* 8. Confianza — features + stats + marcas fusionados */}
       <TrustBar />
-      <Brands />
     </main>
   )
 }
