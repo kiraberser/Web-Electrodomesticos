@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/display/Card';
 import { Star, Quote } from 'lucide-react';
@@ -9,15 +9,29 @@ import { testimonials_data as testimonials} from '@/data/testimonials';
 
 export const Reviews = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    
-    useEffect(() => {
-        if (testimonials.length > 0) {
-            const timer = setInterval(() => {
-                setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-            }, 5000); // Auto-rotate every 5 seconds
+    const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-            return () => clearInterval(timer);
-        }
+    useEffect(() => {
+        if (testimonials.length === 0) return;
+
+        const start = () => {
+            intervalRef.current = setInterval(() => {
+                setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+            }, 5000);
+        };
+        const stop = () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
+        const handleVisibility = () => {
+            if (document.hidden) { stop(); } else { start(); }
+        };
+
+        start();
+        document.addEventListener('visibilitychange', handleVisibility);
+        return () => {
+            stop();
+            document.removeEventListener('visibilitychange', handleVisibility);
+        };
     }, []);
 
 
@@ -121,25 +135,6 @@ export const Reviews = () => {
                     </div>
                 </div>
 
-                {/* Stats */}
-                <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-white mb-2">10,000+</div>
-                        <div className="text-gray-300">Clientes satisfechos</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-white mb-2">4.8</div>
-                        <div className="text-gray-300">Calificación promedio</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-white mb-2">20+</div>
-                        <div className="text-gray-300">Años de experiencia</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-3xl font-bold text-white mb-2">500+</div>
-                        <div className="text-gray-300">Productos disponibles</div>
-                    </div>
-                </div>
             </div>
         </section>
     );
