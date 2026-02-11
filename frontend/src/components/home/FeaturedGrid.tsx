@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Heart, ChevronRight } from 'lucide-react'
-import { Badge } from '@/components/ui/feedback/Badge'
+import { ShoppingBag, ChevronRight, TrendingUp } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import type { Product } from '@/data/products'
 import toast from 'react-hot-toast'
@@ -14,116 +13,99 @@ interface FeaturedGridProps {
   viewAllHref?: string
 }
 
-function FeaturedCard({ product, featured = false }: { product: Product; featured?: boolean }) {
+function RankedCard({ product, rank }: { product: Product; rank: number }) {
   const { addItem } = useCart()
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault()
     addItem({ id: product.id, name: product.name, price: product.price, quantity: 1 })
     toast.success(`${product.name} agregado al carrito`)
   }
 
-  if (featured) {
-    return (
-      <div className="relative rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-col h-full group">
-        <Link
-          href={`/categorias/${product.category}/${product.slug}`}
-          className="relative aspect-[4/3] bg-gray-50 overflow-hidden block"
-        >
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain p-6 group-hover:scale-105 transition-transform duration-200"
-          />
-          <button
-            className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors"
-            aria-label="Agregar a favoritos"
-          >
-            <Heart className="w-5 h-5" />
-          </button>
-          {product.rating ? (
-            <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1">
-              <span className="text-yellow-400 text-sm">★</span>
-              <span className="text-sm font-semibold text-gray-700">{product.rating}</span>
-            </div>
-          ) : null}
-        </Link>
-        <div className="p-5 flex flex-col flex-1">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{product.brand}</p>
-          <Link href={`/categorias/${product.category}/${product.slug}`}>
-            <h3 className="text-base font-bold text-gray-900 line-clamp-2 mb-3 hover:text-[#0A3981] transition-colors">
-              {product.name}
-            </h3>
-          </Link>
-          <p className="text-sm text-gray-500 line-clamp-2 mb-4">{product.shortDescription}</p>
-          <div className="mt-auto flex items-center justify-between">
-            <span className="text-2xl font-bold text-[#E38E49]">
+  const isFirst = rank === 1
+
+  return (
+    <Link
+      href={`/categorias/${product.category}/${product.slug}`}
+      className="group relative flex flex-col"
+    >
+      <div
+        className={`relative rounded-2xl overflow-hidden bg-white transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1 ${
+          isFirst ? 'ring-2 ring-[#E38E49]/30' : 'border border-gray-100'
+        }`}
+      >
+        {/* Rank number watermark */}
+        <span className="absolute top-3 left-4 text-[64px] font-black leading-none text-gray-100 select-none z-0">
+          {String(rank).padStart(2, '0')}
+        </span>
+
+        {/* Top accent for #1 */}
+        {isFirst ? (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E38E49] to-[#E38E49]/40" />
+        ) : null}
+
+        {/* Product image */}
+        <div className="relative z-10 flex items-center justify-center pt-6 pb-2 px-4">
+          <div className="relative w-32 h-32 md:w-36 md:h-36">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="144px"
+              className="object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="relative z-10 px-4 pb-4 pt-2">
+          {/* Brand + Rating */}
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+              {product.brand}
+            </span>
+            {product.rating ? (
+              <div className="flex items-center gap-1">
+                <span className="text-yellow-400 text-xs">★</span>
+                <span className="text-[11px] font-semibold text-gray-500">{product.rating}</span>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Name */}
+          <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-snug mb-3 group-hover:text-[#0A3981] transition-colors">
+            {product.name}
+          </h3>
+
+          {/* Price + Cart */}
+          <div className="flex items-center justify-between">
+            <span className="text-lg font-bold text-[#0A3981]">
               ${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
             </span>
             <button
               onClick={handleAddToCart}
-              className="px-5 py-2.5 bg-[#E38E49] hover:bg-[#d07d3a] text-white text-sm font-bold rounded-lg transition-colors uppercase tracking-wide"
+              className="w-9 h-9 rounded-full bg-[#E38E49] flex items-center justify-center text-white hover:bg-[#d07d3a] transition-colors duration-200"
+              aria-label="Agregar al carrito"
             >
-              Agregar
+              <ShoppingBag className="w-4 h-4" />
             </button>
           </div>
         </div>
       </div>
-    )
-  }
-
-  return (
-    <div className="rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden flex flex-row h-full group">
-      <Link
-        href={`/categorias/${product.category}/${product.slug}`}
-        className="relative w-28 flex-shrink-0 bg-gray-50 overflow-hidden"
-      >
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="112px"
-          className="object-contain p-2 group-hover:scale-105 transition-transform duration-200"
-        />
-      </Link>
-      <div className="p-3 flex flex-col flex-1 justify-center min-w-0">
-        <p className="text-[10px] text-gray-400 uppercase tracking-wide">{product.brand}</p>
-        <Link href={`/categorias/${product.category}/${product.slug}`}>
-          <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight hover:text-[#0A3981] transition-colors">
-            {product.name}
-          </h3>
-        </Link>
-        {product.rating ? (
-          <div className="flex items-center gap-1 mt-1">
-            <span className="text-yellow-400 text-xs">{'★'.repeat(Math.floor(product.rating))}</span>
-            <span className="text-[10px] text-gray-400">({product.rating})</span>
-          </div>
-        ) : null}
-        <div className="flex items-center justify-between mt-2">
-          <span className="text-base font-bold text-[#E38E49]">
-            ${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-          </span>
-          <button
-            onClick={handleAddToCart}
-            className="text-xs font-bold text-[#0A3981] hover:text-[#E38E49] transition-colors"
-          >
-            + Carrito
-          </button>
-        </div>
-      </div>
-    </div>
+    </Link>
   )
 }
 
 export default function FeaturedGrid({ title, products, viewAllHref }: FeaturedGridProps) {
-  const [featured, ...rest] = products
-
   return (
-    <section className="py-10">
+    <section className="py-12">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-[#0A3981] uppercase tracking-wide">{title}</h2>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2.5">
+            <TrendingUp className="w-5 h-5 text-[#E38E49]" />
+            <h2 className="text-2xl font-bold text-[#0A3981] uppercase tracking-wide">{title}</h2>
+          </div>
           {viewAllHref ? (
             <Link
               href={viewAllHref}
@@ -135,16 +117,11 @@ export default function FeaturedGrid({ title, products, viewAllHref }: FeaturedG
           ) : null}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Featured large card */}
-          <FeaturedCard product={featured} featured />
-
-          {/* Side stack of smaller cards */}
-          <div className="flex flex-col gap-4">
-            {rest.slice(0, 3).map((product) => (
-              <FeaturedCard key={product.id} product={product} />
-            ))}
-          </div>
+        {/* Ranked grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {products.slice(0, 4).map((product, i) => (
+            <RankedCard key={product.id} product={product} rank={i + 1} />
+          ))}
         </div>
       </div>
     </section>

@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import { slides } from '@/data/carouselData'
 import { getDealProducts, getBestSellers, getNewArrivals } from '@/data/products'
 import TrustBar from '@/components/home/TrustBar'
+import BrandsBar from '@/components/home/BrandsBar'
 import RepairBlogSection from '@/components/home/RepairBlogSection'
 
 const HeroCarousel = dynamic(
@@ -26,7 +27,7 @@ const SloganBanner = dynamic(
 
 const FeaturedGrid = dynamic(
   () => import('@/components/home/FeaturedGrid'),
-  { loading: () => <div className="h-96 animate-pulse bg-white" /> },
+  { loading: () => <div className="h-80 animate-pulse bg-white" /> },
 )
 
 const ProductRow = dynamic(
@@ -46,29 +47,32 @@ export default function HomePage() {
 
   return (
     <main>
-      {/* 1. Primera impresión — banners promocionales */}
+      {/* 1. Banners promocionales */}
       <HeroCarousel slides={slides} />
 
-      {/* 2. Navegación rápida — categorías */}
+      {/* 2. Categorías — carousel infinito */}
       <CategoryStrip />
 
-      {/* 3. Urgencia — ofertas con countdown */}
+      {/* 3. Ofertas del día con countdown */}
       <DealsSection products={deals} />
 
-      {/* 4. Identidad de marca — rompe la monotonía */}
+      {/* 4. Identidad de marca */}
       <SloganBanner />
 
-      {/* 5. Social proof — grid asimétrico (1 grande + 3 chicos) */}
+      {/* 5. Más vendidos — ranked grid */}
       <FeaturedGrid
         title="Los Más Vendidos"
         products={bestSellers}
         viewAllHref="/categorias"
       />
 
-      {/* 6. Contenido educativo — separa secciones de productos */}
+      {/* 6. Beneficios */}
+      <TrustBar />
+
+      {/* 7. Blog — editorial layout */}
       <RepairBlogSection />
 
-      {/* 7. Descubrimiento — carousel de novedades */}
+      {/* 8. Novedades — carousel */}
       <ProductRow
         title="Recién Llegados"
         products={newArrivals}
@@ -76,8 +80,8 @@ export default function HomePage() {
         badge="Nuevo"
       />
 
-      {/* 8. Confianza — features + stats + marcas fusionados */}
-      <TrustBar />
+      {/* 9. Marcas */}
+      <BrandsBar />
     </main>
   )
 }
