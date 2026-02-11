@@ -1,276 +1,242 @@
 "use client"
 
 import type React from "react"
+import { useEffect } from "react"
 import Link from "next/link"
+import { Search, X, User, Package, ShoppingBag, ChevronRight, MapPin, Heart, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/forms/Button"
-import { Badge } from "@/components/ui/feedback/Badge"
-import { User, Package, ShoppingBag, FileText, Mail, ChevronRight, LogOut, Truck, Phone, MapPin, Heart, LayoutDashboard } from "lucide-react"
-
-interface Category {
-    id: number
-    key: string
-    count?: number
-    label: string
-    cat_model: string
-    description: string
-    image: string
-}
+import { Input } from "@/components/ui/forms/InputField"
+import { categories } from "@/data/category"
+import LogOutButton from "@/components/user/LogOutButton"
 
 interface MobileMenuProps {
     isOpen: boolean
     onClose: () => void
-    categories: Category[]
     username?: string
-    onCategoryClick: (categoryName: string) => void
-    onAccountOpen: () => void
+    searchQuery: string
+    onSearchChange: (value: string) => void
+    onSearchSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
     isOpen,
     onClose,
-    categories,
     username,
-    onCategoryClick,
-    onAccountOpen,
+    searchQuery,
+    onSearchChange,
+    onSearchSubmit,
 }) => {
-    if (!isOpen) return null
+    // Lock body scroll when menu is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden"
+        } else {
+            document.body.style.overflow = ""
+        }
+        return () => {
+            document.body.style.overflow = ""
+        }
+    }, [isOpen])
 
     return (
-        <div className="md:hidden bg-white border-t border-gray-100 shadow-lg mobile-menu">
-            <div className="px-4 py-6 max-h-[80vh] overflow-y-auto">
-                {/* Quick Actions */}
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                    <Link
-                        href="/contacto"
-                        className="flex items-center justify-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer"
+        <>
+            {/* Backdrop */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black/40 z-40 md:hidden"
+                    onClick={onClose}
+                    aria-hidden="true"
+                />
+            )}
+
+            {/* Slide-in Panel */}
+            <div
+                className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl transform transition-transform duration-200 ease-out md:hidden ${
+                    isOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Menú de navegación"
+            >
+                {/* Header */}
+                <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
+                    <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                         onClick={onClose}
+                        aria-label="Cerrar menú"
                     >
-                        <Phone className="w-5 h-5 text-blue-600 mr-2" />
-                        <span className="text-sm font-medium text-blue-700">Llamar</span>
-                    </Link>
-                    <Link
-                        href="/contacto"
-                        className="flex items-center justify-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors cursor-pointer"
-                        onClick={onClose}
-                    >
-                        <MapPin className="w-5 h-5 text-green-600 mr-2" />
-                        <span className="text-sm font-medium text-green-700">Ubicación</span>
-                    </Link>
+                        <X className="w-5 h-5" />
+                    </Button>
                 </div>
 
-                {/* Main Navigation */}
-                <div className="space-y-1 mb-6">
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">Navegación</h3>
-
-                    <Link
-                        href="/productos"
-                        className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 group cursor-pointer"
-                        onClick={onClose}
-                    >
-                        <div className="flex items-center">
-                            <Package className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
-                            <span className="font-medium">Todos los Productos</span>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
-                    </Link>
-
-                    <Link
-                        href="/blog"
-                        className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 group cursor-pointer"
-                        onClick={onClose}
-                    >
-                        <div className="flex items-center">
-                            <FileText className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
-                            <span className="font-medium">Blog</span>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
-                    </Link>
-
-                    <Link
-                        href="/contacto"
-                        className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 group cursor-pointer"
-                        onClick={onClose}
-                    >
-                        <div className="flex items-center">
-                            <Mail className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
-                            <span className="font-medium">Contacto</span>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
-                    </Link>
-                </div>
-
-                {/* Separator */}
-                <div className="border-t border-gray-200 my-6"></div>
-
-                {/* Categories */}
-                {categories.length > 0 && (
-                    <div className="space-y-1 mb-6">
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">Categorías</h3>
-
-                        <div className="space-y-1">
-                            {categories.map((category) => (
-                                <button
-                                    key={category.id}
-                                    onClick={() => {
-                                        onCategoryClick(category.key)
-                                        onClose()
-                                    }}
-                                    className="flex items-center justify-between w-full px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group text-left cursor-pointer"
+                {/* Scrollable Content */}
+                <div className="overflow-y-auto h-[calc(100%-65px)]">
+                    {/* Search */}
+                    <div className="px-4 py-4 border-b border-gray-100">
+                        <form onSubmit={onSearchSubmit} role="search">
+                            <div className="relative">
+                                <Input
+                                    type="text"
+                                    placeholder="Buscar refacciones..."
+                                    value={searchQuery}
+                                    onChange={(e) => onSearchChange(e.target.value)}
+                                    className="w-full pl-4 pr-10 py-2.5 text-sm border-2 border-gray-200 rounded-xl focus:border-[#0A3981] focus:ring-2 focus:ring-[#0A3981]/10 transition-all duration-150"
+                                    aria-label="Buscar productos"
+                                />
+                                <Button
+                                    type="submit"
+                                    size="sm"
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 p-0 bg-[#0A3981] hover:bg-[#0A3981]/90 rounded-lg cursor-pointer"
+                                    aria-label="Buscar"
                                 >
-                                    <span className="font-medium">{category.label}</span>
-                                    <div className="flex items-center">
-                                        {category.count && (
-                                            <Badge variant="secondary" className="mr-2 text-xs">
-                                                {category.count}
-                                            </Badge>
-                                        )}
-                                        <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
-                                    </div>
-                                </button>
+                                    <Search className="w-3.5 h-3.5" />
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Categories */}
+                    <div className="px-4 py-4 border-b border-gray-100">
+                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                            Categorías
+                        </h3>
+                        <div className="space-y-0.5">
+                            <Link
+                                href="/categorias"
+                                className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                onClick={onClose}
+                            >
+                                <span className="text-sm font-medium">Todas las categorías</span>
+                                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                            </Link>
+                            {categories.map((category) => (
+                                <Link
+                                    key={category.id}
+                                    href={`/categorias/${encodeURIComponent(category.key)}`}
+                                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                    onClick={onClose}
+                                >
+                                    <span className="text-sm font-medium">{category.label}</span>
+                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                                </Link>
                             ))}
                         </div>
                     </div>
-                )}
 
-                {/* Separator */}
-                <div className="border-t border-gray-200 my-6"></div>
+                    {/* Account Section */}
+                    <div className="px-4 py-4">
+                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                            Mi Cuenta
+                        </h3>
 
-                {/* Account Section */}
-                <div className="space-y-1">
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">Mi Cuenta</h3>
-
-                    {username ? (
-                        <div className="space-y-1">
-                            {/* Welcome Message */}
-                            <div className="px-3 py-3 bg-blue-50 rounded-lg mb-3">
-                                <p className="text-sm font-medium text-blue-900">¡Hola, {username}! 👋</p>
-                                <p className="text-xs text-blue-600">Bienvenido de vuelta</p>
-                            </div>
-
-                            {/* Account Links */}
-                            <Link
-                                href="/cuenta/perfil"
-                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
-                                onClick={onClose}
-                            >
-                                <div className="flex items-center">
-                                    <User className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
-                                    <span className="font-medium">Mi Perfil</span>
+                        {username ? (
+                            <div className="space-y-0.5">
+                                {/* Welcome */}
+                                <div className="px-3 py-3 bg-[#0A3981]/5 rounded-lg mb-3">
+                                    <p className="text-sm font-medium text-[#0A3981]">Hola, {username}</p>
                                 </div>
-                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
-                            </Link>
 
-                            {username === "admin" && (
                                 <Link
-                                    href="/admin/dashboard"
-                                    className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
+                                    href="/cuenta/perfil"
+                                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
                                     onClick={onClose}
                                 >
                                     <div className="flex items-center">
-                                        <LayoutDashboard className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
-                                        <span className="font-medium">Dashboard</span>
+                                        <User className="w-4 h-4 mr-3 text-gray-400 group-hover:text-[#0A3981]" />
+                                        <span className="text-sm font-medium">Mi Perfil</span>
                                     </div>
-                                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
                                 </Link>
-                            )}
 
-                            {/* Separator */}
-                            <div className="border-t border-gray-200 my-4"></div>
+                                {username === "admin" && (
+                                    <Link
+                                        href="/admin/dashboard"
+                                        className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                        onClick={onClose}
+                                    >
+                                        <div className="flex items-center">
+                                            <LayoutDashboard className="w-4 h-4 mr-3 text-gray-400 group-hover:text-[#0A3981]" />
+                                            <span className="text-sm font-medium">Dashboard</span>
+                                        </div>
+                                        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                                    </Link>
+                                )}
 
-                            <Link
-                                href="/cuenta/perfil/direcciones"
-                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
-                                onClick={onClose}
-                            >
-                                <div className="flex items-center">
-                                    <MapPin className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
-                                    <span className="font-medium">Direcciones</span>
-                                </div>
-                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
-                            </Link>
-
-                            <Link
-                                href="/cuenta/perfil/favoritos"
-                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
-                                onClick={onClose}
-                            >
-                                <div className="flex items-center">
-                                    <Heart className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
-                                    <span className="font-medium">Favoritos</span>
-                                </div>
-                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
-                            </Link>
-
-                            <Link
-                                href="/cuenta/perfil/mis-compras"
-                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
-                                onClick={onClose}
-                            >
-                                <div className="flex items-center">
-                                    <ShoppingBag className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
-                                    <span className="font-medium">Mis Compras</span>
-                                </div>
-                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
-                            </Link>
-
-                            <Link
-                                href="/cuenta/perfil/pedidos"
-                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
-                                onClick={onClose}
-                            >
-                                <div className="flex items-center">
-                                    <Package className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
-                                    <span className="font-medium">Pedidos</span>
-                                </div>
-                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
-                            </Link>
-
-                            {/* Separator */}
-                            <div className="border-t border-gray-200 my-4"></div>
-
-                            <Link
-                                href="/politicas-envio"
-                                className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group cursor-pointer"
-                                onClick={onClose}
-                            >
-                                <div className="flex items-center">
-                                    <Truck className="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" />
-                                    <span className="font-medium">Políticas de Envío</span>
-                                </div>
-                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
-                            </Link>
-
-                            {/* Separator */}
-                            <div className="border-t border-gray-200 my-4"></div>
-
-                            {/* Logout Button */}
-                            <form action="/logout" method="POST">
-                                <button
-                                    type="submit"
-                                    className="flex items-center w-full px-3 py-3 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group cursor-pointer"
+                                <Link
+                                    href="/cuenta/perfil/direcciones"
+                                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                    onClick={onClose}
                                 >
-                                    <LogOut className="w-5 h-5 mr-3 group-hover:text-red-700" />
-                                    <span className="font-medium">Cerrar Sesión</span>
-                                </button>
-                            </form>
-                        </div>
-                    ) : (
-                        <Button
-                            variant="default"
-                            size="lg"
-                            className="w-full justify-start bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                            onClick={() => {
-                                onAccountOpen()
-                                onClose()
-                            }}
-                        >
-                            <User className="w-5 h-5 mr-3" />
-                            Iniciar Sesión
-                        </Button>
-                    )}
+                                    <div className="flex items-center">
+                                        <MapPin className="w-4 h-4 mr-3 text-gray-400 group-hover:text-[#0A3981]" />
+                                        <span className="text-sm font-medium">Direcciones</span>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                                </Link>
+
+                                <Link
+                                    href="/cuenta/perfil/favoritos"
+                                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                    onClick={onClose}
+                                >
+                                    <div className="flex items-center">
+                                        <Heart className="w-4 h-4 mr-3 text-gray-400 group-hover:text-[#0A3981]" />
+                                        <span className="text-sm font-medium">Favoritos</span>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                                </Link>
+
+                                <Link
+                                    href="/cuenta/perfil/mis-compras"
+                                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                    onClick={onClose}
+                                >
+                                    <div className="flex items-center">
+                                        <ShoppingBag className="w-4 h-4 mr-3 text-gray-400 group-hover:text-[#0A3981]" />
+                                        <span className="text-sm font-medium">Mis Compras</span>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                                </Link>
+
+                                <Link
+                                    href="/cuenta/perfil/pedidos"
+                                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                    onClick={onClose}
+                                >
+                                    <div className="flex items-center">
+                                        <Package className="w-4 h-4 mr-3 text-gray-400 group-hover:text-[#0A3981]" />
+                                        <span className="text-sm font-medium">Pedidos</span>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                                </Link>
+
+                                {/* Logout */}
+                                <div className="border-t border-gray-100 mt-3 pt-3">
+                                    <LogOutButton />
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                <Link href="/cuenta/login" onClick={onClose}>
+                                    <Button className="w-full bg-[#0A3981] hover:bg-[#0A3981]/90 text-white cursor-pointer">
+                                        <User className="w-4 h-4 mr-2" />
+                                        Iniciar Sesión
+                                    </Button>
+                                </Link>
+                                <Link href="/cuenta/register" onClick={onClose}>
+                                    <Button variant="outline" className="w-full cursor-pointer mt-2">
+                                        Crear Cuenta
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

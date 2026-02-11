@@ -6,7 +6,7 @@ import { company } from "@/data/company"
 const InformationBar = () => {
     return (
         <>
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm">
+            <div className="bg-gradient-to-r from-[#0A3981] to-[#0A3981] text-white text-sm">
                 <div className="container mx-auto px-4 py-2">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
                         <div className="flex items-center space-x-4 text-xs sm:text-sm">
