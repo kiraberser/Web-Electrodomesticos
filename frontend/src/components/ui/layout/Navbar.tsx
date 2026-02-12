@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
-import { Search, ShoppingCart, Menu, X, User, ChevronDown, MapPin, Heart, Package, ShoppingBag } from "lucide-react"
+import { Search, ShoppingCart, Menu, X, User, ChevronDown, MapPin, Heart, Package, ShoppingBag, Truck } from "lucide-react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 
@@ -262,6 +262,21 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                     </div>
                                 )}
                             </div>
+
+                            {/* Order Tracking - Próximamente */}
+                            <Button
+                                variant="ghost"
+                                className="relative hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-150 cursor-pointer text-gray-400"
+                                aria-label="Rastrear pedido (próximamente)"
+                                title="Rastrear pedido (próximamente)"
+                                disabled
+                            >
+                                <Truck className="w-4 h-4" />
+                                <span className="hidden lg:inline text-sm">Rastrear</span>
+                                <span className="absolute -top-1.5 -right-1.5 bg-[#E38E49] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                                    Pronto
+                                </span>
+                            </Button>
 
                             {/* Shopping Cart */}
                             <Button

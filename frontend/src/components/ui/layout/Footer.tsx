@@ -12,46 +12,44 @@ const Footer = ({ username }: { username: string | undefined }) => {
       {/* Newsletter Banner */}
       {!username && (
         <div className="relative overflow-hidden bg-gradient-to-r from-[#E38E49] to-[#d47a35]">
-          {/* Decorative background elements */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute -top-8 -left-8 w-40 h-40 border-[3px] border-white rounded-full" />
             <div className="absolute -bottom-12 -right-12 w-56 h-56 border-[3px] border-white rounded-full" />
             <div className="absolute top-1/2 left-1/3 w-24 h-24 border-[2px] border-white rounded-full" />
           </div>
-
           <Newsletter />
         </div>
       )}
 
       {/* Main Footer */}
-      <div className="py-12 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6">
+      <div className="py-10 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6">
             {/* Logo & Company */}
-            <div className="col-span-2 md:col-span-3 lg:col-span-1 space-y-4">
+            <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1 space-y-4">
               <div>
                 <h3 className="text-xl font-bold text-white">{company.name}</h3>
-                <p className="text-sm text-white/50 mt-1 italic">
+                <p className="text-sm text-white/70 mt-1 italic">
                   {company.tagline}
                 </p>
               </div>
-              <p className="text-white/60 text-sm leading-relaxed max-w-xs">
+              <p className="text-white/80 text-sm leading-relaxed max-w-xs">
                 {company.description}
               </p>
               <div className="flex items-center gap-3 pt-1">
                 <a
                   href="#"
                   aria-label="Facebook"
-                  className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                  className="w-9 h-9 rounded-lg bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
                 >
-                  <Facebook className="w-4 h-4 text-white/70" />
+                  <Facebook className="w-4 h-4 text-[#0A3981]" />
                 </a>
                 <a
                   href="#"
                   aria-label="Instagram"
-                  className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                  className="w-9 h-9 rounded-lg bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
                 >
-                  <Instagram className="w-4 h-4 text-white/70" />
+                  <Instagram className="w-4 h-4 text-[#0A3981]" />
                 </a>
               </div>
             </div>
@@ -66,7 +64,7 @@ const Footer = ({ username }: { username: string | undefined }) => {
                   <li key={category.id}>
                     <Link
                       href={`/categorias/${encodeURIComponent(category.key)}`}
-                      className="text-white/50 hover:text-white text-sm transition-colors"
+                      className="text-white/80 hover:text-white text-sm transition-colors"
                     >
                       {category.label}
                     </Link>
@@ -92,33 +90,33 @@ const Footer = ({ username }: { username: string | undefined }) => {
                 <li>
                   <Link
                     href="/contacto"
-                    className="text-white/50 hover:text-white transition-colors"
+                    className="text-white/80 hover:text-white transition-colors"
                   >
-                    Contacto
+                    Contáctanos
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/politicas-envio"
-                    className="text-white/50 hover:text-white transition-colors"
+                    href="/cuenta/perfil/pedidos"
+                    className="text-white/80 hover:text-white transition-colors"
                   >
-                    Políticas de envío
+                    Seguimiento de pedidos
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/faq"
-                    className="text-white/50 hover:text-white transition-colors"
+                    className="text-white/80 hover:text-white transition-colors"
                   >
-                    Preguntas frecuentes
+                    Preguntas sobre mi pedido
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/about-us"
-                    className="text-white/50 hover:text-white transition-colors"
+                    href="/contacto"
+                    className="text-white/80 hover:text-white transition-colors"
                   >
-                    Sobre nosotros
+                    Soporte técnico de la refacción
                   </Link>
                 </li>
               </ul>
@@ -127,38 +125,46 @@ const Footer = ({ username }: { username: string | undefined }) => {
             {/* Información Legal */}
             <div>
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
-                Legal
+                Información Legal
               </h4>
               <ul className="space-y-2.5 text-sm">
                 <li>
                   <Link
-                    href="/terms-conditions"
-                    className="text-white/50 hover:text-white transition-colors"
+                    href="/shipping-returns"
+                    className="text-white/80 hover:text-white transition-colors"
                   >
-                    Términos y condiciones
+                    Garantías
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/terms-conditions"
+                    className="text-white/80 hover:text-white transition-colors"
+                  >
+                    Información legal
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/privacy-policy"
-                    className="text-white/50 hover:text-white transition-colors"
+                    className="text-white/80 hover:text-white transition-colors"
                   >
-                    Política de privacidad
+                    Declaración de Privacidad
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/shipping-returns"
-                    className="text-white/50 hover:text-white transition-colors"
+                    href="/privacy-policy"
+                    className="text-white/80 hover:text-white transition-colors"
                   >
-                    Devoluciones
+                    Política de Cookies
                   </Link>
                 </li>
               </ul>
             </div>
 
             {/* Horarios & Contacto */}
-            <div>
+            <div className="col-span-2 sm:col-span-1">
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
                 Horarios
               </h4>
@@ -166,26 +172,26 @@ const Footer = ({ username }: { username: string | undefined }) => {
                 <div className="bg-white/5 rounded-lg p-3.5 border border-white/10">
                   <div className="flex items-center gap-2 mb-2.5">
                     <Clock className="w-4 h-4 text-[#E38E49]" />
-                    <span className="text-xs font-semibold text-white/80 uppercase tracking-wide">
+                    <span className="text-xs font-semibold text-white uppercase tracking-wide">
                       Atención
                     </span>
                   </div>
                   <div className="space-y-1.5 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-white/50">Lun - Vie</span>
-                      <span className="text-white/80 font-medium">
+                      <span className="text-white/70">Lun - Vie</span>
+                      <span className="text-white font-medium">
                         9:00 - 19:00
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/50">Sábado</span>
-                      <span className="text-white/80 font-medium">
+                      <span className="text-white/70">Sábado</span>
+                      <span className="text-white font-medium">
                         9:00 - 14:00
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/50">Domingo</span>
-                      <span className="text-white/40">Cerrado</span>
+                      <span className="text-white/70">Domingo</span>
+                      <span className="text-white/50">Cerrado</span>
                     </div>
                   </div>
                 </div>
@@ -193,19 +199,19 @@ const Footer = ({ username }: { username: string | undefined }) => {
                 <div className="space-y-2.5 text-sm">
                   <a
                     href={`tel:${company.phone}`}
-                    className="flex items-center gap-2 text-white/50 hover:text-white transition-colors"
+                    className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
                   >
                     <Phone className="w-3.5 h-3.5 text-[#E38E49]" />
                     <span>{company.phone}</span>
                   </a>
                   <a
                     href={`mailto:${company.email}`}
-                    className="flex items-center gap-2 text-white/50 hover:text-white transition-colors"
+                    className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
                   >
                     <Mail className="w-3.5 h-3.5 text-[#E38E49]" />
                     <span className="truncate">{company.email}</span>
                   </a>
-                  <div className="flex items-start gap-2 text-white/50">
+                  <div className="flex items-start gap-2 text-white/80">
                     <MapPin className="w-3.5 h-3.5 text-[#E38E49] mt-0.5 flex-shrink-0" />
                     <span className="text-xs leading-relaxed">
                       {company.address}
@@ -220,13 +226,13 @@ const Footer = ({ username }: { username: string | undefined }) => {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
-        <div className="container mx-auto px-4 py-5">
+        <div className="container mx-auto px-4 sm:px-6 py-5">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p className="text-white/40 text-xs">
+            <p className="text-white/60 text-xs">
               &copy; {new Date().getFullYear()}{" "}
               {company.name}. Todos los derechos reservados.
             </p>
-            <p className="text-white/30 text-xs">
+            <p className="text-white/40 text-xs">
               Martínez de la Torre, Veracruz, México
             </p>
           </div>

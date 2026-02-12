@@ -18,23 +18,21 @@ const Newsletter = () => {
     );
 
     return (
-        <section className="w-full h-50 md:h-auto min-h-50 flex items-center bg-[#E38E49]">
-            <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 py-6 md:flex-row md:gap-10 md:py-5">
+        <section className="w-full flex items-center bg-[#E38E49]">
+            <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-5 px-4 py-6 sm:px-6 md:flex-row md:gap-10 md:py-5">
                 {/* Left: Icon + Text */}
-                <div className="flex shrink-0 items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/40">
+                <div className="flex shrink-0 items-center gap-3 sm:gap-4 text-center md:text-left">
+                    <div className="hidden sm:flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full border-2 border-white/40">
                         <Mail
-                            className="h-7 w-7 text-white"
+                            className="h-6 w-6 md:h-7 md:w-7 text-white"
                             strokeWidth={1.5}
                         />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold leading-tight text-white md:text-base">
-                            Entérate de nuestras ofertas,
-                            <br />
-                            novedades y más.
+                        <p className="text-sm font-semibold leading-tight text-white sm:text-base">
+                            Entérate de nuestras ofertas y novedades.
                         </p>
-                        <p className="text-base font-extrabold uppercase text-[#0A3981] md:text-lg">
+                        <p className="text-sm font-extrabold uppercase text-[#0A3981] sm:text-base md:text-lg">
                             Obtén 10% de descuento.
                         </p>
                     </div>
@@ -43,40 +41,40 @@ const Newsletter = () => {
                 {/* Right: Form */}
                 <div className="w-full flex-1">
                     <form action={formAction}>
-                        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2.5">
                             <input
                                 type="text"
                                 name="name"
-                                placeholder="Digita tu nombre"
+                                placeholder="Tu nombre"
                                 required
-                                className="h-11 flex-1 rounded-md border-none bg-white px-4 text-sm text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/30"
+                                className="h-10 sm:h-11 w-full sm:flex-1 rounded-md border-none bg-white px-3.5 text-sm text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/30"
                             />
                             <input
                                 type="email"
                                 name="email"
-                                placeholder="Digita tu e-mail"
+                                placeholder="Tu e-mail"
                                 required
-                                className="h-11 flex-1 rounded-md border-none bg-white px-4 text-sm text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/30"
+                                className="h-10 sm:h-11 w-full sm:flex-1 rounded-md border-none bg-white px-3.5 text-sm text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/30"
                             />
                             <Button
                                 type="submit"
-                                className="h-11 shrink-0 rounded-md bg-[#0A3981] px-6 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#0A3981]/90"
+                                className="h-10 sm:h-11 w-full sm:w-auto shrink-0 rounded-md bg-[#0A3981] px-5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#0A3981]/90 cursor-pointer"
                             >
                                 Suscribirme
                             </Button>
                         </div>
 
                         {/* Privacy */}
-                        <p className="mt-2 text-[11px] leading-snug text-zinc-700">
-                            Al enviar, confirmo que he leído y acepto su{" "}
+                        <p className="mt-2 text-[10px] sm:text-[11px] leading-snug text-zinc-700">
+                            Al enviar, confirmo que he leído y acepto la{" "}
                             <Link
-                                href="/privacidad"
+                                href="/privacy-policy"
                                 className="underline underline-offset-2 hover:text-zinc-900"
                             >
                                 Declaración de privacidad
                             </Link>{" "}
-                            y me gustaría recibir correos electrónicos de
-                            marketing y/o promocionales de {company.name}.
+                            y deseo recibir correos de marketing y/o
+                            promocionales de {company.name}.
                         </p>
 
                         {state?.error && (
