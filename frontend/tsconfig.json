@@ -27,6 +27,12 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@features/*": [
+        "./src/features/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
       ]
     }
   },
@@ -37,8 +43,7 @@
     "next-env.d.ts",
     "src/app/layout.js",
     "src/app/page.js",
-    "src/components/features/reviews/Reviews.tsx",
-    "src/lib/utilscookies.js",
+    "src/shared/lib/utilscookies.js",
     "./.next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
