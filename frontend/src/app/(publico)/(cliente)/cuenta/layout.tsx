@@ -1,4 +1,4 @@
-import { ToastViewport } from "@/components/ui/display/ToastRender"
+import { ToastViewport } from "@/shared/ui/display/ToastRender"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

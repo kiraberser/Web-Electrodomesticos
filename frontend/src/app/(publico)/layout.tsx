@@ -2,13 +2,13 @@
 import '@/styles/index.css'
 
 import { cookies } from 'next/headers';
-import { AppChrome } from '@/components/features/layout/AppChrome';
+import { AppChrome } from '@/shared/layout/AppChrome';
 
 import { Inter } from 'next/font/google';
 // Navbar y Footer se inyectan vía AppChrome según la ruta
-import { CartProvider } from '@/context/CartContext';
-import RouteModalGate from '@/components/public/RouteModalGate';
-import WhatsAppButton from '@/components/public/WhatsAppButton';
+import { CartProvider } from '@/features/cart/CartContext';
+import RouteModalGate from '@/shared/layout/RouteModalGate';
+import WhatsAppButton from '@/shared/layout/WhatsAppButton';
 
 const inter = Inter({
   subsets: ['latin'],

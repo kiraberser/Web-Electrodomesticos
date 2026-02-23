@@ -2,16 +2,16 @@
 
 import React, { useState } from 'react';
 
-import { Button } from '@/components/ui/forms/Button';
-import { Input } from '@/components/ui/forms/InputField';
-import { Label } from '@/components/ui/forms/Label';
-import { Textarea } from '@/components/ui/display/Textarea'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/display/Card'
+import { Button } from '@/shared/ui/forms/Button';
+import { Input } from '@/shared/ui/forms/InputField';
+import { Label } from '@/shared/ui/forms/Label';
+import { Textarea } from '@/shared/ui/display/Textarea'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/display/Card'
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/display/Select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/display/Select'
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
 import { toast } from '@/hook/use-toast'
-import { company } from '@/data/company';
+import { company } from '@/shared/data/company';
 
 const ContactPage = () => {
     const [formData, setFormData] = useState({

@@ -2,19 +2,17 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { createServiceSaleAction } from "@/actions/services"
-import {
-    NoteHeader,
-    ServiceInfoCard,
-    CostBreakdownCard,
-    PartsSection,
-    NotesSection,
-    CostSummary,
-    PaymentStatusCard,
-    DeliveryInfoCard,
-} from "@/components/features/notes"
-import { CostNote } from "@/types/service"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
+import { createServiceSaleAction } from "@/features/services/actions"
+import NoteHeader from "@/features/services/notes/note-header"
+import ServiceInfoCard from "@/features/services/notes/service-info-card"
+import CostBreakdownCard from "@/features/services/notes/cost-breakdown-card"
+import PartsSection from "@/features/services/notes/parts-section"
+import NotesSection from "@/features/services/notes/notes-section"
+import CostSummary from "@/features/services/notes/cost-summary"
+import PaymentStatusCard from "@/features/services/notes/payment-status-card"
+import DeliveryInfoCard from "@/features/services/notes/delivery-info-card"
+import { CostNote } from "@/shared/types/service"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 
 const costNoteSchema = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

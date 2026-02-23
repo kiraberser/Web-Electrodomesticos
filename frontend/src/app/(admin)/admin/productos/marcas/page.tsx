@@ -1,4 +1,4 @@
-import { getAllMarcas } from "@/api/productos"
+import { getAllMarcas } from "@/features/catalog/api"
 import MarcasClient from "./MarcasClient"
 
 export const metadata = {

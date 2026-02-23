@@ -2,14 +2,16 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { Plus, Search, Filter } from "lucide-react"
-import { Button, Input } from "@/components/ui/forms"
-import { Badge } from "@/components/ui/feedback/Badge"
-import ServicesTable from "@/components/features/services/services-table"
-import { DeleteServiceModal, AddServiceModal } from "@/components/features/services"
-import { deleteServiceAction } from "@/actions/services"
+import { Button } from "@/shared/ui/forms/Button"
+import { Input } from "@/shared/ui/forms/InputField"
+import { Badge } from "@/shared/ui/feedback/Badge"
+import ServicesTable from "@/features/services/services-table"
+import { DeleteServiceModal } from "@/features/services/delete-service-modal"
+import { AddServiceModal } from "@/features/services/add-service-modal"
+import { deleteServiceAction } from "@/features/services/actions"
 import { useRouter, useSearchParams } from "next/navigation"
-import type { AdminServicePageItem as Service, PaginationInfo } from "@/types/service"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
+import type { AdminServicePageItem as Service, PaginationInfo } from "@/shared/types/service"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 
 export default function ServicesPageClient({
     initialServices,

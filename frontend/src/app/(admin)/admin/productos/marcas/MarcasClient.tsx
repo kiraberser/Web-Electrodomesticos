@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Button } from "@/components/admin/ui/Button"
-import { Modal } from "@/components/admin/ui/Modal"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
+import { Button } from "@/features/admin/ui/Button"
+import { Modal } from "@/features/admin/ui/Modal"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 import { Plus } from "lucide-react"
-import type { Marca } from "@/api/productos"
-import { getAllMarcas } from "@/api/productos"
-import ProductosHeader from "@/components/admin/productos/ProductosHeader"
-import MarcaForm from "@/components/admin/productos/MarcaForm"
-import MarcasTable from "@/components/admin/productos/MarcasTable"
+import type { Marca } from "@/features/catalog/api"
+import { getAllMarcas } from "@/features/catalog/api"
+import ProductosHeader from "@/features/admin/productos/ProductosHeader"
+import MarcaForm from "@/features/admin/productos/MarcaForm"
+import MarcasTable from "@/features/admin/productos/MarcasTable"
 
 interface MarcasClientProps {
     initialMarcas: Marca[]

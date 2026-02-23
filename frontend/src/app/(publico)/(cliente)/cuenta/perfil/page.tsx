@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { getUser } from "@/api/user"
-import type { UserProfile } from "@/types/user"
+import { getUser } from "@/features/auth/api"
+import type { UserProfile } from "@/shared/types/user"
 import { PerfilClient } from "./PerfilClient"
 
 export const dynamic = 'force-dynamic'

@@ -2,14 +2,12 @@
 
 import { useState, useCallback, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import type { UserProfile } from "@/types/user"
-import {
-    ProfileHeader,
-    ProfileInfo,
-    ProfileActions,
-    EditProfileModal,
-    ChangePasswordModal,
-} from "@/components/usuario"
+import type { UserProfile } from "@/shared/types/user"
+import { ProfileHeader } from "@/features/account/ProfileHeader"
+import { ProfileInfo } from "@/features/account/ProfileInfo"
+import { ProfileActions } from "@/features/account/ProfileActions"
+import { EditProfileModal } from "@/features/account/EditProfileModal"
+import { ChangePasswordModal } from "@/features/account/ChangePasswordModal"
 
 interface PerfilClientProps {
     user: UserProfile

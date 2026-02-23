@@ -7,10 +7,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import Login from './login';
 import Register from './register';
 
-import { Button } from '@/components/ui/forms/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/display/Card';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/display/Tabs';
-import { Separator } from '@/components/ui/display/Separator';
+import { Button } from '@/shared/ui/forms/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/display/Card';
+import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/display/Tabs';
+import { Separator } from '@/shared/ui/display/Separator';
 import { ArrowLeft } from 'lucide-react';
 
 const AuthPage = () => {
@@ -46,7 +46,7 @@ const AuthPage = () => {
     return (
         <div className="min-h-screen">
             {/* Hero Section */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8">
+            <div className="bg-[#0A3981] text-white py-8">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center space-x-4">
                         <Link href="/" className="flex items-center space-x-2 text-blue-100 hover:text-white transition-colors">
@@ -61,11 +61,10 @@ const AuthPage = () => {
                 <div className="max-w-md mx-auto">
                     <Card className="shadow-lg">
                         <CardHeader className="text-center">
-                            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <div className="w-16 h-16 bg-[#0A3981] rounded-full flex items-center justify-center mx-auto mb-4">
                                 <span className="text-white font-bold text-2xl">E</span>
                             </div>
                             <CardTitle className="text-2xl">Refaccionaria &apos;Vega&apos;</CardTitle>
-                            <p className="text-gray-600">Reparamos lo que no se ve, pero es necesario</p>
                         </CardHeader>
                         <CardContent>
                             <Tabs value={activeTab} onValueChange={handleTabChange}>

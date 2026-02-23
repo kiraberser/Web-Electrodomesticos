@@ -1,4 +1,4 @@
-import { getAllCategorias } from "@/api/productos"
+import { getAllCategorias } from "@/features/catalog/api"
 import CategoriasClient from "./CategoriasClient"
 
 export const metadata = {

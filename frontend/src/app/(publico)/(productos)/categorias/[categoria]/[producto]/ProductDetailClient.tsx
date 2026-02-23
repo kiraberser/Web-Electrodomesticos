@@ -5,16 +5,16 @@ import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { useCart } from "@/context/CartContext";
-import { type Refaccion } from "@/api/productos";
-import { type Brand, type Product, ProductType } from "@/data/products";
-import CheckoutButton from "@/components/checkout/CheckoutButton";
-import { agregarFavoritoAction, eliminarFavoritoAction } from "@/actions/favoritos";
-import AuthRequiredModal from "@/components/favoritos/AuthRequiredModal";
-import { checkAuthentication } from "@/lib/cookies";
-import { addCartItemAction } from "@/actions/cart";
-import ProductComments from "@/components/productos/ProductComments";
-import ProductSpecs from "@/components/productos/ProductSpecs";
+import { useCart } from "@/features/cart/CartContext";
+import { type Refaccion } from "@/features/catalog/api";
+import { type Brand, type Product, ProductType } from "@/shared/data/products";
+import CheckoutButton from "@/features/checkout/CheckoutButton";
+import { agregarFavoritoAction, eliminarFavoritoAction } from "@/features/favorites/actions";
+import AuthRequiredModal from "@/features/favorites/AuthRequiredModal";
+import { checkAuthentication } from "@/shared/lib/cookies";
+import { addCartItemAction } from "@/features/cart/actions";
+import ProductComments from "@/features/catalog/ProductComments";
+import ProductSpecs from "@/features/catalog/ProductSpecs";
 
 // Iconos modernos (reemplaza los anteriores si es necesario)
 import {
@@ -33,8 +33,8 @@ import {
     Minus,
     ShoppingCart,
 } from "lucide-react";
-import { Button } from "@/components/ui/forms/Button"; // Tu componente existente
-import { Badge } from "@/components/ui/feedback/Badge";
+import { Button } from "@/shared/ui/forms/Button"; // Tu componente existente
+import { Badge } from "@/shared/ui/feedback/Badge";
 
 interface Props {
     categoria: string;

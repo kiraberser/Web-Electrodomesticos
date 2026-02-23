@@ -1,39 +1,39 @@
 import dynamic from 'next/dynamic'
-import { slides } from '@/data/carouselData'
-import { getDealProducts, getBestSellers, getNewArrivals } from '@/data/products'
-import { getHomepageProducts } from '@/api/homepage'
-import TrustBar from '@/components/home/TrustBar'
-import BrandsBar from '@/components/home/BrandsBar'
-import RepairBlogSection from '@/components/home/RepairBlogSection'
-import FadeInSection from '@/components/home/FadeInSection'
+import { slides } from '@/shared/data/carouselData'
+import { getDealProducts, getBestSellers, getNewArrivals } from '@/shared/data/products'
+import { getHomepageProducts } from '@/features/home/api'
+import TrustBar from '@/features/home/TrustBar'
+import BrandsBar from '@/features/home/BrandsBar'
+import RepairBlogSection from '@/features/home/RepairBlogSection'
+import FadeInSection from '@/features/home/FadeInSection'
 
 const HeroCarousel = dynamic(
-  () => import('@/components/home/HeroCarousel'),
+  () => import('@/features/home/HeroCarousel'),
   { loading: () => <div className="h-[280px] md:h-[420px] lg:h-[480px] animate-pulse bg-gray-100" /> },
 )
 
 const CategoryStrip = dynamic(
-  () => import('@/components/home/CategoryStrip'),
+  () => import('@/features/home/CategoryStrip'),
   { loading: () => <div className="h-80 animate-pulse bg-gray-50" /> },
 )
 
 const DealsSection = dynamic(
-  () => import('@/components/home/DealsSection'),
+  () => import('@/features/home/DealsSection'),
   { loading: () => <div className="h-96 animate-pulse bg-gray-50" /> },
 )
 
 const SloganBanner = dynamic(
-  () => import('@/components/home/SloganBanner'),
+  () => import('@/features/home/SloganBanner'),
   { loading: () => <div className="h-[280px] md:h-[320px] animate-pulse bg-[#0A3981]" /> },
 )
 
 const FeaturedGrid = dynamic(
-  () => import('@/components/home/FeaturedGrid'),
+  () => import('@/features/home/FeaturedGrid'),
   { loading: () => <div className="h-80 animate-pulse bg-white" /> },
 )
 
 const ProductRow = dynamic(
-  () => import('@/components/home/ProductRow'),
+  () => import('@/features/home/ProductRow'),
   { loading: () => <div className="h-96 animate-pulse bg-white" /> },
 )
 

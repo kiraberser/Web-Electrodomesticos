@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { categories as CATEGORIES } from "@/data/category"
+import { categories as CATEGORIES } from "@/shared/data/category"
 import { Wrench } from 'lucide-react'
 import Image from "next/image"
 

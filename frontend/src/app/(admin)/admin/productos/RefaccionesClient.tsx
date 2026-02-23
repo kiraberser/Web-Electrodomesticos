@@ -1,16 +1,16 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import { Button } from "@/components/admin/ui/Button"
-import { Modal } from "@/components/admin/ui/Modal"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
+import { Button } from "@/features/admin/ui/Button"
+import { Modal } from "@/features/admin/ui/Modal"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 import { Plus } from "lucide-react"
-import type { Refaccion, Categoria, Proveedor } from "@/api/productos"
-import { getAllRefacciones, getAllCategorias, getAllProveedores } from "@/api/productos"
-import ProductosHeader from "@/components/admin/productos/ProductosHeader"
-import RefaccionForm from "@/components/admin/productos/RefaccionForm"
-import RefaccionesTable from "@/components/admin/productos/RefaccionesTable"
-import RefaccionDrawer from "@/components/admin/productos/RefaccionDrawer"
+import type { Refaccion, Categoria, Proveedor } from "@/features/catalog/api"
+import { getAllRefacciones, getAllCategorias, getAllProveedores } from "@/features/catalog/api"
+import ProductosHeader from "@/features/admin/productos/ProductosHeader"
+import RefaccionForm from "@/features/admin/productos/RefaccionForm"
+import RefaccionesTable from "@/features/admin/productos/RefaccionesTable"
+import RefaccionDrawer from "@/features/admin/productos/RefaccionDrawer"
 
 interface RefaccionesClientProps {
     initialRefacciones: Refaccion[]

@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, ShoppingCart, Trash2, CreditCard } from "lucide-react";
-import { Button } from "@/components/ui/forms/Button";
-import { useCart } from "@/context/CartContext";
-import CheckoutButton from "@/components/checkout/CheckoutButton";
-import { getDireccionesAction } from "@/actions/auth";
-import { checkAuthentication } from "@/lib/cookies";
+import { Button } from "@/shared/ui/forms/Button";
+import { useCart } from "@/features/cart/CartContext";
+import CheckoutButton from "@/features/checkout/CheckoutButton";
+import { getDireccionesAction } from "@/features/auth/actions";
+import { checkAuthentication } from "@/shared/lib/cookies";
 
 const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-MX", {

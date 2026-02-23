@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useMemo, useEffect, useRef } from "react"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
-import type { Pedido } from "@/api/pedidos"
-import { getAllPedidos } from "@/api/pedidos"
-import PedidosTable from "@/components/admin/pedidos/PedidosTable"
-import PedidoDrawer from "@/components/admin/pedidos/PedidoDrawer"
-import Pagination from "@/components/ui/navigation/Pagination"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
+import type { Pedido } from "@/features/orders/api"
+import { getAllPedidos } from "@/features/orders/api"
+import PedidosTable from "@/features/admin/pedidos/PedidosTable"
+import PedidoDrawer from "@/features/admin/pedidos/PedidoDrawer"
+import Pagination from "@/shared/ui/navigation/Pagination"
 import { ShoppingCart, Search } from "lucide-react"
-import { Input } from "@/components/ui/forms/InputField"
-import { Badge } from "@/components/ui/feedback/Badge"
+import { Input } from "@/shared/ui/forms/InputField"
+import { Badge } from "@/shared/ui/feedback/Badge"
 
 interface PedidosClientProps {
     initialPedidos?: Pedido[]

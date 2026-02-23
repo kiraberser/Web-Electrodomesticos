@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { getDirecciones } from "@/api/user"
-import { DireccionesList } from "@/components/usuario"
+import { getDirecciones } from "@/features/auth/api"
+import { DireccionesList } from "@/features/account/DireccionesList"
 
 export const dynamic = 'force-dynamic'
 

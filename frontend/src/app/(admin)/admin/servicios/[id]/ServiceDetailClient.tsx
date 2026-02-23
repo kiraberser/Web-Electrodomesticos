@@ -1,16 +1,14 @@
 import { Package } from "lucide-react"
-import { Button } from "@/components/ui/forms/Button"
+import { Button } from "@/shared/ui/forms/Button"
 import Link from "next/link"
-import {
-    ServiceHeader,
-    ServiceBasicInfo,
-    ServiceObservations,
-    ServiceCostInfo,
-    ServiceDeliveryInfo,
-    ServiceQuickActions,
-} from "@/components/features/services"
+import { ServiceHeader } from "@/features/services/service-header"
+import { ServiceBasicInfo } from "@/features/services/service-basic-info"
+import { ServiceObservations } from "@/features/services/service-observations"
+import { ServiceCostInfo } from "@/features/services/service-cost-info"
+import { ServiceDeliveryInfo } from "@/features/services/service-delivery-info"
+import { ServiceQuickActions } from "@/features/services/service-quick-actions"
 
-import { ServiceDetail } from "@/types/service"
+import { ServiceDetail } from "@/shared/types/service"
 
 export default function ServiceDetailClient({ service }: { service: ServiceDetail | null }) {
 

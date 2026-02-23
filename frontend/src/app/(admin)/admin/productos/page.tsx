@@ -1,4 +1,4 @@
-import { getAllRefacciones } from "@/api/productos"
+import { getAllRefacciones } from "@/features/catalog/api"
 import RefaccionesClient from "./RefaccionesClient"
 
 export const metadata = {

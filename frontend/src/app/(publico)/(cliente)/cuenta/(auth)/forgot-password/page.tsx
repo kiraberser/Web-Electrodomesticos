@@ -3,11 +3,11 @@
 import { useState, useActionState } from 'react'
 import Link from 'next/link'
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react'
-import { Button } from '@/components/ui/forms/Button'
-import { Input } from '@/components/ui/forms/InputField'
-import { Label } from '@/components/ui/forms/Label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/display/Card'
-import { requestPasswordResetAction } from '@/actions/password-reset'
+import { Button } from '@/shared/ui/forms/Button'
+import { Input } from '@/shared/ui/forms/InputField'
+import { Label } from '@/shared/ui/forms/Label'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/display/Card'
+import { requestPasswordResetAction } from '@/features/auth/password-reset-actions'
 import { toast } from '@/hook/use-toast'
 
 function isValidationError(error: unknown): error is Record<string, { _errors: string[] }> {

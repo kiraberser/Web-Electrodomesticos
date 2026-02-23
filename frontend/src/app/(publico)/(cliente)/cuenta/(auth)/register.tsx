@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { TabsContent } from '@/components/ui/display/Tabs';
-import { Button } from '@/components/ui/forms/Button';
-import { Label } from '@/components/ui/forms/Label';
+import { TabsContent } from '@/shared/ui/display/Tabs';
+import { Button } from '@/shared/ui/forms/Button';
+import { Label } from '@/shared/ui/forms/Label';
 import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
-import { Input } from '@/components/ui/forms/InputField';
+import { Input } from '@/shared/ui/forms/InputField';
 
-import { actionCreateUser } from '@/actions/auth';
+import { actionCreateUser } from '@/features/auth/actions';
 import { toast } from '@/hook/use-toast';
 import { redirect } from 'next/navigation';
 

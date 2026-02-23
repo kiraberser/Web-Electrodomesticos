@@ -1,5 +1,5 @@
-import { getMovimientos } from "@/api/inventario"
-import { getAllRefacciones, getAllCategorias } from "@/api/productos"
+import { getMovimientos } from "@/features/admin/inventario-api"
+import { getAllRefacciones, getAllCategorias } from "@/features/catalog/api"
 import InventarioClient from "./InventarioClient"
 
 export const metadata = {

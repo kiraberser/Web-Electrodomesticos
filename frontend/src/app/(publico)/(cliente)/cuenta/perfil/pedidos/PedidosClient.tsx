@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import PedidosList from "@/components/pedidos/PedidosList"
-import PedidosPagination from "@/components/pedidos/PedidosPagination"
-import { obtenerMisPedidosAction } from "@/actions/pedidos"
-import type { Pedido } from "@/api/pedidos"
+import PedidosList from "@/features/orders/PedidosList"
+import PedidosPagination from "@/features/orders/PedidosPagination"
+import { obtenerMisPedidosAction } from "@/features/orders/actions"
+import type { Pedido } from "@/features/orders/api"
 import { Package, Loader2 } from "lucide-react"
 
 interface PedidosClientProps {

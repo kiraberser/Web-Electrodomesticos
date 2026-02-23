@@ -1,4 +1,4 @@
-import { getAllPedidos } from "@/api/pedidos"
+import { getAllPedidos } from "@/features/orders/api"
 import PedidosClient from "./PedidosClient"
 
 export const dynamic = 'force-dynamic'

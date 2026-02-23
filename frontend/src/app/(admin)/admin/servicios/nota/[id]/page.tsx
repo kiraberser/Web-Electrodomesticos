@@ -1,6 +1,6 @@
-import { getServiceById } from "@/api/services"
+import { getServiceById } from "@/features/services/api"
 import ServiceNoteClient from "./ServiceNoteClient"
-import { CostNote } from "@/types/service"
+import { CostNote } from "@/shared/types/service"
 
 export const revalidate = 60
 

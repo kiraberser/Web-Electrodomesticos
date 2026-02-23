@@ -4,20 +4,20 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { useActionState } from "react"
-import { Button } from "@/components/ui/forms/Button"
-import { Input } from "@/components/ui/forms/InputField"
-import { Badge } from "@/components/ui/feedback/Badge"
-import { Textarea } from "@/components/ui/display/Textarea"
+import { Button } from "@/shared/ui/forms/Button"
+import { Input } from "@/shared/ui/forms/InputField"
+import { Badge } from "@/shared/ui/feedback/Badge"
+import { Textarea } from "@/shared/ui/display/Textarea"
 import dynamic from "next/dynamic"
 
-const RichEditor = dynamic(() => import("@/components/blog/ckeditor"), {
+const RichEditor = dynamic(() => import("@/features/blog/ckeditor"), {
   ssr: false,
   loading: () => <div className="h-64 w-full animate-pulse rounded-lg bg-gray-200" />
 })
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 import { FileText, Hash, Tags, ImageIcon, Save, Eye, ArrowLeft } from "lucide-react"
-import { createPost, type BlogActionState } from "@/actions/blog"
-import { categories } from "@/data/category"
+import { createPost, type BlogActionState } from "@/features/blog/actions"
+import { categories } from "@/shared/data/category"
 
 type BlogDraft = {
   title: string

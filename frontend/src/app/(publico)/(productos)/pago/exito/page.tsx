@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/forms/Button';
+import { Button } from '@/shared/ui/forms/Button';
 import Link from 'next/link';
 
 export default function PagoExitoPage() {

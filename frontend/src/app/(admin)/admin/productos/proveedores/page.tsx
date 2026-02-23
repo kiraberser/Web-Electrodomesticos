@@ -1,4 +1,4 @@
-import { getAllProveedores } from "@/api/productos"
+import { getAllProveedores } from "@/features/catalog/api"
 import ProveedoresClient from "./ProveedoresClient"
 
 export const metadata = {

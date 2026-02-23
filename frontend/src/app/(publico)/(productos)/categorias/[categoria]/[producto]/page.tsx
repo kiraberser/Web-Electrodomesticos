@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { cookies } from "next/headers"
-import { getRefaccionByNombre, type Refaccion } from "@/api/productos"
-import { checkFavoritoAction } from "@/actions/favoritos"
+import { getRefaccionByNombre, type Refaccion } from "@/features/catalog/api"
+import { checkFavoritoAction } from "@/features/favorites/actions"
 import ProductDetailClient from "./ProductDetailClient"
 import type { Metadata } from "next"
 
@@ -19,12 +19,14 @@ export default async function ProductoPage({
 }: {
     params: Promise<{ categoria: string; producto: string }>
 }) {
-    const { categoria, producto } = await params
+    const [{ categoria, producto }, cookieStore] = await Promise.all([
+        params,
+        cookies()
+    ])
     const categoriaParam = decodeURIComponent(categoria ?? "")
     const productoNombre = decodeURIComponent(producto ?? "")
 
-    // Obtener la refacción del backend (Server Component)
-    // Solo una petición al servidor - buscar por nombre del producto
+    // Fetch product — cookies already available from Promise.all above
     let refaccion: Refaccion
     try {
         refaccion = await getRefaccionByNombre(productoNombre)
@@ -33,22 +35,17 @@ export default async function ProductoPage({
         notFound()
     }
 
-    // Verificar si está en favoritos en el servidor (solo si hay ID y usuario autenticado)
+    // Check favorites only if authenticated (cookies already fetched in parallel)
     let isFavorite = false
     if (refaccion.id) {
         try {
-            // Verificar autenticación antes de hacer la petición
-            const cookieStore = await cookies()
             const username = cookieStore.get('username')?.value
             const token = cookieStore.get('access_cookie')?.value
-            
-            // Solo verificar favoritos si el usuario está autenticado
             if (username && token) {
                 const favoritoResult = await checkFavoritoAction(refaccion.id)
                 isFavorite = favoritoResult.success ? favoritoResult.isFavorite : false
             }
-        } catch (error) {
-            // Silenciar errores, por defecto no está en favoritos
+        } catch {
             isFavorite = false
         }
     }

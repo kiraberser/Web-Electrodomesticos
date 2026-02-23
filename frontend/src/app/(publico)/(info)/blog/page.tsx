@@ -1,15 +1,15 @@
 'use client'
 
 import Image from 'next/image';
-import { Button } from '@/components/ui/forms/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/display/Card';
-import { Badge } from '@/components/ui/feedback/Badge';
-import { Input } from '@/components/ui/forms/InputField';
+import { Button } from '@/shared/ui/forms/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/display/Card';
+import { Badge } from '@/shared/ui/feedback/Badge';
+import { Input } from '@/shared/ui/forms/InputField';
 import { Calendar, User, Search, ArrowRight, Eye, MessageSquare } from 'lucide-react';
 
 import { useState, useMemo } from 'react';
-import {blogPosts} from '@/data/blog';
-import { categories } from '@/data/category';
+import {blogPosts} from '@/shared/data/blog';
+import { categories } from '@/shared/data/category';
 
 const BlogPage = () => {
     const [searchTerm, setSearchTerm] = useState('');

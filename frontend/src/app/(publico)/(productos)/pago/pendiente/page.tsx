@@ -3,7 +3,7 @@
 import React from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Clock } from 'lucide-react';
-import { Button } from '@/components/ui/forms/Button';
+import { Button } from '@/shared/ui/forms/Button';
 import Link from 'next/link';
 
 export default function PagoPendientePage() {

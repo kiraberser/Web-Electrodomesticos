@@ -1,12 +1,12 @@
-import { TabsContent, } from '@/components/ui/display/Tabs';
-import { Label } from '@/components/ui/forms/Label';
+import { TabsContent, } from '@/shared/ui/display/Tabs';
+import { Label } from '@/shared/ui/forms/Label';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { Input } from '@/components/ui/forms/InputField';
+import { Input } from '@/shared/ui/forms/InputField';
 
 import Link from 'next/link';
-import { Button } from '@/components/ui/forms/Button';
+import { Button } from '@/shared/ui/forms/Button';
 
-import { actionLoginUser } from '@/actions/auth';
+import { actionLoginUser } from '@/features/auth/actions';
 import { toast } from '@/hook/use-toast';
 import { redirect } from 'next/navigation';
 
@@ -104,7 +104,7 @@ function Login({ isSubmitting, showPassword, setShowPassword }: LoginProps) {
 
                     <Button
                         type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                        className="w-full bg-[#0A3981] cursor-pointer"
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? (

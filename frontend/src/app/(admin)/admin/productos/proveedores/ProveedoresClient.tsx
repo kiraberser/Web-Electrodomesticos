@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Button } from "@/components/admin/ui/Button"
-import { Modal } from "@/components/admin/ui/Modal"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
+import { Button } from "@/features/admin/ui/Button"
+import { Modal } from "@/features/admin/ui/Modal"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 import { Plus } from "lucide-react"
-import type { Proveedor } from "@/api/productos"
-import { getAllProveedores } from "@/api/productos"
-import ProductosHeader from "@/components/admin/productos/ProductosHeader"
-import ProveedorForm from "@/components/admin/productos/ProveedorForm"
-import ProveedoresTable from "@/components/admin/productos/ProveedoresTable"
+import type { Proveedor } from "@/features/catalog/api"
+import { getAllProveedores } from "@/features/catalog/api"
+import ProductosHeader from "@/features/admin/productos/ProductosHeader"
+import ProveedorForm from "@/features/admin/productos/ProveedorForm"
+import ProveedoresTable from "@/features/admin/productos/ProveedoresTable"
 
 interface ProveedoresClientProps {
     initialProveedores: Proveedor[]

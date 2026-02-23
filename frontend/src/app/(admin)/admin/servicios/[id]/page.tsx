@@ -1,7 +1,7 @@
-import { getServiceById } from "@/api/services"
+import { getServiceById } from "@/features/services/api"
 import ServiceDetailClient from "./ServiceDetailClient"
 
-import { ServiceDetail } from "@/types/service"
+import { ServiceDetail } from "@/shared/types/service"
 
 export const revalidate = 60
 

@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Button } from "@/components/admin/ui/Button"
-import { Modal } from "@/components/admin/ui/Modal"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
+import { Button } from "@/features/admin/ui/Button"
+import { Modal } from "@/features/admin/ui/Modal"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 import { Plus } from "lucide-react"
-import type { Categoria } from "@/api/productos"
-import { getAllCategorias } from "@/api/productos"
-import ProductosHeader from "@/components/admin/productos/ProductosHeader"
-import CategoriaForm from "@/components/admin/productos/CategoriaForm"
-import CategoriasTable from "@/components/admin/productos/CategoriasTable"
+import type { Categoria } from "@/features/catalog/api"
+import { getAllCategorias } from "@/features/catalog/api"
+import ProductosHeader from "@/features/admin/productos/ProductosHeader"
+import CategoriaForm from "@/features/admin/productos/CategoriaForm"
+import CategoriasTable from "@/features/admin/productos/CategoriasTable"
 
 interface CategoriasClientProps {
     initialCategorias: Categoria[]

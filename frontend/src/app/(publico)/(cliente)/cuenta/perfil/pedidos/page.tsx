@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { obtenerMisPedidosAction } from "@/actions/pedidos"
+import { obtenerMisPedidosAction } from "@/features/orders/actions"
 import PedidosClient from "./PedidosClient"
 import { Package } from "lucide-react"
 import { Suspense } from "react"

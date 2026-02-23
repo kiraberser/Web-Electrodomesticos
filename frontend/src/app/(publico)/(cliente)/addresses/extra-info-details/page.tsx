@@ -4,12 +4,12 @@
 import { useEffect, useState, useActionState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Home, Building2, Store, MapPin, Clock, Loader2, Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/forms/Button";
-import { Input } from "@/components/ui/forms/InputField";
-import { Label } from "@/components/ui/forms/Label";
-import { updateDireccionExtraInfoAction, type ActionState } from "@/actions/auth";
+import { Button } from "@/shared/ui/forms/Button";
+import { Input } from "@/shared/ui/forms/InputField";
+import { Label } from "@/shared/ui/forms/Label";
+import { updateDireccionExtraInfoAction, type ActionState } from "@/features/auth/actions";
 import toast from "react-hot-toast";
-import { checkAuthentication } from "@/lib/cookies";
+import { checkAuthentication } from "@/shared/lib/cookies";
 
 type TipoLugar = "casa" | "edificio" | "abarrotes" | "otro";
 

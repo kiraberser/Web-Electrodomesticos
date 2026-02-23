@@ -1,0 +1,159 @@
+import type { Venta, VentaRefaccion, VentaServicio, Devolucion } from "@/features/admin/ventas-api"
+
+/**
+ * Exporta las ventas a CSV
+ */
+export const exportToCSV = (ventas: Venta[], filename: string = 'ventas.csv') => {
+    // Encabezados
+    const headers = [
+        'ID',
+        'Tipo',
+        'Fecha',
+        'Producto/Servicio',
+        'Marca',
+        'Cantidad',
+        'Precio Unitario',
+        'Total',
+        'Usuario',
+        'Técnico',
+        'Estado Pago',
+        'Garantía (días)',
+        'Observaciones',
+        'Motivo Devolución',
+    ]
+
+    // Convertir ventas a filas CSV
+    const rows = ventas.map((venta) => {
+        const fecha = venta.tipo === 'devolucion' 
+            ? (venta as Devolucion).fecha_devolucion 
+            : (venta as VentaRefaccion | VentaServicio).fecha_venta
+
+        if (venta.tipo === 'refaccion') {
+            const refaccion = venta as VentaRefaccion
+            return [
+                venta.id,
+                'Refacción',
+                fecha,
+                refaccion.refaccion_nombre || '',
+                refaccion.marca_nombre || '',
+                refaccion.cantidad || '',
+                refaccion.precio_unitario || '',
+                venta.total,
+                refaccion.usuario_username || '',
+                '',
+                '',
+                '',
+                '',
+                '',
+            ]
+        } else if (venta.tipo === 'servicio') {
+            const servicio = venta as VentaServicio
+            return [
+                venta.id,
+                'Servicio',
+                fecha,
+                servicio.servicio_aparato || `Servicio #${servicio.servicio}`,
+                '',
+                '',
+                '',
+                venta.total,
+                '',
+                servicio.tecnico || '',
+                servicio.estado_pago || '',
+                servicio.garantia_dias || '',
+                servicio.observaciones || '',
+                '',
+            ]
+        } else {
+            // devolucion
+            const devolucion = venta as Devolucion
+            return [
+                venta.id,
+                'Devolución',
+                fecha,
+                devolucion.refaccion_nombre || '',
+                devolucion.marca_nombre || '',
+                devolucion.cantidad || '',
+                devolucion.precio_unitario || '',
+                venta.total,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                devolucion.motivo || '',
+            ]
+        }
+    })
+
+    // Crear contenido CSV
+    const csvContent = [
+        headers.join(','),
+        ...rows.map(row => 
+            row.map(cell => {
+                // Escapar comillas y envolver en comillas si contiene comas
+                const cellStr = String(cell || '')
+                if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+                    return `"${cellStr.replace(/"/g, '""')}"`
+                }
+                return cellStr
+            }).join(',')
+        )
+    ].join('\n')
+
+    // Crear blob y descargar
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    
+    link.setAttribute('href', url)
+    link.setAttribute('download', filename)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+
+/**
+ * Exporta las ventas a Excel (formato CSV con extensión .xlsx simulada)
+ * Nota: Para verdadero Excel necesitarías una librería como xlsx
+ */
+export const exportToExcel = (ventas: Venta[], filename: string = 'ventas.xlsx') => {
+    // Por ahora, exportamos como CSV pero con extensión .xlsx
+    // Para verdadero Excel, necesitarías instalar: npm install xlsx
+    exportToCSV(ventas, filename.replace('.xlsx', '.csv'))
+}
+
+/**
+ * Exporta todas las ventas (necesita cargar todas las páginas)
+ */
+type PaginatedVentasResponse = {
+    count: number
+    results: Venta[]
+}
+
+export const exportAllVentas = async (
+    getAllVentasFn: (page: number, tipo?: string, search?: string) => Promise<PaginatedVentasResponse>,
+    tipoFilter?: string,
+    search?: string
+) => {
+    try {
+        // Cargar primera página para obtener el total
+        const firstPage = await getAllVentasFn(1, tipoFilter, search)
+        const totalPages = Math.ceil(firstPage.count / 20)
+        
+        // Cargar todas las páginas
+        const allVentas: Venta[] = [...firstPage.results]
+        
+        for (let page = 2; page <= totalPages; page++) {
+            const pageData = await getAllVentasFn(page, tipoFilter, search)
+            allVentas.push(...pageData.results)
+        }
+        
+        return allVentas
+    } catch (error) {
+        console.error('Error al exportar todas las ventas:', error)
+        throw error
+    }
+}

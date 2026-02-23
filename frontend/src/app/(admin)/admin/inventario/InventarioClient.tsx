@@ -2,25 +2,25 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react"
 import dynamic from "next/dynamic"
-import { useAdminTheme } from "@/components/admin/hooks/useAdminTheme"
-import { Modal } from "@/components/admin/ui/Modal"
-import { Chip } from "@/components/admin/ui/Chip"
-import { KPI } from "@/components/admin/sections/common/KPI"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
+import { Modal } from "@/features/admin/ui/Modal"
+import { Chip } from "@/features/admin/ui/Chip"
+import { KPI } from "@/features/admin/sections/common/KPI"
 import { ArrowDownToLine, ArrowUpFromLine, Activity, DollarSign, AlertTriangle, ChevronDown, ChevronRight } from "lucide-react"
-import type { MovimientoInventario, PaginatedMovimientos } from "@/api/inventario"
-import { getMovimientos } from "@/api/inventario"
-import type { Refaccion, Categoria } from "@/api/productos"
-import { formatNumber, formatCurrency } from "@/components/admin/utils/format"
-import InventarioHeader, { type InventarioTab } from "@/components/admin/inventario/InventarioHeader"
-import MovimientosTable from "@/components/admin/inventario/MovimientosTable"
-import Pagination from "@/components/ui/navigation/Pagination"
-import EntradaForm from "@/components/admin/inventario/EntradaForm"
-import SalidaForm from "@/components/admin/inventario/SalidaForm"
-import DevolucionForm from "@/components/admin/inventario/DevolucionForm"
-import RefaccionSearchDrawer from "@/components/admin/inventario/RefaccionSearchDrawer"
+import type { MovimientoInventario, PaginatedMovimientos } from "@/features/admin/inventario-api"
+import { getMovimientos } from "@/features/admin/inventario-api"
+import type { Refaccion, Categoria } from "@/features/catalog/api"
+import { formatNumber, formatCurrency } from "@/features/admin/utils/format"
+import InventarioHeader, { type InventarioTab } from "@/features/admin/inventario/InventarioHeader"
+import MovimientosTable from "@/features/admin/inventario/MovimientosTable"
+import Pagination from "@/shared/ui/navigation/Pagination"
+import EntradaForm from "@/features/admin/inventario/EntradaForm"
+import SalidaForm from "@/features/admin/inventario/SalidaForm"
+import DevolucionForm from "@/features/admin/inventario/DevolucionForm"
+import RefaccionSearchDrawer from "@/features/admin/inventario/RefaccionSearchDrawer"
 
 const MovimientosChart = dynamic(
-    () => import("@/components/admin/inventario/MovimientosChart"),
+    () => import("@/features/admin/inventario/MovimientosChart"),
     { ssr: false }
 )
 

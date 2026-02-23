@@ -1,4 +1,4 @@
-import { getAllServices } from "@/api/services"
+import { getAllServices } from "@/features/services/api"
 import ServicesPageClient from "@/app/(admin)/admin/servicios/ServicesPageClient"
 
 export const dynamic = 'force-dynamic'

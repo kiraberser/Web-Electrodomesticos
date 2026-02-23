@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { getFavoritosAction } from "@/actions/favoritos"
-import FavoritosList from "@/components/favoritos/FavoritosList"
-import FavoritosSync from "@/components/favoritos/FavoritosSync"
+import { getFavoritosAction } from "@/features/favorites/actions"
+import FavoritosList from "@/features/favorites/FavoritosList"
+import FavoritosSync from "@/features/favorites/FavoritosSync"
 import { Heart } from "lucide-react"
 
 export const dynamic = 'force-dynamic'

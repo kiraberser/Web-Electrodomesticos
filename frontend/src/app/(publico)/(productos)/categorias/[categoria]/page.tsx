@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation"
-import { categories as CATEGORIES } from "@/data/category"
-import { getRefaccionesByCategoria, type Refaccion } from "@/api/productos"
-import { type Product, ProductType, type Brand } from "@/data/products"
-import CategoryView from "@/components/product/CategoryView"
+import { categories as CATEGORIES } from "@/shared/data/category"
+import { getRefaccionesByCategoria, type Refaccion } from "@/features/catalog/api"
+import { type Product, ProductType, type Brand } from "@/shared/data/products"
+import CategoryView from "@/features/catalog/CategoryView"
 import type { Metadata } from "next"
 
 /**

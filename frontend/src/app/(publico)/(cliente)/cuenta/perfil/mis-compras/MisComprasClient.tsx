@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import ComprasList from "@/components/compras/ComprasList"
-import ComprasPagination from "@/components/compras/ComprasPagination"
-import { obtenerMisComprasAction } from "@/actions/compras"
-import type { Pedido } from "@/api/pedidos"
+import ComprasList from "@/features/purchases/ComprasList"
+import ComprasPagination from "@/features/purchases/ComprasPagination"
+import { obtenerMisComprasAction } from "@/features/purchases/actions"
+import type { Pedido } from "@/features/orders/api"
 import { Package, Loader2 } from "lucide-react"
 
 interface MisComprasClientProps {
