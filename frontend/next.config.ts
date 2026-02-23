@@ -50,7 +50,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    
+    optimizePackageImports: ['lucide-react', 'recharts'],
   }
 };
 
