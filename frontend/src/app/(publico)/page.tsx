@@ -6,6 +6,7 @@ import TrustBar from '@/features/home/TrustBar'
 import BrandsBar from '@/features/home/BrandsBar'
 import RepairBlogSection from '@/features/home/RepairBlogSection'
 import FadeInSection from '@/features/home/FadeInSection'
+import { company } from '@/shared/data/company'
 
 const HeroCarousel = dynamic(
   () => import('@/features/home/HeroCarousel'),
@@ -37,9 +38,62 @@ const ProductRow = dynamic(
   { loading: () => <div className="h-96 animate-pulse bg-white" /> },
 )
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  name: company.name,
+  description: company.description,
+  url: 'https://refaccionariavega.com',
+  telephone: '+522323216694',
+  image: 'https://refaccionariavega.com/logo.png',
+  priceRange: '$$',
+  currenciesAccepted: 'MXN',
+  paymentAccepted: 'Efectivo, Tarjeta de crédito, Tarjeta de débito',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Col. Centro, Frente a Dominios',
+    addressLocality: 'Martínez de la Torre',
+    addressRegion: 'Veracruz de Ignacio de la Llave',
+    postalCode: '93600',
+    addressCountry: 'MX',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: '20.0667',
+    longitude: '-97.0500',
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:00',
+      closes: '19:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Saturday'],
+      opens: '09:00',
+      closes: '14:00',
+    },
+  ],
+  sameAs: [],
+}
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Refaccionaria Vega',
+  url: 'https://refaccionariavega.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://refaccionariavega.com/categorias?search={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+}
+
 export const metadata = {
-  title: 'Refaccionaria Vega - Electrodomésticos y Refacciones',
-  description: 'Encuentra las mejores refacciones y electrodomésticos para tu hogar. Calidad garantizada y envíos a toda la república mexicana.',
+  title: 'Refaccionaria Vega — Refacciones y Electrodomésticos',
+  description: 'Refacciones y electrodomésticos de calidad en Martínez de la Torre, Veracruz. Envío a toda la república.',
 }
 
 export default async function HomePage() {
@@ -50,43 +104,28 @@ export default async function HomePage() {
   const bestSellers = apiProducts.bestSellers.length > 0 ? apiProducts.bestSellers : getBestSellers()
   const newArrivals = apiProducts.newArrivals.length > 0 ? apiProducts.newArrivals : getNewArrivals()
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: 'Refaccionaria Vega',
-    description: 'Refacciones y electrodomésticos de calidad en Martínez de la Torre, Veracruz.',
-    url: 'https://refaccionariavega.com',
-    telephone: '+52-232-324-0000',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Martínez de la Torre',
-      addressLocality: 'Martínez de la Torre',
-      addressRegion: 'Veracruz',
-      addressCountry: 'MX',
-    },
-    priceRange: '$$',
-    openingHours: 'Mo-Sa 09:00-19:00',
-    sameAs: [],
-  }
-
   return (
     <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+
+      <h1 className="sr-only">
+        Refacciones para Electrodomésticos en Martínez de la Torre, Veracruz
+      </h1>
 
       {/* 1. Banners promocionales */}
       <HeroCarousel slides={slides} />
 
-      <FadeInSection>
-        <TrustBar />
-      </FadeInSection>
+      <TrustBar />
 
       {/* 2. Categorías — carousel infinito */}
-      <FadeInSection>
-        <CategoryStrip />
-      </FadeInSection>
+      <CategoryStrip />
 
       {/* 3. Ofertas del día con countdown */}
       <FadeInSection>

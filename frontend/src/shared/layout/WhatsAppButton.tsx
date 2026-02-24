@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 
 const PHONE = '522323216694'
-const DEFAULT_MESSAGE = 'Hola, me gustaría obtener información sobre sus productos y refacciones en electromesticos.'
+const DEFAULT_MESSAGE = 'Hola, me gustaría obtener información sobre sus productos y refacciones en electrodomésticos.'
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -15,7 +15,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export default function WhatsAppButton() {
-  const [showTooltip, setShowTooltip] = useState(true)
+  const [showTooltip, setShowTooltip] = useState(false)
   
 
   // Auto-show tooltip after 4s, once per session

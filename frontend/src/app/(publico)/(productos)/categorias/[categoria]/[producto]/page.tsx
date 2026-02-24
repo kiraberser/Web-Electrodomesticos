@@ -5,13 +5,21 @@ import { checkFavoritoAction } from "@/features/favorites/actions"
 import ProductDetailClient from "./ProductDetailClient"
 import type { Metadata } from "next"
 
-// generateMetadata removed to fix Next.js 16 build issue
-// Using static metadata instead
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-    title: 'Producto - Refaccionaria Vega',
-    description: 'Detalles del producto',
+export async function generateMetadata(
+  { params }: { params: Promise<{ categoria: string; producto: string }> }
+): Promise<Metadata> {
+  const { producto, categoria } = await params
+  const nombre = decodeURIComponent(producto)
+  return {
+    title: nombre,
+    description: `Refacción ${nombre} disponible en Refaccionaria Vega, Martínez de la Torre. Envío a toda la república.`,
+    openGraph: {
+      title: nombre,
+      url: `https://refaccionariavega.com/categorias/${categoria}/${producto}`,
+    },
+  }
 }
 
 export default async function ProductoPage({
@@ -50,11 +58,55 @@ export default async function ProductoPage({
         }
     }
 
+    const productSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: refaccion.nombre,
+        sku: refaccion.codigo_parte,
+        brand: { '@type': 'Brand', name: refaccion.marca },
+        image: refaccion.imagen,
+        offers: {
+            '@type': 'Offer',
+            priceCurrency: 'MXN',
+            price: Number(refaccion.precio).toString(),
+            availability: refaccion.existencias > 0
+                ? 'https://schema.org/InStock'
+                : 'https://schema.org/OutOfStock',
+            itemCondition: refaccion.estado === 'NVO'
+                ? 'https://schema.org/NewCondition'
+                : refaccion.estado === 'UBS'
+                ? 'https://schema.org/UsedCondition'
+                : 'https://schema.org/RefurbishedCondition',
+            seller: { '@type': 'Organization', name: 'Refaccionaria Vega' },
+            url: `https://refaccionariavega.com/categorias/${categoriaParam}/${encodeURIComponent(refaccion.nombre)}`,
+        },
+    }
+
+    const breadcrumbSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://refaccionariavega.com/' },
+            { '@type': 'ListItem', position: 2, name: categoriaParam, item: `https://refaccionariavega.com/categorias/${categoriaParam}` },
+            { '@type': 'ListItem', position: 3, name: refaccion.nombre },
+        ],
+    }
+
     return (
-        <ProductDetailClient
-            categoria={categoriaParam}
-            refaccion={refaccion}
-            initialIsFavorite={isFavorite}
-        />
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <ProductDetailClient
+                categoria={categoriaParam}
+                refaccion={refaccion}
+                initialIsFavorite={isFavorite}
+            />
+        </>
     )
 }

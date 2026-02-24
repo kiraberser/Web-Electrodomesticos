@@ -7,28 +7,15 @@ const nextConfig: NextConfig = {
   //   turbo: {}
   // },
   images: {
+    minimumCacheTTL: 86400,
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'imgs.search.brave.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'elektra.vtexassets.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'google.com',
-        pathname: '/**',
-      },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
         pathname: '/**',
       },
-            {
+      {
         protocol: 'https',
         hostname: 'unsplash.com',
         pathname: '/**',
@@ -50,8 +37,29 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts'],
-  }
+    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion'],
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+    ]
+  },
+  async redirects() {
+    return [{ source: '/about-us', destination: '/nosotros', permanent: true }]
+  },
 };
 
 export default nextConfig;

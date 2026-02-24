@@ -1,41 +1,16 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { categories } from '@/shared/data/category'
 
-function useVisibleCount() {
-  const [count, setCount] = useState(2)
-
-  useEffect(() => {
-    const breakpoints = [
-      window.matchMedia('(min-width: 1280px)'),  // xl: 6
-      window.matchMedia('(min-width: 1024px)'),  // lg: 5
-      window.matchMedia('(min-width: 768px)'),   // md: 4
-      window.matchMedia('(min-width: 640px)'),   // sm: 3
-    ]
-
-    const update = () => {
-      if (breakpoints[0].matches) setCount(6)
-      else if (breakpoints[1].matches) setCount(5)
-      else if (breakpoints[2].matches) setCount(4)
-      else if (breakpoints[3].matches) setCount(3)
-      else setCount(2)
-    }
-
-    update()
-    breakpoints.forEach((mq) => mq.addEventListener('change', update))
-    return () => breakpoints.forEach((mq) => mq.removeEventListener('change', update))
-  }, [])
-
-  return count
-}
+// Fixed visible count per breakpoint (matches Tailwind classes below — no JS measurement needed)
+const VISIBLE_COUNT = 6
 
 export default function CategoryStrip() {
   const [startIndex, setStartIndex] = useState(0)
-  const visibleCount = useVisibleCount()
 
   const prev = useCallback(() => {
     setStartIndex((i) => (i - 1 + categories.length) % categories.length)
@@ -45,7 +20,7 @@ export default function CategoryStrip() {
     setStartIndex((i) => (i + 1) % categories.length)
   }, [])
 
-  const visible = Array.from({ length: visibleCount }, (_, offset) => {
+  const visible = Array.from({ length: VISIBLE_COUNT }, (_, offset) => {
     const idx = (startIndex + offset) % categories.length
     return categories[idx]
   })
@@ -91,10 +66,7 @@ export default function CategoryStrip() {
           </button>
 
           {/* Cards grid */}
-          <div
-            className="grid gap-3 sm:gap-4 px-6 sm:px-8"
-            style={{ gridTemplateColumns: `repeat(${visibleCount}, minmax(0, 1fr))` }}
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 px-6 sm:px-8">
             {visible.map((cat, i) => (
               <Link
                 key={`${cat.id}-${i}`}

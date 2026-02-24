@@ -1,6 +1,6 @@
 export const brands_data = [
     {
-        "name": "Simens",
+        "name": "Siemens",
         "logo": "/images/brands/Siemens.webp"
     },
     {

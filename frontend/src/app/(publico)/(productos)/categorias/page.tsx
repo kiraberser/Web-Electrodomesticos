@@ -21,7 +21,7 @@ export default function CategoriasPage() {
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">Categorías</h1>
                         <p className="mt-2 max-w-prose text-gray-600">
-                            Explora nuestra línea de refacciones 
+                            Explora nuestra línea de refacciones para electrodomésticos del hogar. Piezas originales con garantía.
                         </p>
                     </div>
                 </div>

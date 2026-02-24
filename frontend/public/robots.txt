@@ -34,6 +34,9 @@ Allow: /contacto
 # Configuración para bots específicos
 User-agent: Googlebot
 Allow: /
+Disallow: /admin/
+Disallow: /cuenta/
+Disallow: /api/
 
 User-agent: Bingbot
 Allow: /
@@ -46,5 +49,5 @@ User-agent: SemrushBot
 Disallow: /
 
 # Sitemap location
-Sitemap: http://localhost:3000/sitemap.xml
+Sitemap: https://refaccionariavega.com/sitemap.xml
 

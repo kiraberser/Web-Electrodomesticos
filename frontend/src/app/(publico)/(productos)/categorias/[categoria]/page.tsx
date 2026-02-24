@@ -9,11 +9,15 @@ import type { Metadata } from "next"
  * Transforma una refacción del backend a un Product del frontend
  */
 
-// generateMetadata removed to fix Next.js 16 build issue
-// Using static metadata instead
-export const metadata: Metadata = {
-    title: 'Categorías - Refaccionaria Vega',
-    description: 'Explora nuestras categorías de refacciones',
+export async function generateMetadata(
+  { params }: { params: Promise<{ categoria: string }> }
+): Promise<Metadata> {
+  const { categoria } = await params
+  const cat = CATEGORIES.find((c) => c.key === categoria)
+  return {
+    title: cat ? `${cat.label} — Refacciones` : 'Categorías',
+    description: cat?.description ?? 'Explora nuestras categorías de refacciones para electrodomésticos.',
+  }
 }
 
 function transformRefaccionToProduct(refaccion: Refaccion, categoryKey: string): Product {
@@ -39,7 +43,7 @@ function transformRefaccionToProduct(refaccion: Refaccion, categoryKey: string):
 export default async function CategoriaPage({
     params,
 }: {
-    params: { categoria: string }
+    params: Promise<{ categoria: string }>
 }) {
     const { categoria } = await params
     const categoryParam = decodeURIComponent(categoria ?? "")

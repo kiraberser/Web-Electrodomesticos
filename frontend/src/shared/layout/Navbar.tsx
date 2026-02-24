@@ -42,7 +42,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
             const query = searchQuery.trim()
             setSearchQuery("")
             setIsMenuOpen(false)
-            router.push(`/productos?search=${encodeURIComponent(query)}`)
+            router.push(`/categorias?search=${encodeURIComponent(query)}`)
         }
     }, [searchQuery, router])
 
