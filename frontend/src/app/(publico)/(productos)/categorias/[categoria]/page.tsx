@@ -62,10 +62,32 @@ export default async function CategoriaPage({
     const products: Product[] = (refaccionesData.refacciones || [])
         .map(refaccion => transformRefaccionToProduct(refaccion, category.key))
 
+    const itemListSchema = products.length > 0 ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: `${category.label} — Refacciones`,
+        description: category.description,
+        numberOfItems: products.length,
+        itemListElement: products.slice(0, 20).map((p, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            url: `https://refaccionariavega.com/categorias/${category.key}/${encodeURIComponent(p.name)}`,
+            name: p.name,
+        })),
+    } : null
+
     return (
-        <CategoryView
-            categoryKey={category.key}
-            products={products}
-        />
+        <>
+            {itemListSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+                />
+            )}
+            <CategoryView
+                categoryKey={category.key}
+                products={products}
+            />
+        </>
     )
 }

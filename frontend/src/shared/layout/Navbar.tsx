@@ -98,13 +98,13 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                             aria-label="Ir a página principal"
                         >
                             <div className="hidden sm:block">
-                                <h1 className="text-xl font-bold text-gray-800 group-hover:text-[#0A3981] transition-colors duration-150">
+                                <span className="text-xl font-bold text-gray-800 group-hover:text-[#0A3981] transition-colors duration-150">
                                     {company.name}
-                                </h1>
+                                </span>
                                 <p className="text-xs text-gray-500 leading-tight">{company.tagline}</p>
                             </div>
                             <div className="sm:hidden">
-                                <h1 className="text-lg font-bold text-gray-800">Vega</h1>
+                                <span className="text-lg font-bold text-gray-800">Vega</span>
                             </div>
                         </Link>
 

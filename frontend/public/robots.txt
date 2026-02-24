@@ -48,6 +48,31 @@ Disallow: /
 User-agent: SemrushBot
 Disallow: /
 
+# AI crawlers — permitir indexación pública
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /cuenta/
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+Disallow: /cuenta/
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /cuenta/
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /cuenta/
+Disallow: /api/
+
 # Sitemap location
 Sitemap: https://refaccionariavega.com/sitemap.xml
 

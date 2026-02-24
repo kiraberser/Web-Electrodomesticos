@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/` },
     { url: `${BASE_URL}/categorias` },
-    { url: `${BASE_URL}/about-us` },
+    { url: `${BASE_URL}/nosotros` },
     { url: `${BASE_URL}/contacto` },
     { url: `${BASE_URL}/blog` },
   ]

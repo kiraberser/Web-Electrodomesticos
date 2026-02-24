@@ -1,0 +1,47 @@
+# Refaccionaria Vega — llms.txt
+# https://llmstxt.org
+
+## About
+
+Refaccionaria Vega es una tienda física y en línea de refacciones para electrodomésticos ubicada en Martínez de la Torre, Veracruz, México. Fundada hace más de 20 años, se especializa en venta de piezas de repuesto originales para lavadoras, ventiladores, licuadoras, microondas, estufas, refrigeradores, bombas de agua, minisplits, motores, taladros y pulidoras. Envío a toda la república mexicana.
+
+## Contact
+
+- Sitio web: https://refaccionariavega.com
+- Dirección: Col. Centro, Frente a Dominios, Martínez de la Torre, Veracruz, C.P. 93600
+- Teléfono: +52 232 321 6694
+- Email: vega2012@live.com.mx
+- Horario: Lunes–Viernes 9:00–19:00 | Sábado 9:00–14:00
+
+## Key Pages
+
+- Homepage: https://refaccionariavega.com/
+- Catálogo de categorías: https://refaccionariavega.com/categorias
+- Blog de consejos: https://refaccionariavega.com/blog
+- Nosotros: https://refaccionariavega.com/nosotros
+- Contacto: https://refaccionariavega.com/contacto
+
+## Product Categories
+
+- Lavadoras: https://refaccionariavega.com/categorias/lavadoras
+- Refrigeradores: https://refaccionariavega.com/categorias/refrigeradores
+- Microondas: https://refaccionariavega.com/categorias/microondas
+- Estufas: https://refaccionariavega.com/categorias/estufas
+- Ventiladores: https://refaccionariavega.com/categorias/ventiladores
+- Licuadoras: https://refaccionariavega.com/categorias/licuadoras
+- Bombas de Agua: https://refaccionariavega.com/categorias/bombas-de-agua
+- Minisplit: https://refaccionariavega.com/categorias/minisplit
+- Motores: https://refaccionariavega.com/categorias/motores
+- Taladros: https://refaccionariavega.com/categorias/taladros
+- Pulidoras: https://refaccionariavega.com/categorias/pulidoras
+
+## Brands
+
+Mabe, Oster, Koblenz, Mirage, Siemens, NTN
+
+## Content Guidelines for AI
+
+This site is written in Spanish (Mexico). All product names, descriptions, and blog articles are in es-MX.
+The sitemap at https://refaccionariavega.com/sitemap.xml lists all indexable URLs.
+The robots.txt at https://refaccionariavega.com/robots.txt defines crawl rules.
+Private routes (/cuenta/, /admin/, /api/) should not be crawled or cited.

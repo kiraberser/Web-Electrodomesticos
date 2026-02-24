@@ -28,7 +28,6 @@ export const metadata: Metadata = {
     default: 'Refaccionaria Vega — Refacciones y Electrodomésticos',
   },
   description: 'Refacciones y electrodomésticos de calidad en Martínez de la Torre, Veracruz. Envío a toda la república.',
-  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'es_MX',

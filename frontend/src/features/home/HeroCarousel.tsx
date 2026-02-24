@@ -97,9 +97,9 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
           {/* Content */}
           <div className="relative h-full container mx-auto px-4 flex items-center">
             <div className="max-w-lg">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
                 {slide.title}
-              </h1>
+              </h2>
               <p className="text-base md:text-lg text-gray-200 mb-6 leading-relaxed">
                 {slide.subtitle}
               </p>
