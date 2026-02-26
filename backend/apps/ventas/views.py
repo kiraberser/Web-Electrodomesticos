@@ -10,17 +10,21 @@ from apps.pedidos.pagination import PedidoPagination
 from .models import Ventas, VentasServicios, Devolucion
 from .serializers import VentasSerializer, VentasServiciosSerializer, DevolucionSerializer
 # Create your views here.
-class VentasViewSet(viewsets.ReadOnlyModelViewSet):
+class VentasViewSet(viewsets.ModelViewSet):
     """
-    ViewSet para manejar las ventas de refacciones.
-    Permite listar, crear, actualizar y eliminar ventas.
+    ViewSet para manejar las ventas de refacciones (POS).
+    Lectura: usuarios autenticados. Escritura: solo admin.
     """
     queryset = Ventas.objects.all()
     serializer_class = VentasSerializer
-    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['refaccion__nombre', 'marca__nombre']
     ordering_fields = ['fecha_venta', 'total']
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -28,6 +32,14 @@ class VentasViewSet(viewsets.ReadOnlyModelViewSet):
         if not user or user.is_staff or user.is_superuser:
             return qs
         return qs.filter(usuario=user)
+
+    def perform_create(self, serializer):
+        from apps.productos.models import Marca
+        refaccion = serializer.validated_data.get('refaccion')
+        marca = None
+        if refaccion and refaccion.marca:
+            marca, _ = Marca.objects.get_or_create(nombre=refaccion.marca)
+        serializer.save(usuario=self.request.user, marca=marca)
 
 class VentasServiciosViewSet(viewsets.ModelViewSet):
     """

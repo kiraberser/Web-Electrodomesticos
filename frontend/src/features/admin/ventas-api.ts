@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { getToken } from '@/shared/lib/utilscookies';
+import type { Refaccion } from '@/features/catalog/api';
 
 const url = process.env.NEXT_PUBLIC_BASE_URL_API;
 
@@ -165,6 +166,47 @@ export const getEstadisticasVentas = async (
  * @param año - Año a consultar (default: año actual)
  * @param mes - Mes a consultar cuando tipo='dia' (default: mes actual)
  */
+// ─── POS ────────────────────────────────────────────────────────────────────
+
+export interface CreateVentaPayload {
+    refaccion: number
+    cantidad: number
+    precio_unitario: number
+}
+
+export interface VentaCreada {
+    id: number
+    total: string
+    refaccion_nombre: string
+}
+
+/** Busca refacciones por nombre para el POS (requiere token de admin) */
+export const searchRefaccionesForPOS = async (query: string): Promise<Refaccion[]> => {
+    try {
+        const response = await axios.get(`${url}/productos/refacciones/`, {
+            params: { search: query, page_size: 20 },
+            headers: { Authorization: `Bearer ${await getToken()}` },
+        })
+        const data = response.data
+        return data.results ?? data
+    } catch (error: unknown) {
+        console.error('Error buscando refacciones:', error)
+        return []
+    }
+}
+
+/** Crea un registro de venta de refacción (POS) */
+export const createVentaRefaccion = async (payload: CreateVentaPayload): Promise<VentaCreada> => {
+    const response = await axios.post(
+        `${url}/ventas/registros-ventas/`,
+        payload,
+        { headers: { Authorization: `Bearer ${await getToken()}` } },
+    )
+    return response.data
+}
+
+// ─── GRÁFICO ─────────────────────────────────────────────────────────────────
+
 export const getGraficoVentas = async (
     tipo: 'dia' | 'mes' = 'dia',
     año?: number,

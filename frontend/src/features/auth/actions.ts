@@ -9,43 +9,55 @@ import { ActionState, formatZodErrors, getErrorMessage } from "@/shared/lib/acti
 
 export type { ActionState }
 
-export const actionLoginUser = async (formData: LoginUserType) => {
-    const [response, cookieStore] = await Promise.all([
-        loginUser(formData),
-        cookies()
-    ])
-    
-    // Determinar si estamos en desarrollo
-    const isDevelopment = process.env.NODE_ENV === 'development'
-    
-    cookieStore.set({
-        name: 'username',
-        value: response['usuario'],
-        path: '/',
-        maxAge: 60 * 60 * 24,
-        secure: !isDevelopment, // false en desarrollo, true en producción
-        sameSite: isDevelopment ? 'lax' : 'lax'
-    })
-    cookieStore.set({
-        name: 'access_cookie',
-        value: response['access'],
-        httpOnly: true,
-        path: '/',
-        secure: !isDevelopment, // false en desarrollo, true en producción
-        sameSite: isDevelopment ? 'lax' : 'lax',
-        maxAge: 60 * 15
-    })
-    cookieStore.set({
-        name: 'refresh_cookie',
-        value: response['refresh'],
-        httpOnly: true,
-        path: '/',
-        secure: !isDevelopment, // false en desarrollo, true en producción
-        sameSite: isDevelopment ? 'lax' : 'lax',
-        maxAge: 60 * 60 * 24
-    })
+export const actionLoginUser = async (formData: LoginUserType): Promise<ActionState> => {
+    try {
+        const [response, cookieStore] = await Promise.all([
+            loginUser(formData),
+            cookies()
+        ])
 
-    return { success: true }
+        const isDevelopment = process.env.NODE_ENV === 'development'
+
+        cookieStore.set({
+            name: 'username',
+            value: response['usuario'],
+            path: '/',
+            maxAge: 60 * 60 * 24,
+            secure: !isDevelopment,
+            sameSite: 'lax',
+        })
+        cookieStore.set({
+            name: 'access_cookie',
+            value: response['access'],
+            httpOnly: true,
+            path: '/',
+            secure: !isDevelopment,
+            sameSite: 'lax',
+            maxAge: 60 * 15,
+        })
+        cookieStore.set({
+            name: 'refresh_cookie',
+            value: response['refresh'],
+            httpOnly: true,
+            path: '/',
+            secure: !isDevelopment,
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24,
+        })
+
+        return { success: true, error: null }
+    } catch (error: unknown) {
+        // Detect network errors (backend not reachable)
+        if (
+            error &&
+            typeof error === 'object' &&
+            'code' in error &&
+            (error as { code: string }).code === 'ECONNREFUSED'
+        ) {
+            return { success: false, error: 'Servicio no disponible. Intente más tarde.' }
+        }
+        return { success: false, error: 'Correo o contraseña incorrectos' }
+    }
 }
 
 export const actionCreateUser = async (formData: CreateUserType) => {

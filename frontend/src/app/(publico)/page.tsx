@@ -2,10 +2,14 @@ import dynamic from 'next/dynamic'
 import { slides } from '@/shared/data/carouselData'
 import { getDealProducts, getBestSellers, getNewArrivals } from '@/shared/data/products'
 import { getHomepageProducts } from '@/features/home/api'
-import TrustBar from '@/features/home/TrustBar'
 import BrandsBar from '@/features/home/BrandsBar'
 import RepairBlogSection from '@/features/home/RepairBlogSection'
 import FadeInSection from '@/features/home/FadeInSection'
+
+const TrustBar = dynamic(
+  () => import('@/features/home/TrustBar'),
+  { loading: () => <div className="h-14 sm:h-20 bg-[#0A3981]" /> },
+)
 import { company } from '@/shared/data/company'
 
 const HeroCarousel = dynamic(

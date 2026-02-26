@@ -5,11 +5,22 @@ class VentasSerializer(serializers.ModelSerializer):
     refaccion_nombre = serializers.ReadOnlyField(source='refaccion.nombre')
     marca_nombre = serializers.ReadOnlyField(source='marca.nombre')
     usuario_username = serializers.ReadOnlyField(source='usuario.username')
-    
+
     class Meta:
         model = Ventas
-        fields = ['id', 'usuario_username', 'refaccion_nombre', 'marca_nombre', 'cantidad', 'precio_unitario', 'total', 'fecha_venta']
-        read_only_fields = ['precio_unitario', 'total']
+        fields = [
+            'id', 'usuario', 'usuario_username',
+            'marca', 'refaccion', 'refaccion_nombre', 'marca_nombre',
+            'cantidad', 'precio_unitario', 'total', 'fecha_venta',
+        ]
+        read_only_fields = ['total', 'fecha_venta', 'usuario', 'marca']
+
+    def validate(self, attrs):
+        cantidad = attrs.get('cantidad')
+        precio_unitario = attrs.get('precio_unitario')
+        if cantidad is not None and precio_unitario is not None:
+            attrs['total'] = cantidad * precio_unitario
+        return attrs
         
 class VentasServiciosSerializer(serializers.ModelSerializer):
     servicio_aparato = serializers.ReadOnlyField(source='servicio.aparato')

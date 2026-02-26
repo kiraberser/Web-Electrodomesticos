@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
-import { AnimatePresence, motion } from 'framer-motion'
 
 const slogans = [
   'Más de 20 años cuidando tu hogar',
@@ -41,16 +39,8 @@ export default function SloganBanner() {
 
   return (
     <section className="relative bg-[#0A3981] overflow-hidden">
-      {/* Background image — visible on all screen sizes */}
       <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=1920"
-          alt="Taller de refacciones"
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
-        {/* Mobile: full overlay to keep text readable. Desktop: gradient from right */}
+        {/* Mobile: full overlay. Desktop: gradient from right */}
         <div className="absolute inset-0 bg-[#0A3981]/80 md:bg-gradient-to-r md:from-transparent md:to-[#0A3981]/90" />
       </div>
 
@@ -65,18 +55,13 @@ export default function SloganBanner() {
               <p className="text-[#E38E49] text-sm font-semibold uppercase tracking-widest mb-4">
                 Refaccionaria Vega
               </p>
-              <AnimatePresence mode="wait">
-                <motion.h2
-                  key={current}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight"
-                >
-                  {slogans[current]}
-                </motion.h2>
-              </AnimatePresence>
+              {/* key forces remount on change, restarting the CSS animation */}
+              <h2
+                key={current}
+                className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight animate-slogan-in"
+              >
+                {slogans[current]}
+              </h2>
               <div className="mt-6 flex items-center gap-2 justify-center md:justify-start">
                 {slogans.map((_, i) => (
                   <button

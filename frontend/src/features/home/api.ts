@@ -51,7 +51,7 @@ function mapRefaccionToProduct(
     brand: (refaccion.marca || 'Sin marca') as Product['brand'],
     type: 'Pedestal' as Product['type'],
     category: categoriaNombre,
-    image: refaccion.imagen || '/placeholder.svg?height=300&width=300',
+    image: refaccion.imagen || '/placeholder.svg',
     shortDescription: refaccion.descripcion || '',
     specs: [],
     inStock: (refaccion.existencias ?? 0) > 0,

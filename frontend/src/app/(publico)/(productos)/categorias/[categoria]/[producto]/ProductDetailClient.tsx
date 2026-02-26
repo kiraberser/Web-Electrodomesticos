@@ -233,7 +233,7 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
         brand: refaccion.marca as Brand,
         type: refaccion.categoria_nombre as ProductType,
         category: categoria,
-        image: refaccion.imagen || "/placeholder.svg?height=640&width=640",
+        image: refaccion.imagen || "/placeholder.svg",
         shortDescription: refaccion.descripcion || "",
         specs: [
             { label: "Marca", value: refaccion.marca },

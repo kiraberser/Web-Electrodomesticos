@@ -3,7 +3,7 @@ export type Brand = "Azteca" | "Oster" | "Recco" | "IndustrialPro" | "VegaTech" 
 export type ProductTag = "oferta" | "mas_vendido" | "nuevo"
 
 export interface Product {
-  id: string
+  id: string ,
   slug: string
   discount?: number | null
   name: string
@@ -25,13 +25,13 @@ export const CATEGORIES: Array<{ key: string; label: string; description: string
     key: "ventiladores",
     label: "Ventiladores",
     description: "Enfriamiento eficiente para hogar, industria y comercios",
-    cover: "/placeholder.svg?height=480&width=960",
+    cover: "/placeholder.svg",
   },
   {
     key: "refacciones",
     label: "Refacciones",
     description: "Refacciones originales para electrodomésticos y ventilación",
-    cover: "/placeholder.svg?height=480&width=960",
+    cover: "/placeholder.svg",
   },
 ]
 
@@ -50,7 +50,7 @@ export const products: Product[] = [
     brand: "Azteca",
     type: "Pedestal",
     category: "ventiladores",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Flujo de aire potente con 3 velocidades, ideal para hogar u oficina.",
     specs: [
       { label: "Velocidades", value: "3" },
@@ -71,7 +71,7 @@ export const products: Product[] = [
     brand: "VegaTech",
     type: "Pedestal",
     category: "refacciones",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Motor de reemplazo para ventiladores pedestal y pared.",
     specs: [
       { label: "Potencia", value: "60W" },
@@ -92,7 +92,7 @@ export const products: Product[] = [
     brand: "Mabe",
     type: "Pedestal",
     category: "lavadoras",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Lavadora automática con sistema Aqua Saver para ahorro de agua.",
     specs: [
       { label: "Capacidad", value: "16 kg" },
@@ -113,7 +113,7 @@ export const products: Product[] = [
     brand: "Mirage",
     type: "Pared",
     category: "minisplit",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Aire acondicionado inverter con WiFi y filtro antibacterial.",
     specs: [
       { label: "Capacidad", value: "1 Tonelada" },
@@ -134,7 +134,7 @@ export const products: Product[] = [
     brand: "Oster",
     type: "Techo",
     category: "ventiladores",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Diseño silencioso con alto desempeño y acabado premium.",
     specs: [
       { label: "Velocidades", value: "5" },
@@ -153,7 +153,7 @@ export const products: Product[] = [
     brand: "Azteca",
     type: "Pedestal",
     category: "refacciones",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Aspa de repuesto balanceada para 18 pulgadas.",
     specs: [
       { label: "Diámetro", value: "18\"" },
@@ -172,7 +172,7 @@ export const products: Product[] = [
     brand: "Koblenz",
     type: "Pedestal",
     category: "licuadoras",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Licuadora de 10 velocidades con vaso de vidrio de 1.5L y cuchillas de acero.",
     specs: [
       { label: "Velocidades", value: "10" },
@@ -191,7 +191,7 @@ export const products: Product[] = [
     brand: "Koblenz",
     type: "Pedestal",
     category: "bombas-de-agua",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Bomba periférica de 1 HP para uso doméstico e industrial ligero.",
     specs: [
       { label: "Potencia", value: "1 HP" },
@@ -212,7 +212,7 @@ export const products: Product[] = [
     brand: "IndustrialPro",
     type: "Industrial",
     category: "ventiladores",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Para naves y talleres. Motor de alto torque y rejilla reforzada.",
     specs: [
       { label: "Flujo de aire", value: "Alta potencia" },
@@ -231,7 +231,7 @@ export const products: Product[] = [
     brand: "Recco",
     type: "Pared",
     category: "ventiladores",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Ahorra espacio con control frontal y oscilación amplia.",
     specs: [
       { label: "Velocidades", value: "3" },
@@ -250,7 +250,7 @@ export const products: Product[] = [
     brand: "Siemens",
     type: "Pedestal",
     category: "microondas",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Microondas con grill integrado, 23 litros y panel digital.",
     specs: [
       { label: "Capacidad", value: "23L" },
@@ -269,7 +269,7 @@ export const products: Product[] = [
     brand: "Mabe",
     type: "Pedestal",
     category: "refrigeradores",
-    image: "/placeholder.svg?height=640&width=640",
+    image: "/placeholder.svg",
     shortDescription: "Refrigerador compacto con congelador superior y acabado grafito.",
     specs: [
       { label: "Capacidad", value: "10 pies³" },

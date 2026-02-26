@@ -21,6 +21,6 @@ export const brands_data = [
     },
     {
         "name": "NTN",
-        "logo": "/images/brands/Ntn.webp"
+        "logo": "/images/brands/NtnNew.webp"
     },
 ]

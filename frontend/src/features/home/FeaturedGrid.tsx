@@ -66,7 +66,8 @@ function RankedCard({ product, rank }: { product: Product; rank: number }) {
               <Image
                 src={product.image}
                 alt={product.name}
-                fill
+                height={640}
+                width={640}
                 sizes="144px"
                 className="object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
               />

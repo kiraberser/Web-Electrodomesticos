@@ -29,7 +29,7 @@ function transformRefaccionToProduct(refaccion: Refaccion, categoryKey: string):
         brand: refaccion.marca as Brand,
         type: (refaccion.categoria_nombre || "Pedestal") as ProductType,
         category: categoryKey,
-        image: refaccion.imagen || '/placeholder.svg?height=640&width=640',
+        image: refaccion.imagen || '/placeholder.svg',
         shortDescription: refaccion.descripcion || '',
         specs: [
             { label: "Marca", value: refaccion.marca },

@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
-import { Search, ShoppingCart, Menu, X, User, ChevronDown, MapPin, Heart, Package, ShoppingBag, Truck } from "lucide-react"
+import { Search, ShoppingCart, Menu, X, User, ChevronDown, MapPin, Heart, Package, ShoppingBag, Truck, Wrench, Receipt } from "lucide-react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 
@@ -186,14 +186,32 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                                         Mi Perfil
                                                     </Link>
                                                     {username === "admin" && (
-                                                        <Link
-                                                            href="/admin/dashboard"
-                                                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
-                                                            onClick={() => setIsUserDropdownOpen(false)}
-                                                        >
-                                                            <LayoutDashboard className="w-4 h-4 mr-3 text-gray-400" />
-                                                            Dashboard
-                                                        </Link>
+                                                        <>
+                                                            <Link
+                                                                href="/admin/dashboard"
+                                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+                                                                onClick={() => setIsUserDropdownOpen(false)}
+                                                            >
+                                                                <LayoutDashboard className="w-4 h-4 mr-3 text-gray-400" />
+                                                                Dashboard
+                                                            </Link>
+                                                            <Link
+                                                                href="/admin/servicios"
+                                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+                                                                onClick={() => setIsUserDropdownOpen(false)}
+                                                            >
+                                                                <Wrench className="w-4 h-4 mr-3 text-gray-400" />
+                                                                Servicios / Clientes
+                                                            </Link>
+                                                            <Link
+                                                                href="/admin/pos"
+                                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+                                                                onClick={() => setIsUserDropdownOpen(false)}
+                                                            >
+                                                                <Receipt className="w-4 h-4 mr-3 text-gray-400" />
+                                                                Nueva Venta (POS)
+                                                            </Link>
+                                                        </>
                                                     )}
                                                     <div className="border-t border-gray-100 my-1"></div>
                                                     <Link
