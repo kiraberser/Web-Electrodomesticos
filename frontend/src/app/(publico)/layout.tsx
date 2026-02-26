@@ -7,6 +7,7 @@ import { AppChrome } from '@/shared/layout/AppChrome';
 import { Inter } from 'next/font/google';
 // Navbar y Footer se inyectan vía AppChrome según la ruta
 import { CartProvider } from '@/features/cart/CartContext';
+import { FavoritesProvider } from '@/features/favorites/FavoritesContext';
 import RouteModalGate from '@/shared/layout/RouteModalGate';
 import WhatsAppButton from '@/shared/layout/WhatsAppButton';
 import type { Metadata, Viewport } from 'next';
@@ -55,11 +56,13 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body className={`${inter.className} text-[#0A3981]`}>
         <CartProvider>
-          <AppChrome username={username || undefined}>
-            {children}
-          </AppChrome>
-          <RouteModalGate />
-          <WhatsAppButton />
+          <FavoritesProvider>
+            <AppChrome username={username || undefined}>
+              {children}
+            </AppChrome>
+            <RouteModalGate />
+            <WhatsAppButton />
+          </FavoritesProvider>
         </CartProvider>
       </body>
     </html>
