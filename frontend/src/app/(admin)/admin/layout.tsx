@@ -9,7 +9,7 @@ import { Toaster } from "@/features/admin/ui/Toaster";
 import { useToasts } from "@/features/admin/hooks/useToasts";
 import { AdminThemeProvider } from "@/features/admin/hooks/useAdminTheme";
 import type { DateRange, SectionKey, NavItem } from "@/features/admin/utils/types";
-import { LayoutDashboard, Package, ShoppingCart, Server, Book, Box, Store } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Server, Book, Box, Store, MonitorSmartphone } from "lucide-react";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -73,6 +73,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       ? "blog"
       : pathname?.includes("/inventario")
       ? "inventario"
+      : pathname?.includes("/pos")
+      ? "pos"
       : "overview";
 
     const navItems: NavItem[] = [
@@ -83,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       { key: "servicios", label: "Servicios", icon: Server },
       { key: "blog", label: "Blog", icon: Book },
       { key: "inventario", label: "Inventario", icon: Box },
+      { key: "pos", label: "POS", icon: MonitorSmartphone },
     ];
 
     const handleNavigate = (key: SectionKey) => {
@@ -93,6 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       if (key === "servicios") router.push("/admin/servicios");
       if (key === "blog") router.push("/admin/blog/create");
       if (key === "inventario") router.push("/admin/inventario");
+      if (key === "pos") router.push("/admin/pos");
     };
 
     return (
