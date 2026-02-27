@@ -22,9 +22,7 @@ export const getAllServices = async (page: number = 1, pageSize: number = 10, se
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
-        // Enable Next.js caching per URL
-        next: { revalidate: 60 },
-        cache: 'force-cache',
+        cache: 'no-store',
     })
 
     if (!res.ok) throw new Error('Failed to fetch services')
@@ -142,6 +140,16 @@ export const createServiceSale = async (payload: {
     }
 
     return { data: response.data, status: response.status };
+}
+
+export const patchServiceFields = async (id: string, fields: Record<string, unknown>) => {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('access_cookie')?.value
+    const res = await axios.patch(`${URL}/servicios/${id}/`, fields, {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    })
+    if (res.status !== 200) throw new Error('Failed to patch service')
+    return { data: res.data }
 }
 
 export const getServiceSaleByService = async (servicioId: string) => {

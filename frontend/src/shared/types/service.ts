@@ -66,6 +66,7 @@ export interface AdminServicePageItem {
     observaciones: string
     estado: "Pendiente" | "En Proceso" | "Reparado" | "Entregado" | "Cancelado"
     marca: number
+    estadoPago?: "Pendiente" | "Pagado" | "No Aplica"
 }
 
 export interface PaginationInfo {

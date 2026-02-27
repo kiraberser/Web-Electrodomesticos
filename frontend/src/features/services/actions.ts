@@ -1,14 +1,16 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { Service } from "@/shared/types/service"
 import { serviceSchema } from "@/features/services/schemas/serviceSchema"
-import { 
-    getServiceById, 
-    updateService as putService, 
-    createService as postService, 
-    deleteService, 
-    createServiceSale, 
-    updateServiceNote 
+import {
+    getServiceById,
+    updateService as putService,
+    createService as postService,
+    deleteService,
+    createServiceSale,
+    updateServiceNote,
+    patchServiceFields,
 } from "@/features/services/api"
 
 type ActionState = {
@@ -172,5 +174,34 @@ export const createServiceSaleAction = async (prevState: ActionState, formData: 
     } catch (error: unknown) {
         console.error('Error creating service sale:', error)
         return { success: false, error: getErrorMessage(error, 'Error al crear la venta del servicio') }
+    }
+}
+
+export const updateServiceStatusAction = async (id: string, estado: string): Promise<ActionState> => {
+    try {
+        await patchServiceFields(id, { estado })
+        revalidatePath('/admin/servicios')
+        return { success: true, error: null }
+    } catch (error: unknown) {
+        return { success: false, error: getErrorMessage(error, 'Error al actualizar estado') }
+    }
+}
+
+export const updateRevisionStatusAction = async (id: string, estadoPago: string): Promise<ActionState> => {
+    try {
+        await patchServiceFields(id, { estadoPago })
+        revalidatePath('/admin/servicios')
+        return { success: true, error: null }
+    } catch (error: unknown) {
+        return { success: false, error: getErrorMessage(error, 'Error al actualizar revisión') }
+    }
+}
+
+export const lookupServiceAction = async (id: string): Promise<ActionState> => {
+    try {
+        const response = await getServiceById(id)
+        return { success: true, error: null, data: response.data }
+    } catch {
+        return { success: false, error: `No se encontró el servicio #${id}` }
     }
 }

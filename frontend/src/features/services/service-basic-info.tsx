@@ -1,100 +1,111 @@
 "use client"
 
-import { Phone, Calendar, Package, User } from "lucide-react"
-import { Badge } from "@/shared/ui/feedback/Badge"
+import { Phone, Calendar, Tv2, User, Tag, ShieldAlert } from "lucide-react"
 import type { ServiceDetail } from "@/shared/types/service"
+import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
 
 interface ServiceBasicInfoProps {
-    service: Pick<ServiceDetail, "cliente" | "telefono" | "aparato" | "fecha" | "estado" | "prioridad">
+    service: Pick<ServiceDetail, "cliente" | "telefono" | "aparato" | "fecha" | "estado" | "prioridad" | "marca">
+}
+
+const formatPhone = (phone: string) =>
+    phone.length === 10
+        ? `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`
+        : phone
+
+const formatDate = (d: string) =>
+    new Date(d).toLocaleDateString("es-MX", { day: "2-digit", month: "long", year: "numeric" })
+
+const ESTADO_COLORS: Record<string, { dark: string; light: string }> = {
+    "Pendiente":   { dark: "bg-amber-900/20 text-amber-300",    light: "bg-amber-100 text-amber-800"    },
+    "En Proceso":  { dark: "bg-blue-900/20 text-blue-300",      light: "bg-blue-100 text-blue-800"      },
+    "Reparado":    { dark: "bg-emerald-900/20 text-emerald-300",light: "bg-emerald-100 text-emerald-800" },
+    "Entregado":   { dark: "bg-purple-900/20 text-purple-300",  light: "bg-purple-100 text-purple-800"  },
+    "Cancelado":   { dark: "bg-red-900/20 text-red-300",        light: "bg-red-100 text-red-800"        },
 }
 
 export function ServiceBasicInfo({ service }: ServiceBasicInfoProps) {
-    const getStatusBadge = (status: ServiceBasicInfoProps["service"]["estado"]) => {
-        const statusConfig = {
-            Pendiente: { color: "bg-yellow-100 text-yellow-800", icon: "⏳" },
-            "En Proceso": { color: "bg-blue-100 text-blue-800", icon: "🔧" },
-            Reparado: { color: "bg-green-100 text-green-800", icon: "✅" },
-            Entregado: { color: "bg-purple-100 text-purple-800", icon: "📦" },
-            Cancelado: { color: "bg-red-100 text-red-800", icon: "❌" },
-        }
+    const { dark } = useAdminTheme()
 
-        const config = statusConfig[status]
-        return (
-            <Badge className={`${config.color} font-medium`}>
-                <span className="mr-1">{config.icon}</span>
-                {status}
-            </Badge>
-        )
-    }
-
-    const getPriorityBadge = (priority: ServiceBasicInfoProps["service"]["prioridad"]) => {
-        if (!priority) return null
-
-        const priorityConfig = {
-            Baja: { color: "bg-gray-100 text-gray-800" },
-            Media: { color: "bg-blue-100 text-blue-800" },
-            Alta: { color: "bg-orange-100 text-orange-800" },
-            Urgente: { color: "bg-red-100 text-red-800" },
-        }
-
-        const config = priorityConfig[priority]
-        return <Badge className={`${config.color} font-medium`}>{priority}</Badge>
-    }
+    const estadoColor = ESTADO_COLORS[service.estado]
+    const labelCls = `text-xs ${dark ? "text-gray-500" : "text-gray-400"} w-28 shrink-0`
+    const valueCls = `text-sm flex-1 ${dark ? "text-gray-200" : "text-gray-800"}`
+    const iconCls  = `w-4 h-4 shrink-0 ${dark ? "text-gray-600" : "text-gray-400"}`
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Package className="w-5 h-5 mr-2 text-blue-600" />
-                Información del Servicio
-            </h2>
+        <div className={`rounded-xl border ${dark ? "border-white/10 bg-[#0F172A]" : "border-gray-200 bg-white"}`}>
+            {/* Section header */}
+            <div className={`px-5 py-4 border-b ${dark ? "border-white/10" : "border-gray-100"}`}>
+                <h2 className={`text-xs font-semibold uppercase tracking-wider ${dark ? "text-gray-400" : "text-gray-500"}`}>
+                    Información del Servicio
+                </h2>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <User className="w-4 h-4 inline mr-2" />
-                        Cliente
-                    </label>
-                    <p className="text-gray-900 font-medium">{service.cliente}</p>
+            {/* Field rows */}
+            <div className={dark ? "divide-y divide-white/5" : "divide-y divide-gray-100"}>
+                {/* Cliente */}
+                <div className="flex items-center gap-4 px-5 py-3.5">
+                    <User className={iconCls} />
+                    <span className={labelCls}>Cliente</span>
+                    <span className={`${valueCls} font-medium ${dark ? "text-gray-100" : "text-gray-900"}`}>
+                        {service.cliente}
+                    </span>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <Phone className="w-4 h-4 inline mr-2" />
-                        Teléfono
-                    </label>
+                {/* Teléfono */}
+                <div className="flex items-center gap-4 px-5 py-3.5">
+                    <Phone className={iconCls} />
+                    <span className={labelCls}>Teléfono</span>
                     <a
                         href={`tel:${service.telefono}`}
-                        className="text-blue-600 hover:text-blue-700 cursor-pointer"
+                        className={`text-sm font-medium flex-1 ${dark ? "text-blue-300 hover:text-blue-200" : "text-blue-600 hover:text-blue-700"}`}
                     >
-                        {service.telefono}
+                        {formatPhone(service.telefono)}
                     </a>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <Package className="w-4 h-4 inline mr-2" />
-                        Aparato
-                    </label>
-                    <p className="text-gray-900">{service.aparato}</p>
+                {/* Aparato */}
+                <div className="flex items-center gap-4 px-5 py-3.5">
+                    <Tv2 className={iconCls} />
+                    <span className={labelCls}>Aparato</span>
+                    <span className={valueCls}>{service.aparato}</span>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <Calendar className="w-4 h-4 inline mr-2" />
-                        Fecha de Ingreso
-                    </label>
-                    <p className="text-gray-900">{new Date(service.fecha).toLocaleDateString("es-ES")}</p>
+                {/* Marca */}
+                {service.marca && (
+                    <div className="flex items-center gap-4 px-5 py-3.5">
+                        <Tag className={iconCls} />
+                        <span className={labelCls}>Marca</span>
+                        <span className={valueCls}>{service.marca}</span>
+                    </div>
+                )}
+
+                {/* Fecha ingreso */}
+                <div className="flex items-center gap-4 px-5 py-3.5">
+                    <Calendar className={iconCls} />
+                    <span className={labelCls}>Fecha de ingreso</span>
+                    <span className={valueCls}>{formatDate(service.fecha)}</span>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
-                    {getStatusBadge(service.estado)}
+                {/* Estado */}
+                <div className="flex items-center gap-4 px-5 py-3.5">
+                    <ShieldAlert className={iconCls} />
+                    <span className={labelCls}>Estado</span>
+                    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${estadoColor ? (dark ? estadoColor.dark : estadoColor.light) : ""}`}>
+                        {service.estado}
+                    </span>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Prioridad</label>
-                    {getPriorityBadge(service.prioridad)}
-                </div>
+                {/* Prioridad */}
+                {service.prioridad && (
+                    <div className="flex items-center gap-4 px-5 py-3.5">
+                        <div className={`w-4 h-4 shrink-0 ${iconCls}`} />
+                        <span className={labelCls}>Prioridad</span>
+                        <span className={`text-sm ${dark ? "text-gray-300" : "text-gray-700"}`}>
+                            {service.prioridad}
+                        </span>
+                    </div>
+                )}
             </div>
         </div>
     )
