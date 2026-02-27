@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify as django_slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
@@ -62,8 +63,52 @@ class Refaccion(models.Model):
     compatibilidad = models.TextField(help_text="Modelos de electrodomésticos compatibles")
     ubicacion_estante = models.CharField(max_length=50, blank=True, null=True, help_text="Numero de estante/anaquel")
 
+    # ── SEO & contenido extendido ──────────────────────────────────────────────
+    slug = models.SlugField(
+        max_length=220, unique=True, blank=True, null=True, default=None,
+        help_text="URL amigable para SEO. Se auto-genera desde el nombre si se deja vacío."
+    )
+    titulo_seo = models.CharField(
+        max_length=60, blank=True,
+        help_text="Título SEO (máx. 60 caracteres). Si se omite, se usa el nombre."
+    )
+    descripcion_seo = models.CharField(
+        max_length=160, blank=True,
+        help_text="Meta descripción para buscadores (máx. 160 caracteres)."
+    )
+    descripcion_corta = models.CharField(
+        max_length=300, blank=True,
+        help_text="Descripción breve para cards y listados."
+    )
+    precio_tachado = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True,
+        help_text="Precio original antes de descuento (se muestra tachado en el frontend)."
+    )
+    specs = models.JSONField(
+        default=list, blank=True,
+        help_text='Especificaciones técnicas: lista de objetos {"clave": "...", "valor": "..."}.'
+    )
+    # ──────────────────────────────────────────────────────────────────────────
+
     fecha_ingreso = models.DateTimeField(auto_now_add=True)
     ultima_actualizacion = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = django_slugify(f"{self.nombre} {self.codigo_parte}")[:200]
+            slug = base
+            counter = 1
+            qs = Refaccion.objects.filter(slug=slug)
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            while qs.exists():
+                slug = f"{base[:195]}-{counter}"
+                counter += 1
+                qs = Refaccion.objects.filter(slug=slug)
+                if self.pk:
+                    qs = qs.exclude(pk=self.pk)
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.nombre} - {self.codigo_parte}"

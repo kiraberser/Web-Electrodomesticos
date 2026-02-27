@@ -1,4 +1,4 @@
-import { getAllServices } from "@/features/services/api"
+import { getAllServices, getServiciosEstadisticas } from "@/features/services/api"
 import ServicesPageClient from "@/app/(admin)/admin/servicios/ServicesPageClient"
 
 export const dynamic = 'force-dynamic'
@@ -9,12 +9,16 @@ export default async function ServicesPage({ searchParams }: PageProps) {
     const sp = await searchParams
     const page = Number(sp.page ?? 1)
 
-    const response = await getAllServices(page, 10)
+    const [response, estadisticas] = await Promise.all([
+        getAllServices(page, 10),
+        getServiciosEstadisticas(),
+    ])
 
     return (
         <ServicesPageClient
             initialServices={response.data}
             initialPagination={response.pagination}
+            estadisticas={estadisticas}
         />
     )
 }

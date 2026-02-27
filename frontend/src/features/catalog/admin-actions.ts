@@ -457,14 +457,26 @@ export const createRefaccionAction = async (prevState: ActionState, formData: Fo
     const codigo_parte = ((formData.get("codigo_parte") as string) || "").trim()
     const nombre = ((formData.get("nombre") as string) || "").trim()
     const descripcion = ((formData.get("descripcion") as string) || "").trim()
+    const descripcion_corta = ((formData.get("descripcion_corta") as string) || "").trim()
     const marca = ((formData.get("marca") as string) || "").trim()
     const categoria = Number(formData.get("categoria"))
     const proveedor = formData.get("proveedor") ? Number(formData.get("proveedor")) : undefined
     const precio = Number(formData.get("precio"))
+    const precio_tachado_raw = ((formData.get("precio_tachado") as string) || "").trim()
+    const precio_tachado = precio_tachado_raw ? Number(precio_tachado_raw) : null
     const existencias = Number(formData.get("existencias"))
     const estado = ((formData.get("estado") as string) || "NVO") as 'NVO' | 'UBS' | 'REC'
     const compatibilidad = ((formData.get("compatibilidad") as string) || "").trim()
     const imagenFile = formData.get("imagen") as File | null
+    const slug = ((formData.get("slug") as string) || "").trim() || undefined
+    const titulo_seo = ((formData.get("titulo_seo") as string) || "").trim() || undefined
+    const descripcion_seo = ((formData.get("descripcion_seo") as string) || "").trim() || undefined
+    let specs: Array<{ clave: string; valor: string }> = []
+    try {
+        const specsRaw = (formData.get("specs") as string) || "[]"
+        const parsed = JSON.parse(specsRaw)
+        if (Array.isArray(parsed)) specs = parsed
+    } catch { specs = [] }
 
     // Validaciones
     const fieldErrors: Record<string, { _errors: string[] }> = {}
@@ -520,14 +532,20 @@ export const createRefaccionAction = async (prevState: ActionState, formData: Fo
             codigo_parte,
             nombre,
             descripcion: descripcion || undefined,
+            descripcion_corta: descripcion_corta || undefined,
             marca,
             categoria,
             proveedor,
             precio,
+            precio_tachado,
             existencias,
             estado,
             compatibilidad,
-            imagen: imagenUrl
+            imagen: imagenUrl,
+            slug,
+            titulo_seo,
+            descripcion_seo,
+            specs,
         }
 
         const response = await postRefaccion(refaccionData)
@@ -560,14 +578,26 @@ export const updateRefaccionAction = async (prevState: ActionState, formData: Fo
     const codigo_parte = ((formData.get("codigo_parte") as string) || "").trim()
     const nombre = ((formData.get("nombre") as string) || "").trim()
     const descripcion = ((formData.get("descripcion") as string) || "").trim()
+    const descripcion_corta = ((formData.get("descripcion_corta") as string) || "").trim()
     const marca = ((formData.get("marca") as string) || "").trim()
     const categoria = Number(formData.get("categoria"))
     const proveedor = formData.get("proveedor") ? Number(formData.get("proveedor")) : undefined
     const precio = Number(formData.get("precio"))
+    const precio_tachado_raw = ((formData.get("precio_tachado") as string) || "").trim()
+    const precio_tachado = precio_tachado_raw ? Number(precio_tachado_raw) : null
     const existencias = Number(formData.get("existencias"))
     const estado = ((formData.get("estado") as string) || "NVO") as 'NVO' | 'UBS' | 'REC'
     const compatibilidad = ((formData.get("compatibilidad") as string) || "").trim()
     const imagenFile = formData.get("imagen") as File | null
+    const slug = ((formData.get("slug") as string) || "").trim() || undefined
+    const titulo_seo = ((formData.get("titulo_seo") as string) || "").trim() || undefined
+    const descripcion_seo = ((formData.get("descripcion_seo") as string) || "").trim() || undefined
+    let specs: Array<{ clave: string; valor: string }> = []
+    try {
+        const specsRaw = (formData.get("specs") as string) || "[]"
+        const parsed = JSON.parse(specsRaw)
+        if (Array.isArray(parsed)) specs = parsed
+    } catch { specs = [] }
 
     // Validaciones
     const fieldErrors: Record<string, { _errors: string[] }> = {}
@@ -627,13 +657,19 @@ export const updateRefaccionAction = async (prevState: ActionState, formData: Fo
             codigo_parte,
             nombre,
             descripcion: descripcion || undefined,
+            descripcion_corta: descripcion_corta || undefined,
             marca,
             categoria,
             proveedor,
             precio,
+            precio_tachado,
             existencias,
             estado,
             compatibilidad,
+            slug,
+            titulo_seo,
+            descripcion_seo,
+            specs,
             ...(imagenUrl && { imagen: imagenUrl })
         }
 

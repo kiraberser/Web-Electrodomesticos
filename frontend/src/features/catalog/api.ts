@@ -31,20 +31,33 @@ export interface Proveedor {
     logo?: string;
 }
 
+export interface RefaccionSpec {
+    clave: string;
+    valor: string;
+}
+
 export interface Refaccion {
     id?: number;
     codigo_parte: string;
     nombre: string;
     descripcion?: string;
+    descripcion_corta?: string;
     marca: string;
     categoria: number;
     proveedor?: number;
     precio: number;
+    precio_tachado?: number | string | null;
     existencias: number;
     estado: 'NVO' | 'UBS' | 'REC';
     compatibilidad: string;
     ubicacion_estante?: string;
     imagen?: string;
+    // SEO
+    slug?: string | null;
+    titulo_seo?: string;
+    descripcion_seo?: string;
+    specs?: RefaccionSpec[];
+    // Read-only
     fecha_ingreso?: string;
     ultima_actualizacion?: string;
     marca_nombre?: string;

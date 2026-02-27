@@ -6,6 +6,32 @@ import { Service } from "@/shared/types/service";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URL_API
 
+// ── Estadísticas ──────────────────────────────────────────────────────────────
+
+export interface ServiciosEstadisticas {
+    total: number
+    pendientes: number
+    completados: number
+    tasa_completado: number
+    por_estado: Record<string, number>
+    por_aparato: { aparato: string; count: number }[]
+    por_marca:   { marca:   string; count: number }[]
+    tendencia_semanal: { semana: string; count: number }[]
+}
+
+export const getServiciosEstadisticas = async (): Promise<ServiciosEstadisticas> => {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('access_cookie')?.value
+    const res = await fetch(`${URL}/servicios/estadisticas/`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        cache: 'no-store',
+    })
+    if (!res.ok) throw new Error('Failed to fetch servicios estadisticas')
+    return res.json()
+}
+
+// ── CRUD ─────────────────────────────────────────────────────────────────────
+
 export const getAllServices = async (page: number = 1, pageSize: number = 10, search?: string) => {
     const cookieStore = await cookies()
     const token = cookieStore.get('access_cookie')?.value

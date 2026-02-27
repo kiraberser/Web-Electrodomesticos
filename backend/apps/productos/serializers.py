@@ -19,9 +19,11 @@ class RefaccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Refaccion
         fields = [
-            'id', 'codigo_parte', 'nombre', 'descripcion', 
+            'id', 'codigo_parte', 'nombre', 'descripcion', 'descripcion_corta',
             'marca', 'marca_nombre', 'categoria', 'categoria_nombre',
-            'precio', 'existencias', 'estado', 'compatibilidad', 'ubicacion_estante',
+            'precio', 'precio_tachado', 'existencias', 'estado',
+            'compatibilidad', 'ubicacion_estante',
+            'slug', 'titulo_seo', 'descripcion_seo', 'specs',
             'fecha_ingreso', 'ultima_actualizacion', 'proveedor', 'imagen'
         ]
 
