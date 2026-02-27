@@ -24,6 +24,16 @@ export interface PedidoItem {
     subtotal: string;
 }
 
+export interface DireccionSnapshot {
+    nombre: string;
+    street: string;
+    colony: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    references?: string | null;
+}
+
 export interface Pedido {
     id: number;
     estado: string;
@@ -41,6 +51,8 @@ export interface Pedido {
     pago_payment_id?: string | null;
     pago_fecha_creacion?: string | null;
     pago_fecha_aprobacion?: string | null;
+    numero_seguimiento?: string | null;
+    direccion_envio?: DireccionSnapshot | null;
 }
 
 export interface PaginatedPedidosResponse {
@@ -169,4 +181,37 @@ export const obtenerMisPedidosPagados = async (page: number = 1): Promise<Pagina
         }
         throw error;
     }
+}
+
+/**
+ * PATCH parcial sobre un pedido — acepta estado y/o numero_seguimiento (admin)
+ */
+export const patchPedidoFields = async (pedidoId: number, fields: Record<string, unknown>): Promise<Pedido> => {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('access_cookie')?.value
+    const response = await axios.patch(
+        `${url}/pedidos/${pedidoId}/update-estado/`,
+        fields,
+        { headers: { Authorization: `Bearer ${token}` } }
+    )
+    return response.data
+}
+
+export interface PedidosStats {
+    total: number;
+    revenue: number;
+    por_estado: Record<string, number>;
+    por_pago: Record<string, number>;
+}
+
+/**
+ * Obtiene estadísticas globales de pedidos (admin)
+ */
+export const getPedidosStats = async (): Promise<PedidosStats> => {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('access_cookie')?.value
+    const response = await axios.get(`${url}/pedidos/stats/`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return response.data
 }

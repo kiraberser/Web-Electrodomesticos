@@ -98,17 +98,19 @@ class PedidoListSerializer(serializers.ModelSerializer):
     pago_payment_id = serializers.SerializerMethodField()
     pago_fecha_creacion = serializers.SerializerMethodField()
     pago_fecha_aprobacion = serializers.SerializerMethodField()
+    numero_seguimiento = serializers.CharField(allow_null=True, required=False)
+    direccion_envio = serializers.SerializerMethodField()
 
     class Meta:
         model = Pedido
         fields = [
-            'id', 
-            'estado', 
-            'total', 
-            'fecha_creacion', 
-            'items', 
-            'usuario_nombre', 
-            'usuario_email', 
+            'id',
+            'estado',
+            'total',
+            'fecha_creacion',
+            'items',
+            'usuario_nombre',
+            'usuario_email',
             'metodo_pago',
             'metodo_pago_display',
             'pago_id',
@@ -118,6 +120,8 @@ class PedidoListSerializer(serializers.ModelSerializer):
             'pago_payment_id',
             'pago_fecha_creacion',
             'pago_fecha_aprobacion',
+            'numero_seguimiento',
+            'direccion_envio',
         ]
 
     def get_usuario_nombre(self, obj):
@@ -230,6 +234,26 @@ class PedidoListSerializer(serializers.ModelSerializer):
         """Retorna la fecha de aprobación del pago"""
         try:
             return obj.pago.fecha_aprobacion if obj.pago else None
+        except Exception:
+            return None
+
+    def get_direccion_envio(self, obj):
+        """Retorna la dirección principal del usuario como snapshot"""
+        try:
+            addr = obj.usuario.direcciones.filter(is_primary=True).first()
+            if not addr:
+                addr = obj.usuario.direcciones.order_by('-created_at').first()
+            if not addr:
+                return None
+            return {
+                'nombre': addr.nombre,
+                'street': addr.street,
+                'colony': addr.colony,
+                'city': addr.city,
+                'state': addr.state,
+                'postal_code': addr.postal_code,
+                'references': addr.references,
+            }
         except Exception:
             return None
 

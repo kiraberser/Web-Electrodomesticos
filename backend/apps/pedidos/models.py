@@ -18,6 +18,7 @@ class Pedido(models.Model):
     estado = models.CharField(max_length=3, choices=EstadoChoices.choices, default=EstadoChoices.CREADO)
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    numero_seguimiento = models.CharField(max_length=100, blank=True, null=True, verbose_name="Número de seguimiento")
 
     class Meta:
         ordering = ['-fecha_creacion']

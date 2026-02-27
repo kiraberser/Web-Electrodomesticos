@@ -1,4 +1,4 @@
-import { getAllPedidos } from "@/features/orders/api"
+import { getAllPedidos, getPedidosStats } from "@/features/orders/api"
 import PedidosClient from "./PedidosClient"
 
 export const dynamic = 'force-dynamic'
@@ -9,13 +9,16 @@ export const metadata = {
 }
 
 export default async function PedidosPage() {
-    // Cargar primera página de pedidos en el servidor
-    const response = await getAllPedidos(1)
+    const [response, stats] = await Promise.all([
+        getAllPedidos(1),
+        getPedidosStats(),
+    ])
 
-    return <PedidosClient 
+    return <PedidosClient
         initialPedidos={response.results}
         initialTotalCount={response.count}
         initialTotalPages={Math.ceil(response.count / 20)}
+        initialStats={stats}
     />
 }
 
