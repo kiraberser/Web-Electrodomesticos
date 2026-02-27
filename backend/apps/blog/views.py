@@ -1,69 +1,81 @@
-from rest_framework import viewsets, permissions, status, filters
-from rest_framework.response import Response
+from django.utils import timezone
+from rest_framework import viewsets, permissions, filters
 
-from .models import Comment
-from .serializers import CommentSerializer
+from .models import Blog, Comment
+from .serializers import PostSerializer, CommentSerializer
 
-from .models import Blog
-from .serializers import PostSerializer
 
 class PostViewSet(viewsets.ModelViewSet):
     """
-    ViewSet para manejar operaciones CRUD de Posts
-    Soporta: listar, crear, recuperar, actualizar y eliminar posts
-    Incluye búsqueda, ordenación y control de permisos.
+    CRUD del blog.
+    - list/retrieve: público (anónimos solo ven publicados)
+    - create/update/destroy: requiere ser staff
+    Filtros: ?category=Motor  ?status=draft (solo staff)
+    Búsqueda: ?search=texto
     """
-    queryset = Blog.objects.all()
     serializer_class = PostSerializer
     lookup_field = 'slug'
 
-    # Filtros y ordenación
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'content']
-    ordering_fields = ['created_at', 'title']
-    ordering = ['-created_at']  # Orden por defecto
+    search_fields = ['title', 'description', 'focus_keyword']
+    ordering_fields = ['created_at', 'published_at', 'title']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        qs = Blog.objects.all()
+        user = self.request.user
+
+        # Usuarios anónimos y no-staff solo ven publicados
+        if self.action == 'list' and not (user and user.is_staff):
+            qs = qs.filter(status=Blog.StatusChoices.PUBLISHED)
+
+        category = self.request.query_params.get('category')
+        if category:
+            qs = qs.filter(category=category)
+
+        status_filter = self.request.query_params.get('status')
+        if status_filter and user and user.is_staff:
+            qs = qs.filter(status=status_filter)
+
+        return qs
 
     def get_permissions(self):
-        """
-        Define permisos por acción:
-        - list/retrieve: acceso público
-        - create/update/destroy: requiere autenticación
-        """
         if self.action in ['list', 'retrieve']:
-            permission_classes = [permissions.AllowAny]
-        else:
-            permission_classes = [permissions.IsAdminUser]
-        return [p() for p in permission_classes]
+            return [permissions.AllowAny()]
+        return [permissions.IsAdminUser()]
 
-    def create(self, request, *args, **kwargs):
-        """
-        Lógica de creación personalizada (si en un futuro quieres validaciones extra).
-        """
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def perform_create(self, serializer):
+        published_at = None
+        if serializer.validated_data.get('status') == Blog.StatusChoices.PUBLISHED:
+            published_at = timezone.now()
+        serializer.save(autor=self.request.user, published_at=published_at)
 
-    def update(self, request, *args, **kwargs):
-        """
-        Lógica de actualización personalizada.
-        """
-        partial = kwargs.pop('partial', False)
+    def perform_update(self, serializer):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
-    
+        published_at = instance.published_at
+        if (
+            serializer.validated_data.get('status') == Blog.StatusChoices.PUBLISHED
+            and not published_at
+        ):
+            published_at = timezone.now()
+        serializer.save(published_at=published_at)
+
+
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
+
+    def get_queryset(self):
+        qs = Comment.objects.filter(active=True)
+        post_slug = self.request.query_params.get('post')
+        if post_slug:
+            qs = qs.filter(post__slug=post_slug)
+        return qs
+
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            self.permission_classes = [permissions.IsAuthenticated]
-        else:
-            self.permission_classes = [permissions.AllowAny]
-        return super().get_permissions()
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
