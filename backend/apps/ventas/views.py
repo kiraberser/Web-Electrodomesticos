@@ -1,12 +1,15 @@
 from rest_framework import viewsets, permissions, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError as DRFValidationError
+from django.db import transaction
 from django.db.models import Sum, Count
 from django.db.models.functions import TruncMonth, TruncDate, TruncDay
 from datetime import datetime
 from django.utils import timezone
 from datetime import timedelta
 from apps.pedidos.pagination import PedidoPagination
+from apps.inventario.services import registrar_salida_por_compra
 from .models import Ventas, VentasServicios, Devolucion
 from .serializers import VentasSerializer, VentasServiciosSerializer, DevolucionSerializer
 # Create your views here.
@@ -36,10 +39,22 @@ class VentasViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         from apps.productos.models import Marca
         refaccion = serializer.validated_data.get('refaccion')
+        cantidad = serializer.validated_data.get('cantidad')
+        precio_unitario = serializer.validated_data.get('precio_unitario')
         marca = None
         if refaccion and refaccion.marca:
             marca, _ = Marca.objects.get_or_create(nombre=refaccion.marca)
-        serializer.save(usuario=self.request.user, marca=marca)
+
+        with transaction.atomic():
+            try:
+                registrar_salida_por_compra(
+                    refaccion=refaccion,
+                    cantidad=cantidad,
+                    precio_unitario=precio_unitario,
+                )
+            except ValueError as e:
+                raise DRFValidationError({'detail': str(e)})
+            serializer.save(usuario=self.request.user, marca=marca)
 
 class VentasServiciosViewSet(viewsets.ModelViewSet):
     """
