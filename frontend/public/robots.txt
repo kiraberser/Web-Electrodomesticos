@@ -23,7 +23,7 @@ Allow: /images/*
 # Permitir todas las páginas públicas
 Allow: /categorias
 Allow: /blog
-Allow: /about-us
+Allow: /nosotros
 Allow: /faq
 Allow: /special-offers
 Allow: /privacy-policy
@@ -74,5 +74,5 @@ Disallow: /cuenta/
 Disallow: /api/
 
 # Sitemap location
-Sitemap: https://refaccionariavega.com/sitemap.xml
+Sitemap: https://www.refaccionariavega.com.mx/sitemap.xml
 

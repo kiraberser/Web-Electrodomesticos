@@ -6,6 +6,9 @@ import Image from "next/image"
 export const metadata = {
     title: 'Categorías de Refacciones',
     description: 'Explora nuestras categorías de refacciones para electrodomésticos. Encuentra la pieza que necesitas para ventiladores, lavadoras, microondas y más.',
+    alternates: {
+        canonical: 'https://www.refaccionariavega.com.mx/categorias',
+    },
 }
 
 export default function CategoriasPage() {

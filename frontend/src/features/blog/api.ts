@@ -8,6 +8,33 @@ import { CreatePostType } from '@/shared/types/blog'
 
 const BASE = process.env.NEXT_PUBLIC_BASE_URL_API
 
+export type BlogPostSummary = {
+    id: number
+    title: string
+    slug: string
+    description: string
+    content: string
+    author?: string
+    image?: string
+    category: string
+    created_at: string
+    updated_at?: string
+    tags?: string[]
+}
+
+export const getBlogPosts = cache(async (): Promise<BlogPostSummary[]> => {
+    try {
+        const res = await fetch(`${BASE}/blog/posts/`, {
+            next: { revalidate: 300 },
+        })
+        if (!res.ok) return []
+        const data = await res.json()
+        return data.results ?? data
+    } catch {
+        return []
+    }
+})
+
 export const postBlog = async (newPost: CreatePostType) => {
     const cookieStore = await cookies()
     const token = cookieStore.get('access_cookie')?.value

@@ -2,13 +2,18 @@ import type { Metadata } from 'next'
 import { Input } from '@/shared/ui/forms/InputField'
 import { Search } from 'lucide-react'
 import BlogFilters from './BlogFilters'
+import { getBlogPosts } from '@/features/blog/api'
 
 export const metadata: Metadata = {
     title: 'Blog — Consejos y Guías',
     description: 'Artículos sobre mantenimiento de electrodomésticos, guías de compra y consejos para el hogar.',
+    alternates: {
+        canonical: 'https://www.refaccionariavega.com.mx/blog',
+    },
 }
 
-export default function BlogPage() {
+export default async function BlogPage() {
+    const apiPosts = await getBlogPosts()
     return (
         <div className="min-h-screen">
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
@@ -34,7 +39,7 @@ export default function BlogPage() {
                 </div>
             </div>
 
-            <BlogFilters />
+            <BlogFilters apiPosts={apiPosts.length > 0 ? apiPosts : undefined} />
         </div>
     )
 }

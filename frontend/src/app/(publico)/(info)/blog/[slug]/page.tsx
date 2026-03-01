@@ -26,6 +26,8 @@ function formatDate(dateString: string) {
     })
 }
 
+const BASE = 'https://www.refaccionariavega.com.mx'
+
 export async function generateMetadata(
     { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
@@ -35,6 +37,9 @@ export async function generateMetadata(
         return {
             title: post.title,
             description: post.description,
+            alternates: {
+                canonical: `${BASE}/blog/${slug}`,
+            },
             openGraph: {
                 title: post.title,
                 description: post.description,
@@ -45,7 +50,11 @@ export async function generateMetadata(
             },
         }
     } catch {
-        return { title: 'Artículo', description: 'Artículo del blog de Refaccionaria Vega.' }
+        return {
+            title: 'Artículo',
+            description: 'Artículo del blog de Refaccionaria Vega.',
+            alternates: { canonical: `${BASE}/blog/${slug}` },
+        }
     }
 }
 
@@ -58,22 +67,35 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         '@type': 'BlogPosting',
         headline: post.title,
         description: post.description,
-        image: post.image,
+        ...(post.image ? { image: post.image } : {}),
         datePublished: post.created_at,
         dateModified: post.updated_at ?? post.created_at,
-        author: {
-            '@type': 'Person',
-            name: post.author ?? 'Refaccionaria Vega',
-        },
+        author: post.author
+            ? { '@type': 'Person', name: post.author }
+            : { '@type': 'Organization', name: 'Refaccionaria Vega', url: BASE },
         publisher: {
             '@type': 'Organization',
             name: 'Refaccionaria Vega',
-            url: 'https://refaccionariavega.com',
+            url: BASE,
+            logo: {
+                '@type': 'ImageObject',
+                url: `${BASE}/logo.png`,
+            },
         },
         mainEntityOfPage: {
             '@type': 'WebPage',
-            '@id': `https://refaccionariavega.com/blog/${slug}`,
+            '@id': `${BASE}/blog/${slug}`,
         },
+    }
+
+    const breadcrumbSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
+            { '@type': 'ListItem', position: 2, name: 'Blog', item: `${BASE}/blog` },
+            { '@type': 'ListItem', position: 3, name: post.title },
+        ],
     }
 
     return (
@@ -81,6 +103,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
             />
             <article className="prose lg:prose-xl">
                 <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
@@ -103,9 +129,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
                 <div className="text-gray-600 mb-4">{post.description}</div>
 
-                <div className="prose prose-lg">
-                    {post.content}
-                </div>
+                <div
+                    className="prose prose-lg"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                />
             </article>
             <Link
                 href="/blog/"

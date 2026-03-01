@@ -14,7 +14,7 @@ import { company } from '@/shared/data/company'
 
 const HeroCarousel = dynamic(
   () => import('@/features/home/HeroCarousel'),
-  { loading: () => <div className="h-[280px] md:h-[420px] lg:h-[480px] animate-pulse bg-gray-100" /> },
+  { loading: () => <div className="h-[350px] md:h-[420px] lg:h-[calc(80vh-80px)] bg-gray-100" /> },
 )
 
 const CategoryStrip = dynamic(
@@ -47,9 +47,9 @@ const jsonLd = {
   '@type': 'HomeAndConstructionBusiness',
   name: company.name,
   description: company.description,
-  url: 'https://refaccionariavega.com',
+  url: 'https://www.refaccionariavega.com.mx',
   telephone: '+522323216694',
-  image: 'https://refaccionariavega.com/logo.png',
+  image: 'https://www.refaccionariavega.com.mx/logo.png',
   priceRange: '$$',
   currenciesAccepted: 'MXN',
   paymentAccepted: 'Efectivo, Tarjeta de crédito, Tarjeta de débito',
@@ -63,8 +63,8 @@ const jsonLd = {
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: '20.0667',
-    longitude: '-97.0500',
+    latitude: 20.0667,
+    longitude: -97.05,
   },
   openingHoursSpecification: [
     {
@@ -80,17 +80,19 @@ const jsonLd = {
       closes: '14:00',
     },
   ],
-  sameAs: [],
 }
 
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Refaccionaria Vega',
-  url: 'https://refaccionariavega.com',
+  url: 'https://www.refaccionariavega.com.mx',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://refaccionariavega.com/categorias?search={search_term_string}',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://www.refaccionariavega.com.mx/categorias?search={search_term_string}',
+    },
     'query-input': 'required name=search_term_string',
   },
 }
@@ -98,6 +100,9 @@ const websiteSchema = {
 export const metadata = {
   title: 'Refaccionaria Vega — Refacciones y Electrodomésticos',
   description: 'Refacciones y electrodomésticos de calidad en Martínez de la Torre, Veracruz. Envío a toda la república.',
+  alternates: {
+    canonical: 'https://www.refaccionariavega.com.mx',
+  },
 }
 
 export default async function HomePage() {

@@ -12,8 +12,8 @@ export const slides: HeroSlide[] = [
   {
     id: 1,
     image: '/images/hero/minisplit.webp',
-    title: 'No sufras de calor en esta temporada!',
-    subtitle: 'Instalación de minisplit en tú hogar.',
+    title: '¡No sufras de calor en esta temporada!',
+    subtitle: 'Instalación de minisplit en tu hogar.',
     ctaText: 'Ver ofertas',
     ctaHref: '/categorias',
     bgColor: '#0A3981',

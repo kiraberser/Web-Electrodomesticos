@@ -1,8 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import Image from 'next/image';
 import { Button } from '@/shared/ui/forms/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/display/Card';
+import { Card, CardContent, CardHeader } from '@/shared/ui/display/Card';
 import { Badge } from '@/shared/ui/feedback/Badge';
 import { Input } from '@/shared/ui/forms/InputField';
 import { Calendar, User, Search, ArrowRight, Eye, MessageSquare } from 'lucide-react';
@@ -10,16 +11,58 @@ import { Calendar, User, Search, ArrowRight, Eye, MessageSquare } from 'lucide-r
 import { useState, useMemo } from 'react';
 import { blogPosts } from '@/shared/data/blog';
 import { categories } from '@/shared/data/category';
+import type { BlogPostSummary } from '@/features/blog/api';
 
-export default function BlogFilters() {
+type UnifiedPost = {
+    id: number | string
+    title: string
+    slug: string
+    excerpt: string
+    author: string
+    date: string
+    category: string
+    image: string
+    tags: string[]
+    views: number
+    comments: number
+    featured: boolean
+}
+
+function normalizeApiPost(p: BlogPostSummary, index: number): UnifiedPost {
+    return {
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        excerpt: p.description ?? '',
+        author: p.author ?? 'Refaccionaria Vega',
+        date: p.created_at,
+        category: p.category ?? '',
+        image: p.image ?? '/images/hero/ElectrodomesticosHero.webp',
+        tags: p.tags ?? [],
+        views: 0,
+        comments: 0,
+        featured: index === 0,
+    }
+}
+
+interface Props {
+    apiPosts?: BlogPostSummary[]
+}
+
+export default function BlogFilters({ apiPosts }: Props) {
+    const posts: UnifiedPost[] = useMemo(
+        () => apiPosts ? apiPosts.map(normalizeApiPost) : blogPosts as UnifiedPost[],
+        [apiPosts]
+    )
+
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 6;
 
-    const featuredPosts = useMemo(() => blogPosts.filter(post => post.featured), []);
+    const featuredPosts = useMemo(() => posts.filter(post => post.featured), [posts]);
 
-    const filteredPosts = useMemo(() => blogPosts.filter(post => {
+    const filteredPosts = useMemo(() => posts.filter(post => {
         const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -28,7 +71,7 @@ export default function BlogFilters() {
             (selectedCategory !== 'all' && categories.find(c => String(c.id) === selectedCategory)?.label === post.category);
 
         return matchesSearch && matchesCategory;
-    }), [searchTerm, selectedCategory]);
+    }), [posts, searchTerm, selectedCategory]);
 
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -43,72 +86,73 @@ export default function BlogFilters() {
         });
     };
 
-    interface BlogCardProps {
-        post: typeof blogPosts[0];
-        featured?: boolean;
-    }
-
-    const BlogCard = ({ post, featured = false }: BlogCardProps) => (
-        <Card className={`group hover:shadow-lg transition-all duration-300 ${featured ? 'md:col-span-2' : ''}`}>
-            <div className={`relative overflow-hidden ${featured ? 'h-64' : 'h-48'}`}>
-                <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                />
-                <div className="absolute top-4 left-4">
-                    <Badge className="bg-blue-600 text-white">
-                        {post.category}
-                    </Badge>
-                </div>
-            </div>
-            <CardHeader>
-                <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
-                    <div className="flex items-center space-x-1">
-                        <User className="w-4 h-4" />
-                        <span>{post.author}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{formatDate(post.date)}</span>
-                    </div>
-                </div>
-                <p className={`font-semibold group-hover:text-blue-600 transition-colors ${featured ? 'text-xl' : 'text-lg'}`}>
-                    {post.title}
-                </p>
-            </CardHeader>
-            <CardContent>
-                <p className="text-gray-600 mb-4 line-clamp-2">
-                    {post.excerpt}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.slice(0, 3).map((tag: string, index: number) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                            {tag}
+    const BlogCard = ({ post, featured = false }: { post: UnifiedPost; featured?: boolean }) => (
+        <Link href={`/blog/${post.slug}`} className="block group">
+            <Card className={`hover:shadow-lg transition-all duration-300 h-full ${featured ? 'md:col-span-2' : ''}`}>
+                <div className={`relative overflow-hidden ${featured ? 'h-64' : 'h-48'}`}>
+                    <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                    />
+                    <div className="absolute top-4 left-4">
+                        <Badge className="bg-blue-600 text-white">
+                            {post.category}
                         </Badge>
-                    ))}
+                    </div>
                 </div>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                <CardHeader>
+                    <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
                         <div className="flex items-center space-x-1">
-                            <Eye className="w-4 h-4" />
-                            <span>{post.views}</span>
+                            <User className="w-4 h-4" />
+                            <span>{post.author}</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                            <MessageSquare className="w-4 h-4" />
-                            <span>{post.comments}</span>
+                            <Calendar className="w-4 h-4" />
+                            <span>{formatDate(post.date)}</span>
                         </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="group-hover:bg-blue-50 group-hover:text-blue-600">
-                        Leer más
-                        <ArrowRight className="w-4 h-4 ml-1" />
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
+                    <p className={`font-semibold group-hover:text-blue-600 transition-colors ${featured ? 'text-xl' : 'text-lg'}`}>
+                        {post.title}
+                    </p>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                        {post.excerpt}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {post.tags.slice(0, 3).map((tag: string, index: number) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                                {tag}
+                            </Badge>
+                        ))}
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4 text-sm text-gray-500">
+                            {post.views > 0 && (
+                                <div className="flex items-center space-x-1">
+                                    <Eye className="w-4 h-4" />
+                                    <span>{post.views}</span>
+                                </div>
+                            )}
+                            {post.comments > 0 && (
+                                <div className="flex items-center space-x-1">
+                                    <MessageSquare className="w-4 h-4" />
+                                    <span>{post.comments}</span>
+                                </div>
+                            )}
+                        </div>
+                        <span className="flex items-center text-sm font-medium text-blue-600 group-hover:underline">
+                            Leer más
+                            <ArrowRight className="w-4 h-4 ml-1" />
+                        </span>
+                    </div>
+                </CardContent>
+            </Card>
+        </Link>
     );
 
     return (
@@ -117,30 +161,50 @@ export default function BlogFilters() {
                 {/* Sidebar */}
                 <div className="lg:col-span-1">
                     <div className="sticky top-8">
+                        {/* Search */}
+                        <Card className="mb-6">
+                            <CardContent className="pt-4">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                                    <Input
+                                        type="text"
+                                        placeholder="Buscar artículos..."
+                                        value={searchTerm}
+                                        onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                        className="pl-9"
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
+
                         {/* Categories */}
                         <Card className="mb-8">
                             <CardHeader>
-                                <CardTitle className="text-lg">Categorías</CardTitle>
+                                <p className="font-semibold text-gray-900">Categorías</p>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-2">
+                                    <button
+                                        onClick={() => { setSelectedCategory('all'); setCurrentPage(1); }}
+                                        className={`w-full text-left px-3 py-2 rounded-md transition-colors ${selectedCategory === 'all' ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
+                                    >
+                                        <div className="flex justify-between items-center">
+                                            <span>Todos</span>
+                                            <Badge variant="outline" className="text-xs">{posts.length}</Badge>
+                                        </div>
+                                    </button>
                                     {categories.map((category) => {
-                                        const postCount = blogPosts.filter(post => post.category === category.label).length;
+                                        const postCount = posts.filter(post => post.category === category.label).length;
                                         const categoryKey = String(category.id);
                                         return (
                                             <button
                                                 key={category.id}
-                                                onClick={() => setSelectedCategory(categoryKey)}
-                                                className={`w-full text-left px-3 py-2 rounded-md transition-colors ${selectedCategory === categoryKey
-                                                    ? 'bg-blue-100 text-blue-700'
-                                                    : 'hover:bg-gray-100'
-                                                    }`}
+                                                onClick={() => { setSelectedCategory(categoryKey); setCurrentPage(1); }}
+                                                className={`w-full text-left px-3 py-2 rounded-md transition-colors ${selectedCategory === categoryKey ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}`}
                                             >
                                                 <div className="flex justify-between items-center">
                                                     <span>{category.label}</span>
-                                                    <Badge variant="outline" className="text-xs">
-                                                        {postCount}
-                                                    </Badge>
+                                                    <Badge variant="outline" className="text-xs">{postCount}</Badge>
                                                 </div>
                                             </button>
                                         );
@@ -152,41 +216,30 @@ export default function BlogFilters() {
                         {/* Popular Posts */}
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-lg">Artículos Populares</CardTitle>
+                                <p className="font-semibold text-gray-900">Artículos Recientes</p>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    {blogPosts
-                                        .slice()
-                                        .sort((a, b) => b.views - a.views)
-                                        .slice(0, 3)
-                                        .map((post) => (
-                                            <div key={post.id} className="flex space-x-3 group cursor-pointer">
-                                                <div className="relative w-16 h-16 flex-shrink-0">
-                                                    <Image
-                                                        src={post.image}
-                                                        alt={post.title}
-                                                        fill
-                                                        sizes="64px"
-                                                        className="object-cover rounded-md"
-                                                        loading="lazy"
-                                                    />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <h4 className="font-medium text-sm group-hover:text-blue-600 transition-colors line-clamp-2">
-                                                        {post.title}
-                                                    </h4>
-                                                    <div className="flex items-center space-x-2 text-xs text-gray-500 mt-1">
-                                                        <span>{formatDate(post.date)}</span>
-                                                        <span>•</span>
-                                                        <div className="flex items-center space-x-1">
-                                                            <Eye className="w-3 h-3" />
-                                                            <span>{post.views}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                    {posts.slice(0, 3).map((post) => (
+                                        <Link key={post.id} href={`/blog/${post.slug}`} className="flex space-x-3 group">
+                                            <div className="relative w-16 h-16 flex-shrink-0">
+                                                <Image
+                                                    src={post.image}
+                                                    alt={post.title}
+                                                    fill
+                                                    sizes="64px"
+                                                    className="object-cover rounded-md"
+                                                    loading="lazy"
+                                                />
                                             </div>
-                                        ))}
+                                            <div className="flex-1">
+                                                <h4 className="font-medium text-sm group-hover:text-blue-600 transition-colors line-clamp-2">
+                                                    {post.title}
+                                                </h4>
+                                                <span className="text-xs text-gray-500 mt-1">{formatDate(post.date)}</span>
+                                            </div>
+                                        </Link>
+                                    ))}
                                 </div>
                             </CardContent>
                         </Card>
@@ -196,7 +249,7 @@ export default function BlogFilters() {
                 {/* Main Content */}
                 <div className="lg:col-span-3">
                     {/* Featured Posts */}
-                    {searchTerm === '' && selectedCategory === 'all' && (
+                    {searchTerm === '' && selectedCategory === 'all' && featuredPosts.length > 0 && (
                         <div className="mb-12">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">
                                 Artículos Destacados

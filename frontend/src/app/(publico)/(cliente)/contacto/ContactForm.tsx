@@ -7,8 +7,9 @@ import { Label } from '@/shared/ui/forms/Label';
 import { Textarea } from '@/shared/ui/display/Textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/display/Card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/display/Select'
-import { Send, CheckCircle } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from '@/hook/use-toast'
+import { submitContactForm } from '@/features/contact/actions'
 
 export default function ContactForm() {
     const [formData, setFormData] = useState({
@@ -30,15 +31,29 @@ export default function ContactForm() {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false);
+        const result = await submitContactForm({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.subject,
+            message: formData.message,
+            priority: formData.priority,
+        });
+
+        setIsSubmitting(false);
+
+        if (result.success) {
             setIsSubmitted(true);
             toast({
                 title: "Mensaje enviado",
                 description: "Gracias por contactarnos. Te responderemos pronto.",
             });
-        }, 1500);
+        } else {
+            toast({
+                title: "Error al enviar",
+                description: result.error ?? 'Inténtalo de nuevo.',
+            });
+        }
     };
 
     if (isSubmitted) {
@@ -156,7 +171,10 @@ export default function ContactForm() {
                                 required
                             />
                             <Label htmlFor="terms" className="text-sm text-gray-600">
-                                Acepto los términos y condiciones y la política de privacidad
+                                Acepto los{' '}
+                                <a href="/terms-conditions" className="underline hover:text-blue-600">términos y condiciones</a>
+                                {' '}y la{' '}
+                                <a href="/privacy-policy" className="underline hover:text-blue-600">política de privacidad</a>
                             </Label>
                         </div>
 

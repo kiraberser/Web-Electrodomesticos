@@ -17,6 +17,9 @@ export async function generateMetadata(
   return {
     title: cat ? `${cat.label} — Refacciones` : 'Categorías',
     description: cat?.description ?? 'Explora nuestras categorías de refacciones para electrodomésticos.',
+    alternates: {
+      canonical: `https://www.refaccionariavega.com.mx/categorias/${categoria}`,
+    },
   }
 }
 
@@ -62,6 +65,8 @@ export default async function CategoriaPage({
     const products: Product[] = (refaccionesData.refacciones || [])
         .map(refaccion => transformRefaccionToProduct(refaccion, category.key))
 
+    const BASE = 'https://www.refaccionariavega.com.mx'
+
     const itemListSchema = products.length > 0 ? {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
@@ -71,10 +76,23 @@ export default async function CategoriaPage({
         itemListElement: products.slice(0, 20).map((p, i) => ({
             '@type': 'ListItem',
             position: i + 1,
-            url: `https://refaccionariavega.com/categorias/${category.key}/${encodeURIComponent(p.name)}`,
-            name: p.name,
+            item: {
+                '@type': 'Product',
+                '@id': `${BASE}/categorias/${category.key}/${encodeURIComponent(p.name)}`,
+                name: p.name,
+            },
         })),
     } : null
+
+    const breadcrumbSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
+            { '@type': 'ListItem', position: 2, name: 'Categorías', item: `${BASE}/categorias` },
+            { '@type': 'ListItem', position: 3, name: category.label },
+        ],
+    }
 
     return (
         <>
@@ -84,8 +102,14 @@ export default async function CategoriaPage({
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
                 />
             )}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
             <CategoryView
                 categoryKey={category.key}
+                categoryLabel={category.label}
+                categoryDescription={category.description}
                 products={products}
             />
         </>

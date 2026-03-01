@@ -13,11 +13,15 @@ const ProductCard = dynamic(() => import("./ProductCard"), {
 
 interface Props {
     categoryKey: string
+    categoryLabel?: string
+    categoryDescription?: string
     products: Product[]
 }
 
 export default function CategoryView({
     products,
+    categoryLabel,
+    categoryDescription,
 }: Props) {
     const [filters, setFilters] = useState<{ brands: Brand[]; types?: ProductType[]; min: number; max: number }>({
         brands: [],
@@ -64,6 +68,16 @@ export default function CategoryView({
 
     return (
         <div className="bg-gray-50">
+            {categoryLabel && (
+                <div className="border-b border-gray-200 bg-white">
+                    <div className="container mx-auto px-4 py-8">
+                        <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{categoryLabel}</h1>
+                        {categoryDescription && (
+                            <p className="mt-2 max-w-prose text-gray-600">{categoryDescription}</p>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Content with sidebar filters + grid */}
             <section className="container mx-auto grid grid-cols-1 gap-6 px-4 py-6 lg:grid-cols-[280px_1fr]">

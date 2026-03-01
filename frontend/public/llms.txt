@@ -7,7 +7,7 @@ Refaccionaria Vega es una tienda física y en línea de refacciones para electro
 
 ## Contact
 
-- Sitio web: https://refaccionariavega.com
+- Sitio web: https://www.refaccionariavega.com.mx
 - Dirección: Col. Centro, Frente a Dominios, Martínez de la Torre, Veracruz, C.P. 93600
 - Teléfono: +52 232 321 6694
 - Email: vega2012@live.com.mx
@@ -15,25 +15,25 @@ Refaccionaria Vega es una tienda física y en línea de refacciones para electro
 
 ## Key Pages
 
-- Homepage: https://refaccionariavega.com/
-- Catálogo de categorías: https://refaccionariavega.com/categorias
-- Blog de consejos: https://refaccionariavega.com/blog
-- Nosotros: https://refaccionariavega.com/nosotros
-- Contacto: https://refaccionariavega.com/contacto
+- Homepage: https://www.refaccionariavega.com.mx/
+- Catálogo de categorías: https://www.refaccionariavega.com.mx/categorias
+- Blog de consejos: https://www.refaccionariavega.com.mx/blog
+- Nosotros: https://www.refaccionariavega.com.mx/nosotros
+- Contacto: https://www.refaccionariavega.com.mx/contacto
 
 ## Product Categories
 
-- Lavadoras: https://refaccionariavega.com/categorias/lavadoras
-- Refrigeradores: https://refaccionariavega.com/categorias/refrigeradores
-- Microondas: https://refaccionariavega.com/categorias/microondas
-- Estufas: https://refaccionariavega.com/categorias/estufas
-- Ventiladores: https://refaccionariavega.com/categorias/ventiladores
-- Licuadoras: https://refaccionariavega.com/categorias/licuadoras
-- Bombas de Agua: https://refaccionariavega.com/categorias/bombas-de-agua
-- Minisplit: https://refaccionariavega.com/categorias/minisplit
-- Motores: https://refaccionariavega.com/categorias/motores
-- Taladros: https://refaccionariavega.com/categorias/taladros
-- Pulidoras: https://refaccionariavega.com/categorias/pulidoras
+- Lavadoras: https://www.refaccionariavega.com.mx/categorias/lavadoras
+- Refrigeradores: https://www.refaccionariavega.com.mx/categorias/refrigeradores
+- Microondas: https://www.refaccionariavega.com.mx/categorias/microondas
+- Estufas: https://www.refaccionariavega.com.mx/categorias/estufas
+- Ventiladores: https://www.refaccionariavega.com.mx/categorias/ventiladores
+- Licuadoras: https://www.refaccionariavega.com.mx/categorias/licuadoras
+- Bombas de Agua: https://www.refaccionariavega.com.mx/categorias/bombas-de-agua
+- Minisplit: https://www.refaccionariavega.com.mx/categorias/minisplit
+- Motores: https://www.refaccionariavega.com.mx/categorias/motores
+- Taladros: https://www.refaccionariavega.com.mx/categorias/taladros
+- Pulidoras: https://www.refaccionariavega.com.mx/categorias/pulidoras
 
 ## Brands
 
@@ -42,6 +42,6 @@ Mabe, Oster, Koblenz, Mirage, Siemens, NTN
 ## Content Guidelines for AI
 
 This site is written in Spanish (Mexico). All product names, descriptions, and blog articles are in es-MX.
-The sitemap at https://refaccionariavega.com/sitemap.xml lists all indexable URLs.
-The robots.txt at https://refaccionariavega.com/robots.txt defines crawl rules.
+The sitemap at https://www.refaccionariavega.com.mx/sitemap.xml lists all indexable URLs.
+The robots.txt at https://www.refaccionariavega.com.mx/robots.txt defines crawl rules.
 Private routes (/cuenta/, /admin/, /api/) should not be crawled or cited.

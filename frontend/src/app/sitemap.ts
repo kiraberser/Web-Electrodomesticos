@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { categories } from '@/shared/data/category'
 
-const BASE_URL = 'https://refaccionariavega.com'
+const BASE_URL = 'https://www.refaccionariavega.com.mx'
 
 async function getBlogSlugs(): Promise<{ slug: string; lastmod: string }[]> {
   try {
@@ -27,8 +27,8 @@ async function getProductsByCategory(id: number, key: string) {
     if (!res.ok) return []
     const data = await res.json()
     const items = data.refacciones ?? data.results ?? data
-    return items.map((r: { nombre: string; ultima_actualizacion?: string }) => ({
-      url: `${BASE_URL}/categorias/${key}/${encodeURIComponent(r.nombre)}`,
+    return items.map((r: { nombre: string; slug?: string | null; ultima_actualizacion?: string }) => ({
+      url: `${BASE_URL}/categorias/${key}/${r.slug ?? encodeURIComponent(r.nombre)}`,
       lastmod: r.ultima_actualizacion ?? new Date().toISOString(),
     }))
   } catch { return [] }

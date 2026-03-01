@@ -5,6 +5,9 @@ import { company } from '@/shared/data/company'
 export const metadata: Metadata = {
     title: 'Nosotros',
     description: 'Más de 20 años en Martínez de la Torre, Veracruz. Conoce la historia de Refaccionaria Vega.',
+    alternates: {
+        canonical: 'https://www.refaccionariavega.com.mx/nosotros',
+    },
 }
 
 export default function NosotrosPage() {

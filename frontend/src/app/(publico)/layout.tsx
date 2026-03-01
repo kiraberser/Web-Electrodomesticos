@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://refaccionariavega.com'),
+  metadataBase: new URL('https://www.refaccionariavega.com.mx'),
   title: {
     template: '%s | Refaccionaria Vega',
     default: 'Refaccionaria Vega — Refacciones y Electrodomésticos',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_MX',
-    url: 'https://refaccionariavega.com',
+    url: 'https://www.refaccionariavega.com.mx',
     siteName: 'Refaccionaria Vega',
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Refaccionaria Vega' }],
   },
@@ -51,8 +51,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="es-MX" className={inter.variable}>
       <head>
-        <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="preload" as="image" href="/images/hero/minisplit.webp" fetchPriority="high" />
       </head>
       <body className={`${inter.className} text-[#0A3981]`}>
         <CartProvider>
