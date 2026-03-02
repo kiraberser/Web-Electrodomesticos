@@ -41,6 +41,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/nosotros` },
     { url: `${BASE_URL}/contacto` },
     { url: `${BASE_URL}/blog` },
+    { url: `${BASE_URL}/faq` },
+    { url: `${BASE_URL}/privacy-policy` },
+    { url: `${BASE_URL}/terms-conditions` },
+    { url: `${BASE_URL}/envios` },
+    { url: `${BASE_URL}/devoluciones` },
+    { url: `${BASE_URL}/cookie-policy` },
   ]
 
   const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({

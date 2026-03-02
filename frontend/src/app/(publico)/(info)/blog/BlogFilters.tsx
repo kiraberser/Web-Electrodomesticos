@@ -9,7 +9,6 @@ import { Input } from '@/shared/ui/forms/InputField';
 import { Calendar, User, Search, ArrowRight, Eye, MessageSquare } from 'lucide-react';
 
 import { useState, useMemo } from 'react';
-import { blogPosts } from '@/shared/data/blog';
 import { categories } from '@/shared/data/category';
 import type { BlogPostSummary } from '@/features/blog/api';
 
@@ -46,12 +45,12 @@ function normalizeApiPost(p: BlogPostSummary, index: number): UnifiedPost {
 }
 
 interface Props {
-    apiPosts?: BlogPostSummary[]
+    apiPosts: BlogPostSummary[]
 }
 
 export default function BlogFilters({ apiPosts }: Props) {
     const posts: UnifiedPost[] = useMemo(
-        () => apiPosts ? apiPosts.map(normalizeApiPost) : blogPosts as UnifiedPost[],
+        () => apiPosts.map(normalizeApiPost),
         [apiPosts]
     )
 

@@ -27,8 +27,10 @@ Allow: /nosotros
 Allow: /faq
 Allow: /special-offers
 Allow: /privacy-policy
-Allow: /shipping-returns
 Allow: /terms-conditions
+Allow: /envios
+Allow: /devoluciones
+Allow: /cookie-policy
 Allow: /contacto
 
 # Configuración para bots específicos
