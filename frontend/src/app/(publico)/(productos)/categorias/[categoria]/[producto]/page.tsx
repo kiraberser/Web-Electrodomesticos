@@ -96,7 +96,7 @@ export default async function ProductoPage({
         itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
             { '@type': 'ListItem', position: 2, name: categoryLabel, item: `${BASE}/categorias/${categoriaParam}` },
-            { '@type': 'ListItem', position: 3, name: refaccion.nombre },
+            { '@type': 'ListItem', position: 3, name: refaccion.nombre, item: `${BASE}/categorias/${categoriaParam}/${encodeURIComponent(refaccion.nombre)}` },
         ],
     }
 

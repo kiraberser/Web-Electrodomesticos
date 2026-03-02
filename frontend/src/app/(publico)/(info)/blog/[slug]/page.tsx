@@ -79,7 +79,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             url: BASE,
             logo: {
                 '@type': 'ImageObject',
-                url: `${BASE}/logo.png`,
+                url: `${BASE}/logo.svg`,
             },
         },
         mainEntityOfPage: {
@@ -94,7 +94,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
             { '@type': 'ListItem', position: 2, name: 'Blog', item: `${BASE}/blog` },
-            { '@type': 'ListItem', position: 3, name: post.title },
+            { '@type': 'ListItem', position: 3, name: post.title, item: `${BASE}/blog/${slug}` },
         ],
     }
 

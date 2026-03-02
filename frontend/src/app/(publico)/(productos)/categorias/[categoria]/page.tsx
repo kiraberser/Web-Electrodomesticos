@@ -90,7 +90,7 @@ export default async function CategoriaPage({
         itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
             { '@type': 'ListItem', position: 2, name: 'Categorías', item: `${BASE}/categorias` },
-            { '@type': 'ListItem', position: 3, name: category.label },
+            { '@type': 'ListItem', position: 3, name: category.label, item: `${BASE}/categorias/${category.key}` },
         ],
     }
 

@@ -44,15 +44,18 @@ const ProductRow = dynamic(
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'HomeAndConstructionBusiness',
+  '@type': 'LocalBusiness',
   name: company.name,
   description: company.description,
   url: 'https://www.refaccionariavega.com.mx',
   telephone: '+522323216694',
-  image: 'https://www.refaccionariavega.com.mx/logo.png',
+  image: 'https://www.refaccionariavega.com.mx/logo.svg',
   priceRange: '$$',
   currenciesAccepted: 'MXN',
   paymentAccepted: 'Efectivo, Tarjeta de crédito, Tarjeta de débito',
+  sameAs: [
+    'https://www.google.com/maps/search/Refaccionaria+Vega+Martinez+de+la+Torre',
+  ],
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Col. Centro, Frente a Dominios',
@@ -89,10 +92,7 @@ const websiteSchema = {
   url: 'https://www.refaccionariavega.com.mx',
   potentialAction: {
     '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: 'https://www.refaccionariavega.com.mx/categorias?search={search_term_string}',
-    },
+    target: 'https://www.refaccionariavega.com.mx/categorias?search={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
 }

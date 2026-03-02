@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     locale: 'es_MX',
     url: 'https://www.refaccionariavega.com.mx',
     siteName: 'Refaccionaria Vega',
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Refaccionaria Vega' }],
+    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'Refaccionaria Vega' }],
   },
   twitter: {
     card: 'summary_large_image',
