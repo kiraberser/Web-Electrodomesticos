@@ -33,7 +33,7 @@ export const actionLoginUser = async (formData: LoginUserType): Promise<ActionSt
             path: '/',
             secure: !isDevelopment,
             sameSite: 'lax',
-            maxAge: 60 * 15,
+            maxAge: 60 * 60 * 24,
         })
         cookieStore.set({
             name: 'refresh_cookie',
