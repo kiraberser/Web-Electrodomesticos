@@ -1,28 +1,31 @@
-"use client";
+import { getEstadisticasVentas, getGraficoVentas } from '@/features/admin/ventas-api'
+import { getPedidosStats, getAllPedidos } from '@/features/orders/api'
+import { getServiciosEstadisticas } from '@/features/services/api'
+import { getAllRefacciones } from '@/features/catalog/api'
+import OverviewSection from '@/features/admin/sections/OverviewSection'
 
-import dynamic from "next/dynamic";
+export const dynamic = 'force-dynamic'
 
-function DashboardSkeleton() {
-  return (
-    <div className="p-6 space-y-6 animate-pulse">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-28 rounded-xl bg-slate-200/60" />
-        ))}
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="h-64 rounded-xl bg-slate-200/60" />
-        <div className="h-64 rounded-xl bg-slate-200/60" />
-      </div>
-    </div>
-  );
-}
+export default async function DashboardPage() {
+    const [estadisticasVentas, grafico, pedidosStats, pedidos, serviciosEstadisticas, refacciones] =
+        await Promise.all([
+            getEstadisticasVentas('mes').catch(() => null),
+            getGraficoVentas('dia', new Date().getFullYear(), new Date().getMonth() + 1).catch(() => ({ datos: [], tipo: 'dia', año: new Date().getFullYear() })),
+            getPedidosStats().catch(() => null),
+            getAllPedidos(1).catch(() => ({ results: [], count: 0, next: null, previous: null })),
+            getServiciosEstadisticas().catch(() => null),
+            getAllRefacciones().catch(() => []),
+        ])
 
-const OverviewSection = dynamic(
-  () => import("@/features/admin/sections/OverviewSection").then((m) => ({ default: m.OverviewSection })),
-  { loading: () => <DashboardSkeleton /> }
-);
-
-export default function DashboardPage() {
-  return <OverviewSection />;
+    return (
+        <OverviewSection
+            estadisticasVentas={estadisticasVentas}
+            grafico={grafico.datos ?? []}
+            pedidosStats={pedidosStats}
+            pedidos={pedidos.results ?? []}
+            pedidosCount={pedidos.count ?? 0}
+            serviciosEstadisticas={serviciosEstadisticas}
+            refacciones={Array.isArray(refacciones) ? refacciones : []}
+        />
+    )
 }
