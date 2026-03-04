@@ -102,8 +102,14 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     const syncCart = useCallback(async () => {
         const isAuthenticated = checkAuthentication();
         if (!isAuthenticated) {
-            localStorage.removeItem('electromart-cart');
-            dispatch({ type: 'LOAD_CART', payload: [] });
+            // Guest: load from localStorage (preserve guest cart)
+            try {
+                const stored = localStorage.getItem('electromart-cart');
+                const parsed: CartItem[] = stored ? JSON.parse(stored) : [];
+                dispatch({ type: 'LOAD_CART', payload: parsed });
+            } catch {
+                dispatch({ type: 'LOAD_CART', payload: [] });
+            }
             return;
         }
         try {

@@ -17,7 +17,7 @@ const CartDrawer = ({
     const { items, updateQuantity, removeItem, getTotalPrice, clearCart } =
         useCart();
     const subtotal = getTotalPrice();
-    const shippingFee = subtotal > 0 ? 800 : 0;
+    const shippingFee = subtotal > 0 && subtotal < 600 ? 150 : 0;
     const totalWithShipping = subtotal + shippingFee;
 
     if (!isOpen) return null;
@@ -65,7 +65,7 @@ const CartDrawer = ({
 
                         {/* Barra de envío gratis */}
                         <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                            {subtotal >= 800
+                            {subtotal >= 600
                                 ? (
                                     <div className="flex items-center gap-2 text-green-700 text-sm font-medium">
                                         <span>🎉</span> ¡Tu pedido tiene{" "}
@@ -76,7 +76,7 @@ const CartDrawer = ({
                                     <div className="text-sm text-gray-600">
                                         Agrega{" "}
                                         <span className="font-bold text-gray-900">
-                                            {formatPrice(800 - subtotal)}
+                                            {formatPrice(600 - subtotal)}
                                         </span>{" "}
                                         para envío gratis.
                                         {/* Barra de progreso visual */}
@@ -84,9 +84,10 @@ const CartDrawer = ({
                                             <div
                                                 className="h-full bg-blue-600 rounded-full transition-all duration-500"
                                                 style={{
-                                                    width: `${
-                                                        (subtotal / 800) * 100
-                                                    }%`,
+                                                    width: `${Math.min(
+                                                        (subtotal / 600) * 100,
+                                                        100,
+                                                    )}%`,
                                                 }}
                                             />
                                         </div>
