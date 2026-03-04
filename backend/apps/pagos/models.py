@@ -24,7 +24,9 @@ class Pago(models.Model):
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name='pagos'
+        related_name='pagos',
+        null=True,
+        blank=True,
     )
     
     # Información de Mercado Pago

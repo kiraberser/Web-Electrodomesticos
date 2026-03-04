@@ -76,6 +76,80 @@ class CheckoutSerializer(serializers.Serializer):
         }
 
 
+class CheckoutInvitadoSerializer(serializers.Serializer):
+    guest_name = serializers.CharField(max_length=150)
+    guest_email = serializers.EmailField()
+    guest_phone = serializers.CharField(max_length=30)
+    calle = serializers.CharField(max_length=255)
+    ciudad = serializers.CharField(max_length=100)
+    estado_envio = serializers.CharField(max_length=100)
+    codigo_postal = serializers.CharField(max_length=10)
+    notas = serializers.CharField(required=False, allow_blank=True, default='')
+    items = CheckoutItemSerializer(many=True)
+
+    def create(self, validated_data):
+        items_data = validated_data.pop('items')
+        direccion_snapshot = {
+            'calle': validated_data.pop('calle'),
+            'ciudad': validated_data.pop('ciudad'),
+            'estado': validated_data.pop('estado_envio'),
+            'codigo_postal': validated_data.pop('codigo_postal'),
+            'notas': validated_data.pop('notas', ''),
+        }
+
+        with transaction.atomic():
+            pedido = Pedido.objects.create(
+                usuario=None,
+                guest_name=validated_data['guest_name'],
+                guest_email=validated_data['guest_email'],
+                guest_phone=validated_data['guest_phone'],
+                direccion_snapshot=direccion_snapshot,
+                estado=Pedido.EstadoChoices.CREADO,
+                total=0,
+            )
+            total = 0
+            for item in items_data:
+                try:
+                    from apps.inventario.models import Inventario
+                    inventario = Inventario.objects.filter(
+                        refaccion=item['refaccion'],
+                        cantidad__gt=0
+                    ).order_by('fecha').first()
+
+                    if not inventario:
+                        raise serializers.ValidationError({
+                            'detail': f'No hay stock disponible para {item["refaccion"].nombre}'
+                        })
+                    if inventario.cantidad < item['cantidad']:
+                        raise serializers.ValidationError({
+                            'detail': f'Stock insuficiente para {item["refaccion"].nombre}. Disponible: {inventario.cantidad}'
+                        })
+
+                    precio_unitario = inventario.precio_unitario
+                    subtotal_item = item['cantidad'] * precio_unitario
+                    PedidoItem.objects.create(
+                        pedido=pedido,
+                        refaccion=item['refaccion'],
+                        cantidad=item['cantidad'],
+                        precio_unitario=precio_unitario,
+                        subtotal=subtotal_item,
+                    )
+                    total += subtotal_item
+                except DjangoValidationError as e:
+                    raise serializers.ValidationError(
+                        e.message_dict if hasattr(e, 'message_dict') else {'detail': e.messages}
+                    )
+
+            pedido.total = total
+            pedido.save(update_fields=['total'])
+
+        return {
+            'pedido_id': pedido.id,
+            'total': str(pedido.total),
+            'estado': pedido.estado,
+        }
+
+
 class PedidoItemListSerializer(serializers.ModelSerializer):
     refaccion_nombre = serializers.ReadOnlyField(source='refaccion.nombre')
     refaccion_imagen = serializers.ReadOnlyField(source='refaccion.imagen')
@@ -125,7 +199,9 @@ class PedidoListSerializer(serializers.ModelSerializer):
         ]
 
     def get_usuario_nombre(self, obj):
-        """Retorna el nombre completo del usuario o username si no tiene nombre"""
+        """Retorna el nombre completo del usuario, o nombre de invitado si es guest"""
+        if not obj.usuario:
+            return obj.guest_name or 'Invitado'
         if obj.usuario.first_name or obj.usuario.last_name:
             nombre_completo = f"{obj.usuario.first_name or ''} {obj.usuario.last_name or ''}".strip()
             return nombre_completo if nombre_completo else obj.usuario.username

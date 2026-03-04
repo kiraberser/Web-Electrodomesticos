@@ -5,7 +5,8 @@ from django.db.models import Q, Sum
 from django.utils import timezone
 from datetime import timedelta
 
-from .serializers import CheckoutSerializer, PedidoListSerializer
+from rest_framework.permissions import AllowAny
+from .serializers import CheckoutSerializer, CheckoutInvitadoSerializer, PedidoListSerializer
 from .models import Pedido
 from .pagination import PedidoPagination, PedidoPagadoPagination
 
@@ -14,6 +15,16 @@ class CheckoutView(APIView):
 
     def post(self, request):
         serializer = CheckoutSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        data = serializer.save()
+        return Response(data, status=status.HTTP_201_CREATED)
+
+
+class CheckoutInvitadoView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = CheckoutInvitadoSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.save()
         return Response(data, status=status.HTTP_201_CREATED)
