@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react'
 import { checkAuthentication } from '@/shared/lib/cookies'
-import { getFavoritosClient, agregarFavoritoClient, eliminarFavoritoClient } from '@/features/auth/api-client'
+import { getFavoritosIdsAction, agregarFavoritoAction, eliminarFavoritoAction } from '@/features/favorites/actions'
 
 interface FavoritesContextType {
     isFavorite: (id: number) => boolean
@@ -21,8 +21,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
             return
         }
         try {
-            const data = await getFavoritosClient()
-            setFavoriteIds(new Set(data.favoritos.map((f) => f.id)))
+            const ids = await getFavoritosIdsAction()
+            setFavoriteIds(new Set(ids))
         } catch {
             // Silently fail — user won't see favorites pre-filled but can still toggle
         }
@@ -40,7 +40,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         // Optimistic update
         setFavoriteIds((prev) => new Set([...prev, id]))
         try {
-            await agregarFavoritoClient(id)
+            const res = await agregarFavoritoAction(id)
+            if (!res.success) throw new Error(res.error)
         } catch {
             // Revert on error
             setFavoriteIds((prev) => {
@@ -60,7 +61,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
             return next
         })
         try {
-            await eliminarFavoritoClient(id)
+            const res = await eliminarFavoritoAction(id)
+            if (!res.success) throw new Error(res.error)
         } catch {
             // Revert on error
             setFavoriteIds((prev) => new Set([...prev, id]))

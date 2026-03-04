@@ -95,6 +95,21 @@ export async function agregarFavoritoAction(refaccionId: number) {
     }
 }
 
+/**
+ * Obtiene los IDs de favoritos del usuario para el Provider global.
+ * No redirige si no está autenticado — devuelve [] silenciosamente.
+ */
+export async function getFavoritosIdsAction(): Promise<number[]> {
+    try {
+        const cookieStore = await cookies()
+        if (!cookieStore.get('username')?.value) return []
+        const data = await getFavoritos()
+        return data.favoritos.map((f: { id?: number }) => Number(f.id)).filter(Boolean)
+    } catch {
+        return []
+    }
+}
+
 export async function eliminarFavoritoAction(refaccionId: number) {
     try {
         const isAuthenticated = await checkAuth()

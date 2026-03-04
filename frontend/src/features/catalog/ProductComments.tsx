@@ -6,8 +6,7 @@ import { useActionState } from "react"
 import { Button } from "@/shared/ui/forms/Button"
 import { Star, Trash2 } from "lucide-react"
 import toast from "react-hot-toast"
-import { createComentarioAction, deleteComentarioAction } from "@/features/catalog/comentarios-actions"
-import { getComentariosProductoClient } from "@/features/catalog/api-client"
+import { createComentarioAction, deleteComentarioAction, getComentariosAction } from "@/features/catalog/comentarios-actions"
 import { type ComentarioProducto } from "@/features/catalog/api"
 import { checkAuthentication } from "@/shared/lib/cookies"
 import { getCookieValue } from "@/shared/lib/cookies"
@@ -57,8 +56,9 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
             
             setIsLoadingComentarios(true)
             try {
-                const allComentarios = await getComentariosProductoClient(productId)
-                
+                const res = await getComentariosAction(productId)
+                const allComentarios = res.data ?? []
+
                 if (isMounted) {
                     setAllComentarios(allComentarios)
                     setComentarios(allComentarios.slice(0, 5))
@@ -97,7 +97,8 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
             
             // Recargar comentarios después de un breve delay
             reloadTimeoutRef.current = setTimeout(async () => {
-                const allComentarios = await getComentariosProductoClient(productId)
+                const res = await getComentariosAction(productId)
+                const allComentarios = res.data ?? []
                 setAllComentarios(allComentarios)
                 setComentarios(allComentarios.slice(0, 5))
                 hasProcessedFormState.current = false
@@ -158,7 +159,8 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
                 
                 // Recargar comentarios
                 reloadTimeoutRef.current = setTimeout(async () => {
-                    const allComentarios = await getComentariosProductoClient(productId)
+                    const res = await getComentariosAction(productId)
+                    const allComentarios = res.data ?? []
                     setAllComentarios(allComentarios)
                     setComentarios(allComentarios.slice(0, 5))
                 }, 300)
