@@ -11,6 +11,7 @@ import { FavoritesProvider } from '@/features/favorites/FavoritesContext';
 import RouteModalGate from '@/shared/layout/RouteModalGate';
 import WhatsAppButton from '@/shared/layout/WhatsAppButton';
 import type { Metadata, Viewport } from 'next';
+import { getIsAdminFromToken } from '@/shared/lib/jwt.server';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,7 +35,6 @@ export const metadata: Metadata = {
     locale: 'es_MX',
     url: 'https://www.refaccionariavega.com.mx',
     siteName: 'Refaccionaria Vega',
-    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'Refaccionaria Vega' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -48,6 +48,7 @@ interface RootLayoutProps {
 export default async function RootLayout({ children }: RootLayoutProps) {
   const cookiesStore = await cookies();
   const username = cookiesStore.get('username')?.value || null;
+  const isAdmin = getIsAdminFromToken(cookiesStore.get('access_cookie')?.value);
   return (
     <html lang="es-MX" className={inter.variable}>
       <head>
@@ -57,7 +58,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className={`${inter.className} text-[#0A3981]`}>
         <CartProvider>
           <FavoritesProvider>
-            <AppChrome username={username || undefined}>
+            <AppChrome username={username || undefined} isAdmin={isAdmin}>
               {children}
             </AppChrome>
             <RouteModalGate />

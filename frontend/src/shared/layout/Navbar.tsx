@@ -22,9 +22,10 @@ import { checkAuthentication } from "@/shared/lib/cookies"
 
 interface NavbarProps {
     username?: string
+    isAdmin?: boolean
 }
 
-const Navbar: React.FC<NavbarProps> = ({ username }) => {
+const Navbar: React.FC<NavbarProps> = ({ username, isAdmin = false }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isCartOpen, setIsCartOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState("")
@@ -185,7 +186,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                                         <User className="w-4 h-4 mr-3 text-gray-400" />
                                                         Mi Perfil
                                                     </Link>
-                                                    {username === "admin" && (
+                                                    {isAdmin && (
                                                         <>
                                                             <Link
                                                                 href="/admin/dashboard"
@@ -351,7 +352,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                                                     : "text-[#E38E49] hover:bg-[#E38E49]/10"
                                             }`}
                                         >
-                                            <span className="text-[11px]">❄</span>
+                                            <span className="text-[11px]" aria-hidden="true">❄</span>
                                             {label}
                                         </Link>
                                     )
