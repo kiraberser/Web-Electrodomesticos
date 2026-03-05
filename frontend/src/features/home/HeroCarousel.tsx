@@ -144,8 +144,8 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`h-2.5 rounded-full transition-all duration-200 ${
-              i === current ? 'bg-[#E38E49] w-6 opacity-100' : 'bg-white/50 w-2.5 opacity-70 hover:opacity-100'
+            className={`w-6 h-2.5 rounded-full transition-opacity duration-200 ${
+              i === current ? 'bg-[#E38E49] opacity-100' : 'bg-white/50 opacity-50 hover:opacity-80'
             }`}
             aria-label={`Ir a slide ${i + 1}`}
             aria-current={i === current ? 'true' : undefined}

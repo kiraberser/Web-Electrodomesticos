@@ -47,13 +47,13 @@ const Navbar: React.FC<NavbarProps> = ({ username, isAdmin = false }) => {
         }
     }, [searchQuery, router])
 
-    const handleCartClick = () => {
+    const handleCartClick = useCallback(() => {
         if (!checkAuthentication()) {
             router.push("/cuenta/login")
             return
         }
         setIsCartOpen(true)
-    }
+    }, [router])
 
     // Close dropdowns when clicking outside
     useEffect(() => {

@@ -16,6 +16,7 @@ import { getIsAdminFromToken } from '@/shared/lib/jwt.server';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 });
 
 export const viewport: Viewport = {

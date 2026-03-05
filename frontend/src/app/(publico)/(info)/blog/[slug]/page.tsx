@@ -123,6 +123,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                             src={post.image}
                             alt={post.title}
                             fill
+                            priority
                             className="object-cover rounded-lg"
                             sizes="(max-width: 896px) 100vw, 896px"
                         />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 const slogans = [
   'Más de 20 años cuidando tu hogar',
@@ -14,13 +14,21 @@ const slogans = [
 
 export default function SloganBanner() {
   const [current, setCurrent] = useState(0)
+  const [visible, setVisible] = useState(true)
   const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Fade-out → swap text → fade-in to avoid DOM remount (CLS)
+  const advance = useCallback(() => {
+    setVisible(false)
+    setTimeout(() => {
+      setCurrent((prev) => (prev + 1) % slogans.length)
+      setVisible(true)
+    }, 220)
+  }, [])
 
   useEffect(() => {
     const start = () => {
-      intervalRef.current = setInterval(() => {
-        setCurrent((prev) => (prev + 1) % slogans.length)
-      }, 3500)
+      intervalRef.current = setInterval(advance, 3500)
     }
     const stop = () => {
       if (intervalRef.current) clearInterval(intervalRef.current)
@@ -35,7 +43,7 @@ export default function SloganBanner() {
       stop()
       document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [])
+  }, [advance])
 
   return (
     <section className="relative bg-[#0A3981] overflow-hidden">
@@ -55,10 +63,10 @@ export default function SloganBanner() {
               <p className="text-[#E38E49] text-sm font-semibold uppercase tracking-widest mb-4">
                 Refaccionaria Vega
               </p>
-              {/* key forces remount on change, restarting the CSS animation */}
               <h2
-                key={current}
-                className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight animate-slogan-in"
+                className={`text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight min-h-[3.5rem] md:min-h-[2.75rem] transition-opacity duration-200 ${visible ? 'opacity-100' : 'opacity-0'}`}
+                aria-live="polite"
+                aria-atomic="true"
               >
                 {slogans[current]}
               </h2>

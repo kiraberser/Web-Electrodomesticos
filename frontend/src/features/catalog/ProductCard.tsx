@@ -1,5 +1,6 @@
 "use client"
 
+import { memo, useCallback } from "react"
 import Image from "next/image"
 import { Button } from "@/shared/ui/forms/Button"
 import { Badge } from "@/shared/ui/feedback/Badge"
@@ -21,16 +22,15 @@ const ShoppingCartIcon = () => (
 
 interface Props {
     product?: Product
-    key?: string | undefined
 }
 
-export default function ProductCard({
+const ProductCard = memo(function ProductCard({
     product
 }: Props) {
     const { addItem } = useCart();
     const router = useRouter();
 
-    const handleAddToCart = async (product: Product) => {
+    const handleAddToCart = useCallback(async (product: Product) => {
         const authStatus = checkAuthentication();
         if (!authStatus) {
             toast.error('Inicia sesión para agregar productos al carrito', {
@@ -59,7 +59,7 @@ export default function ProductCard({
                 color: '#fff',
             },
         });
-    };
+    }, [addItem, router]);
 
     return (
         <div className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
@@ -119,4 +119,6 @@ export default function ProductCard({
             </div>
         </div>
     )
-}
+})
+
+export default ProductCard
