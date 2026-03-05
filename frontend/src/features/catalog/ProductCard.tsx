@@ -65,7 +65,7 @@ export default function ProductCard({
         <div className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
             <Link
                 href={
-                    `/categorias/${product?.category}/${product?.name}`
+                    `/categorias/${product?.category}/${encodeURIComponent(product?.name ?? '')}`
                 }
                 className="block"
                 aria-label={`Ver ${product?.name || ""}`}
@@ -92,7 +92,7 @@ export default function ProductCard({
             <div className="flex flex-1 flex-col p-4">
                 <Link
                     href={
-                        `/categorias/${product?.category}/${product?.name}`
+                        `/categorias/${product?.category}/${encodeURIComponent(product?.name ?? '')}`
                     }
                     className="line-clamp-2 text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors"
                 >

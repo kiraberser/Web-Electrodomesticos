@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 import type { HeroSlide } from '@/shared/data/carouselData'
 
 interface HeroCarouselProps {
@@ -14,6 +14,7 @@ interface HeroCarouselProps {
 export default function HeroCarousel({ slides }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0)
   const [direction, setDirection] = useState(1)
+  const [paused, setPaused] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const goTo = useCallback(
@@ -34,13 +35,19 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length)
   }, [slides.length])
 
-  // Auto-advance with visibility API (no setInterval when tab hidden)
+  // Auto-advance with visibility API (no setInterval when tab hidden or user paused)
   useEffect(() => {
-    const start = () => {
-      intervalRef.current = setInterval(next, 5000)
-    }
     const stop = () => {
       if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+
+    if (paused) {
+      stop()
+      return
+    }
+
+    const start = () => {
+      intervalRef.current = setInterval(next, 5000)
     }
 
     const handleVisibility = () => {
@@ -58,7 +65,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
       stop()
       document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [next])
+  }, [next, paused])
 
   const variants = {
     enter: (dir: number) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
@@ -131,18 +138,28 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
         <ChevronRight className="w-5 h-5" />
       </button>
 
-      {/* Dot indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Dot indicators + pause control */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-              i === current ? 'bg-[#E38E49] w-6' : 'bg-white/50 hover:bg-white/70'
+            className={`h-2.5 rounded-full transition-all duration-200 ${
+              i === current ? 'bg-[#E38E49] w-6 opacity-100' : 'bg-white/50 w-2.5 opacity-70 hover:opacity-100'
             }`}
             aria-label={`Ir a slide ${i + 1}`}
+            aria-current={i === current ? 'true' : undefined}
           />
         ))}
+
+        {/* Pause / Play — WCAG 2.2.2 */}
+        <button
+          onClick={() => setPaused((p) => !p)}
+          className="ml-1 w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+          aria-label={paused ? 'Reanudar carrusel' : 'Pausar carrusel'}
+        >
+          {paused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+        </button>
       </div>
     </section>
   )

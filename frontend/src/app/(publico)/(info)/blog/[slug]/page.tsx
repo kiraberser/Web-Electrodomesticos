@@ -118,13 +118,15 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 </div>
 
                 {post.image && (
-                    <Image
-                        src={post.image}
-                        alt={post.title}
-                        width={1200}
-                        height={400}
-                        className="w-full h-64 object-cover rounded-lg mb-6"
-                    />
+                    <div className="relative w-full h-64 mb-6">
+                        <Image
+                            src={post.image}
+                            alt={post.title}
+                            fill
+                            className="object-cover rounded-lg"
+                            sizes="(max-width: 896px) 100vw, 896px"
+                        />
+                    </div>
                 )}
 
                 <div className="text-gray-600 mb-4">{post.description}</div>

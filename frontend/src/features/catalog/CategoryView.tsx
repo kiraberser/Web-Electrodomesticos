@@ -1,15 +1,10 @@
 "use client"
 
-import { useMemo, useState, useEffect } from "react"
+import { useMemo, useState, useCallback } from "react"
 import { Product, Brand, ProductType } from "@/shared/data/products"
 import Filters from "@/shared/ui/product/filter"
 import { PackageSearch } from 'lucide-react'
-import dynamic from "next/dynamic"
-
-// Lazy load ProductCard para reducir el bundle inicial
-const ProductCard = dynamic(() => import("./ProductCard"), {
-    loading: () => <div className="h-[400px] animate-pulse bg-gray-200 rounded-xl" />,
-})
+import ProductCard from "./ProductCard"
 
 interface Props {
     categoryKey: string
@@ -61,10 +56,13 @@ export default function CategoryView({
 
     const totalPages = Math.ceil(filtered.length / productsPerPage)
 
-    // Resetear a página 1 cuando cambien los filtros
-    useEffect(() => {
-        setCurrentPage(1)
-    }, [filters.brands, filters.types, filters.min, filters.max])
+    const handleFilterChange = useCallback(
+        (newFilters: { brands: Brand[]; types?: ProductType[]; min: number; max: number }) => {
+            setFilters(newFilters)
+            setCurrentPage(1)
+        },
+        [],
+    )
 
     return (
         <div className="bg-gray-50">
@@ -81,7 +79,7 @@ export default function CategoryView({
 
             {/* Content with sidebar filters + grid */}
             <section className="container mx-auto grid grid-cols-1 gap-6 px-4 py-6 lg:grid-cols-[280px_1fr]">
-                <Filters brands={availableBrands} types={availableTypes} onChangeAction={setFilters} defaultMin={0} defaultMax={50000} />
+                <Filters brands={availableBrands} types={availableTypes} onChangeAction={handleFilterChange} defaultMin={0} defaultMax={50000} />
 
                 <div>
                     {/* Results header */}
@@ -123,6 +121,8 @@ export default function CategoryView({
                                             <button
                                                 key={page}
                                                 onClick={() => setCurrentPage(page)}
+                                                aria-label={`Página ${page}`}
+                                                aria-current={currentPage === page ? 'page' : undefined}
                                                 className={`w-10 h-10 text-sm font-medium rounded-md ${
                                                     currentPage === page
                                                         ? 'bg-blue-600 text-white'
@@ -133,12 +133,14 @@ export default function CategoryView({
                                             </button>
                                         )
                                     })}
-                                    
+
                                     {totalPages > 5 && (
                                         <>
-                                            <span className="text-gray-500">...</span>
+                                            <span className="text-gray-500" aria-hidden="true">...</span>
                                             <button
                                                 onClick={() => setCurrentPage(totalPages)}
+                                                aria-label={`Página ${totalPages}`}
+                                                aria-current={currentPage === totalPages ? 'page' : undefined}
                                                 className="w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                                             >
                                                 {totalPages}

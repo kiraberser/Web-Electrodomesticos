@@ -37,20 +37,20 @@ const Footer = ({ username }: { username: string | undefined }) => {
                 {company.description}
               </p>
               <div className="flex items-center gap-3 pt-1">
-                <a
-                  href="#"
-                  aria-label="Facebook"
-                  className="w-9 h-9 rounded-lg bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
+                <span
+                  aria-label="Facebook (próximamente)"
+                  title="Facebook (próximamente)"
+                  className="w-9 h-9 rounded-lg bg-white/50 flex items-center justify-center cursor-not-allowed opacity-50"
                 >
-                  <Facebook className="w-4 h-4 text-[#0A3981]" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Instagram"
-                  className="w-9 h-9 rounded-lg bg-white flex items-center justify-center hover:bg-white/90 transition-colors"
+                  <Facebook className="w-4 h-4 text-[#0A3981]" aria-hidden="true" />
+                </span>
+                <span
+                  aria-label="Instagram (próximamente)"
+                  title="Instagram (próximamente)"
+                  className="w-9 h-9 rounded-lg bg-white/50 flex items-center justify-center cursor-not-allowed opacity-50"
                 >
-                  <Instagram className="w-4 h-4 text-[#0A3981]" />
-                </a>
+                  <Instagram className="w-4 h-4 text-[#0A3981]" aria-hidden="true" />
+                </span>
               </div>
             </div>
 
@@ -169,10 +169,10 @@ const Footer = ({ username }: { username: string | undefined }) => {
               <ul className="space-y-2.5 text-sm">
                 <li>
                   <Link
-                    href="/shipping-returns"
+                    href="/envios"
                     className="text-white/80 hover:text-white transition-colors"
                   >
-                    Garantías
+                    Garantías y Envíos
                   </Link>
                 </li>
                 <li>
@@ -193,7 +193,7 @@ const Footer = ({ username }: { username: string | undefined }) => {
                 </li>
                 <li>
                   <Link
-                    href="/privacy-policy"
+                    href="/cookie-policy"
                     className="text-white/80 hover:text-white transition-colors"
                   >
                     Política de Cookies

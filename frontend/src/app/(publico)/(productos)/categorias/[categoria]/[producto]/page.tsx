@@ -44,8 +44,7 @@ export default async function ProductoPage({
     let refaccion: Refaccion
     try {
         refaccion = await getRefaccionByNombre(productoNombre)
-    } catch (error) {
-        console.error('Error fetching refaccion:', error)
+    } catch {
         notFound()
     }
 
