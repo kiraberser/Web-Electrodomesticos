@@ -25,7 +25,6 @@ Allow: /categorias
 Allow: /blog
 Allow: /nosotros
 Allow: /faq
-Allow: /special-offers
 Allow: /privacy-policy
 Allow: /terms-conditions
 Allow: /envios

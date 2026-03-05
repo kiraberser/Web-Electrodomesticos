@@ -36,21 +36,23 @@ async function getProductsByCategory(id: number, key: string) {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
-    { url: `${BASE_URL}/` },
-    { url: `${BASE_URL}/categorias` },
-    { url: `${BASE_URL}/nosotros` },
-    { url: `${BASE_URL}/contacto` },
-    { url: `${BASE_URL}/blog` },
-    { url: `${BASE_URL}/faq` },
-    { url: `${BASE_URL}/privacy-policy` },
-    { url: `${BASE_URL}/terms-conditions` },
-    { url: `${BASE_URL}/envios` },
-    { url: `${BASE_URL}/devoluciones` },
-    { url: `${BASE_URL}/cookie-policy` },
+    { url: `${BASE_URL}/`, changeFrequency: 'daily', priority: 1.0 },
+    { url: `${BASE_URL}/categorias`, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${BASE_URL}/nosotros`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/contacto`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/blog`, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${BASE_URL}/faq`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE_URL}/privacy-policy`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE_URL}/terms-conditions`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE_URL}/envios`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE_URL}/devoluciones`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE_URL}/cookie-policy`, changeFrequency: 'yearly', priority: 0.3 },
   ]
 
   const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({
     url: `${BASE_URL}/categorias/${cat.key}`,
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
   }))
 
   const [blogSlugs, ...productArrays] = await Promise.all([
@@ -61,9 +63,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPages = blogSlugs.map(({ slug, lastmod }) => ({
     url: `${BASE_URL}/blog/${slug}`,
     lastmod,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
   }))
 
-  const productPages = productArrays.flat().map(({ url, lastmod }) => ({ url, lastmod }))
+  const productPages = productArrays.flat().map(({ url, lastmod }) => ({
+    url,
+    lastmod,
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }))
 
   return [...staticPages, ...categoryPages, ...blogPages, ...productPages]
 }

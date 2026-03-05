@@ -80,6 +80,7 @@ export default function CategoryStrip() {
                     fill
                     sizes={`(min-width: 1280px) 16vw, (min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw`}
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    priority={i < 3}
                   />
                   {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A3981]/80 via-[#0A3981]/10 to-transparent" />
@@ -104,10 +105,10 @@ export default function CategoryStrip() {
               <button
                 key={i}
                 onClick={() => setStartIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-150 cursor-pointer ${
+                className={`w-6 h-1.5 rounded-full transition-opacity duration-150 cursor-pointer ${
                   i === startIndex
-                    ? 'w-6 bg-[#0A3981]'
-                    : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+                    ? 'bg-[#0A3981] opacity-100'
+                    : 'bg-gray-300 opacity-40 hover:opacity-70'
                 }`}
                 aria-label={`Ir a categoría ${i + 1}`}
               />

@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Heart } from 'lucide-react'
@@ -15,12 +16,12 @@ interface ProductCardMiniProps {
   showDiscount?: boolean
 }
 
-export default function ProductCardMini({ product, showDiscount = false }: ProductCardMiniProps) {
+const ProductCardMini = memo(function ProductCardMini({ product, showDiscount = false }: ProductCardMiniProps) {
   const { addItem } = useCart()
   const { isFavorite, isLoading, showAuthModal, toggleFavorite, closeAuthModal } = useFavorite(product.id)
   const hasDiscount = showDiscount && product.discount && product.original_price
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     addItem({
       id: product.id,
       name: product.name,
@@ -28,7 +29,7 @@ export default function ProductCardMini({ product, showDiscount = false }: Produ
       quantity: 1,
     })
     toast.success(`${product.name} agregado al carrito`)
-  }
+  }, [addItem, product.id, product.name, product.price])
 
   return (
     <>
@@ -104,4 +105,6 @@ export default function ProductCardMini({ product, showDiscount = false }: Produ
       <AuthRequiredModal isOpen={showAuthModal} onCloseAction={closeAuthModal} />
     </>
   )
-}
+})
+
+export default ProductCardMini

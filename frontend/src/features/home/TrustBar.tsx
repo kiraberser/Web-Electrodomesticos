@@ -22,9 +22,22 @@ function MobileCarousel() {
     const advance = () => {
       setCurrent((prev) => (prev + 1) % features.length);
     };
-    timeoutRef.current = setInterval(advance, 3500);
-    return () => {
+    const start = () => {
+      timeoutRef.current = setInterval(advance, 3500);
+    };
+    const stop = () => {
       if (timeoutRef.current) clearInterval(timeoutRef.current);
+    };
+    const handleVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+
+    start();
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 

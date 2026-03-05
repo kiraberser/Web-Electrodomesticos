@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingBag, ChevronRight, TrendingUp, Heart } from 'lucide-react'
@@ -15,7 +16,7 @@ interface FeaturedGridProps {
   viewAllHref?: string
 }
 
-function RankedCard({ product, rank }: { product: Product; rank: number }) {
+const RankedCard = memo(function RankedCard({ product, rank }: { product: Product; rank: number }) {
   const { addItem } = useCart()
   const { isFavorite, isLoading, showAuthModal, toggleFavorite, closeAuthModal } = useFavorite(product.id)
 
@@ -113,7 +114,7 @@ function RankedCard({ product, rank }: { product: Product; rank: number }) {
       <AuthRequiredModal isOpen={showAuthModal} onCloseAction={closeAuthModal} />
     </>
   )
-}
+})
 
 export default function FeaturedGrid({ title, products, viewAllHref }: FeaturedGridProps) {
   return (
