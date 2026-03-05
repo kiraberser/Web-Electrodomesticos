@@ -3,7 +3,8 @@ import { slides } from '@/shared/data/carouselData'
 import { getDealProducts, getBestSellers, getNewArrivals } from '@/shared/data/products'
 import { getHomepageProducts } from '@/features/home/api'
 import BrandsBar from '@/features/home/BrandsBar'
-import RepairBlogSection from '@/features/home/RepairBlogSection'
+// import RepairBlogSection from '@/features/home/RepairBlogSection'
+import MinisplitSection from '@/features/home/MinisplitSection'
 import FadeInSection from '@/features/home/FadeInSection'
 
 const TrustBar = dynamic(
@@ -155,10 +156,13 @@ export default async function HomePage() {
 
       {/* 6. Beneficios */}
 
-      {/* 7. Blog — editorial layout */}
-      <FadeInSection>
+      {/* 7. Blog — editorial layout (deshabilitado, pendiente datos reales) */}
+      {/* <FadeInSection>
         <RepairBlogSection />
-      </FadeInSection>
+      </FadeInSection> */}
+
+      {/* 7. Instalación de Minisplit */}
+      <MinisplitSection />
 
       {/* 9. Marcas */}
       <FadeInSection>

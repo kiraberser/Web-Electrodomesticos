@@ -327,33 +327,49 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                     </div>
                 </div>
 
-                {/* Desktop Categories Navigation */}
+                {/* Desktop Main Navigation */}
                 <nav className="bg-gray-50/80 border-t border-gray-100" role="navigation" aria-label="Navegación principal">
                     <div className="container mx-auto px-2">
-                        <div className="hidden md:flex items-center space-x-1 py-2 overflow-x-auto">
-                            <Link
-                                href="/categorias"
-                                className={`px-4 py-2 text-sm rounded-lg transition-all duration-150 font-medium whitespace-nowrap cursor-pointer ${
-                                    pathname === "/categorias"
-                                        ? "text-[#0A3981] bg-[#0A3981]/5"
-                                        : "text-gray-600 hover:text-[#0A3981] hover:bg-white"
-                                }`}
-                            >
-                                Todas las categorías
-                            </Link>
-                            {categories.map((category) => (
-                                <Link
-                                    key={category.id}
-                                    href={`/categorias/${encodeURIComponent(category.key)}`}
-                                    className={`px-4 py-2 text-sm rounded-lg transition-all duration-150 font-medium whitespace-nowrap cursor-pointer ${
-                                        pathname === `/categorias/${category.key}`
-                                            ? "text-[#0A3981] bg-[#0A3981]/5"
-                                            : "text-gray-600 hover:text-[#0A3981] hover:bg-white"
-                                    }`}
-                                >
-                                    {category.label}
-                                </Link>
-                            ))}
+                        <div className="hidden md:flex items-center justify-center gap-0.5 py-2 overflow-x-auto">
+                            {([
+                                { href: "/categorias",    label: "Categorías" },
+                                { href: "/servicios",     label: "Servicios" },
+                                { href: "/minisplit",     label: "Instalación de Minisplit", special: true },
+                                { href: "/nosotros",      label: "Nosotros" },
+                                { href: "/envios",        label: "Políticas de Envío" },
+                                { href: "/contacto",      label: "Contacto" },
+                            ] as const).map(({ href, label, special }) => {
+                                const active = pathname === href
+                                if (special) {
+                                    return (
+                                        <Link
+                                            key={href}
+                                            href={href}
+                                            className={`flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg font-semibold whitespace-nowrap cursor-pointer transition-all duration-150 ${
+                                                active
+                                                    ? "bg-[#E38E49] text-white"
+                                                    : "text-[#E38E49] hover:bg-[#E38E49]/10"
+                                            }`}
+                                        >
+                                            <span className="text-[11px]">❄</span>
+                                            {label}
+                                        </Link>
+                                    )
+                                }
+                                return (
+                                    <Link
+                                        key={href}
+                                        href={href}
+                                        className={`px-4 py-2 text-sm rounded-lg font-medium whitespace-nowrap cursor-pointer transition-all duration-150 ${
+                                            active
+                                                ? "text-[#0A3981] bg-[#0A3981]/5"
+                                                : "text-gray-600 hover:text-[#0A3981] hover:bg-white"
+                                        }`}
+                                    >
+                                        {label}
+                                    </Link>
+                                )
+                            })}
                         </div>
                     </div>
                 </nav>

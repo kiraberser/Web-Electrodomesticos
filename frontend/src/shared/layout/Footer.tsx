@@ -24,7 +24,7 @@ const Footer = ({ username }: { username: string | undefined }) => {
       {/* Main Footer */}
       <div className="py-10 sm:py-12">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-6">
             {/* Logo & Company */}
             <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1 space-y-4">
               <div>
@@ -117,6 +117,45 @@ const Footer = ({ username }: { username: string | undefined }) => {
                     className="text-white/80 hover:text-white transition-colors"
                   >
                     Soporte técnico de la refacción
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Nosotros */}
+            <div>
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Nosotros
+              </h4>
+              <ul className="space-y-2.5 text-sm">
+                <li>
+                  <Link href="/nosotros" className="text-white/80 hover:text-white transition-colors">
+                    Quiénes Somos
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/nosotros#mision" className="text-white/80 hover:text-white transition-colors">
+                    Misión
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/nosotros#vision" className="text-white/80 hover:text-white transition-colors">
+                    Visión
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/nosotros#historia" className="text-white/80 hover:text-white transition-colors">
+                    Historia
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/nosotros#valores" className="text-white/80 hover:text-white transition-colors">
+                    Valores
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/nosotros#servicios" className="text-white/80 hover:text-white transition-colors">
+                    Servicios
                   </Link>
                 </li>
               </ul>

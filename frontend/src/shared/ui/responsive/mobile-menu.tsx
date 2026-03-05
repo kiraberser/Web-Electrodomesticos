@@ -6,7 +6,6 @@ import Link from "next/link"
 import { Search, X, User, Package, ShoppingBag, ChevronRight, MapPin, Heart, LayoutDashboard } from "lucide-react"
 import { Button } from "@/shared/ui/forms/Button"
 import { Input } from "@/shared/ui/forms/InputField"
-import { categories } from "@/shared/data/category"
 import LogOutButton from "@/features/auth/LogOutButton"
 
 interface MobileMenuProps {
@@ -98,29 +97,35 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                         </form>
                     </div>
 
-                    {/* Categories */}
+                    {/* Main Navigation */}
                     <div className="px-4 py-4 border-b border-gray-100">
                         <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                            Categorías
+                            Navegación
                         </h3>
                         <div className="space-y-0.5">
-                            <Link
-                                href="/categorias"
-                                className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
-                                onClick={onClose}
-                            >
-                                <span className="text-sm font-medium">Todas las categorías</span>
-                                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
-                            </Link>
-                            {categories.map((category) => (
+                            {([
+                                { href: "/categorias", label: "Categorías" },
+                                { href: "/servicios",  label: "Servicios" },
+                                { href: "/minisplit",  label: "Instalación de Minisplit", special: true },
+                                { href: "/nosotros",   label: "Nosotros" },
+                                { href: "/envios",     label: "Políticas de Envío" },
+                                { href: "/contacto",   label: "Contacto" },
+                            ] as const).map(({ href, label, special }) => (
                                 <Link
-                                    key={category.id}
-                                    href={`/categorias/${encodeURIComponent(category.key)}`}
-                                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-[#0A3981] transition-colors duration-150 group"
+                                    key={href}
+                                    href={href}
+                                    className={`flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors duration-150 group ${
+                                        special
+                                            ? "text-[#E38E49] hover:bg-[#E38E49]/10"
+                                            : "text-gray-700 hover:bg-gray-50 hover:text-[#0A3981]"
+                                    }`}
                                     onClick={onClose}
                                 >
-                                    <span className="text-sm font-medium">{category.label}</span>
-                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0A3981]" />
+                                    <span className={`text-sm font-medium flex items-center gap-2 ${special ? "font-semibold" : ""}`}>
+                                        {special && <span className="text-[11px]">❄</span>}
+                                        {label}
+                                    </span>
+                                    <ChevronRight className={`w-4 h-4 ${special ? "text-[#E38E49]/60" : "text-gray-300 group-hover:text-[#0A3981]"}`} />
                                 </Link>
                             ))}
                         </div>
