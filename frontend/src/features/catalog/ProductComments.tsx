@@ -13,12 +13,13 @@ import { getCookieValue } from "@/shared/lib/cookies"
 
 interface ProductCommentsProps {
     productId: number
+    initialComentarios?: ComentarioProducto[]
 }
 
-export default function ProductComments({ productId }: ProductCommentsProps) {
+export default function ProductComments({ productId, initialComentarios = [] }: ProductCommentsProps) {
     const router = useRouter()
-    const [comentarios, setComentarios] = useState<ComentarioProducto[]>([])
-    const [allComentarios, setAllComentarios] = useState<ComentarioProducto[]>([])
+    const [comentarios, setComentarios] = useState<ComentarioProducto[]>(initialComentarios.slice(0, 5))
+    const [allComentarios, setAllComentarios] = useState<ComentarioProducto[]>(initialComentarios)
     const [showAllComentarios, setShowAllComentarios] = useState(false)
     const [isLoadingComentarios, setIsLoadingComentarios] = useState(false)
     const [userRating, setUserRating] = useState(0)
@@ -47,40 +48,31 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
         }
     }, [])
 
-    // Cargar comentarios al montar
+    // Solo recarga comentarios cuando no se recibieron inicialmente (fallback)
     useEffect(() => {
+        if (initialComentarios.length > 0) return
         let isMounted = true
-        
+
         const loadComentarios = async () => {
             if (!productId) return
-            
             setIsLoadingComentarios(true)
             try {
                 const res = await getComentariosAction(productId)
-                const allComentarios = res.data ?? []
-
+                const all = res.data ?? []
                 if (isMounted) {
-                    setAllComentarios(allComentarios)
-                    setComentarios(allComentarios.slice(0, 5))
+                    setAllComentarios(all)
+                    setComentarios(all.slice(0, 5))
                 }
-            } catch (error) {
-                if (isMounted) {
-                    setComentarios([])
-                    setAllComentarios([])
-                }
+            } catch {
+                // silently fail — initial empty state is shown
             } finally {
-                if (isMounted) {
-                    setIsLoadingComentarios(false)
-                }
+                if (isMounted) setIsLoadingComentarios(false)
             }
         }
 
         loadComentarios()
-        
-        return () => {
-            isMounted = false
-        }
-    }, [productId])
+        return () => { isMounted = false }
+    }, [productId, initialComentarios.length])
 
     // Manejar resultado del formulario (solo una vez por cambio de formState)
     useEffect(() => {

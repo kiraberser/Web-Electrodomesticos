@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { cookies } from "next/headers"
-import { getRefaccionByNombre, type Refaccion } from "@/features/catalog/api"
+import { getRefaccionByNombre, getComentariosProducto, type Refaccion, type ComentarioProducto } from "@/features/catalog/api"
 import { categories as CATEGORIES } from "@/shared/data/category"
 import { checkFavoritoAction } from "@/features/favorites/actions"
 import ProductDetailClient from "./ProductDetailClient"
@@ -46,19 +46,18 @@ export default async function ProductoPage({
         notFound()
     }
 
-    // Check favorites only if authenticated (cookies already fetched in parallel)
+    // Check favorites + preload comments in parallel (cookies already fetched above)
     let isFavorite = false
+    let initialComentarios: ComentarioProducto[] = []
     if (refaccion.id) {
-        try {
-            const username = cookieStore.get('username')?.value
-            const token = cookieStore.get('access_cookie')?.value
-            if (username && token) {
-                const favoritoResult = await checkFavoritoAction(refaccion.id)
-                isFavorite = favoritoResult.success ? favoritoResult.isFavorite : false
-            }
-        } catch {
-            isFavorite = false
-        }
+        const username = cookieStore.get('username')?.value
+        const token = cookieStore.get('access_cookie')?.value
+        const [favoritoResult, comentarios] = await Promise.all([
+            username && token ? checkFavoritoAction(refaccion.id).catch(() => null) : Promise.resolve(null),
+            getComentariosProducto(refaccion.id).catch(() => []),
+        ])
+        isFavorite = favoritoResult?.success ? favoritoResult.isFavorite : false
+        initialComentarios = comentarios
     }
 
     const categoryLabel = CATEGORIES.find((c) => c.key === categoriaParam)?.label ?? categoriaParam
@@ -111,6 +110,7 @@ export default async function ProductoPage({
                 categoria={categoriaParam}
                 refaccion={refaccion}
                 initialIsFavorite={isFavorite}
+                initialComentarios={initialComentarios}
             />
         </>
     )

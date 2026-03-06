@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/shared/ui/forms/Button"
-import { type Refaccion } from "@/features/catalog/api"
+import { type Refaccion, type ComentarioProducto } from "@/features/catalog/api"
 import { type Brand, type Product, ProductType } from "@/shared/data/products"
 import AuthRequiredModal from "@/features/favorites/AuthRequiredModal"
 import ProductSpecs from "@/features/catalog/ProductSpecs"
@@ -19,9 +19,10 @@ interface Props {
   categoria: string
   refaccion: Refaccion
   initialIsFavorite?: boolean
+  initialComentarios?: ComentarioProducto[]
 }
 
-export default function ProductDetailClient({ categoria, refaccion, initialIsFavorite = false }: Props) {
+export default function ProductDetailClient({ categoria, refaccion, initialIsFavorite = false, initialComentarios = [] }: Props) {
   const router = useRouter()
   const { isMounted, showAuthModal, setShowAuthModal } = useAuthModal()
   const { isFavorite, isFavoriteLoading, toggleFavorite } = useFavoriteSync(
@@ -108,7 +109,7 @@ export default function ProductDetailClient({ categoria, refaccion, initialIsFav
             <ProductSpecs product={product} description={refaccion.descripcion} />
             {refaccion?.id && (
               <div className="lg:col-span-1">
-                <ProductComments productId={refaccion.id} />
+                <ProductComments productId={refaccion.id} initialComentarios={initialComentarios} />
               </div>
             )}
           </div>
