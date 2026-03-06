@@ -1,6 +1,4 @@
-"use client";
 import React from "react";
-import { usePathname } from "next/navigation";
 import Navbar from "@/shared/layout/Navbar";
 import Footer from "@/shared/layout/Footer";
 
@@ -11,9 +9,6 @@ interface AppChromeProps {
 }
 
 export function AppChrome({ children, username, isAdmin = false }: AppChromeProps) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
-  if (isAdminRoute) return <>{children}</>;
   return (
     <>
       <a

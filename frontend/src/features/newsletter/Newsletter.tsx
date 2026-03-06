@@ -1,3 +1,5 @@
+'use client'
+
 import { Mail } from "lucide-react";
 import { useActionState } from "react";
 import { subscribeNewsletterAction } from "@/features/newsletter/actions";

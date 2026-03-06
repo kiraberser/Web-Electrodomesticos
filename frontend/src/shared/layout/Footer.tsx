@@ -1,5 +1,3 @@
-"use client";
-
 import { Clock, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { company } from "@/shared/data/company";
 import { categories } from "@/shared/data/category";
