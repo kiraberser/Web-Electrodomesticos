@@ -275,22 +275,26 @@ export const getRefaccionByCodigoParte = async (codigoParte: string) => {
 export const getRefaccionByNombre = async (nombre: string) => {
     try {
         const url = `${URL}/productos/refacciones/?search=${encodeURIComponent(nombre)}`
-        const response = await axios.get(url)
-        
-        if (response.status !== 200) {
+        const response = await fetch(url, {
+            headers: { 'Content-Type': 'application/json' },
+            next: { revalidate: 3600 },
+        })
+
+        if (!response.ok) {
             throw new Error('Failed to fetch refaccion by nombre')
         }
-        
+
+        const data = await response.json()
         // El search puede devolver múltiples resultados, tomamos el primero que coincida exactamente
-        const refacciones = response.data.results || response.data
-        const refaccion = Array.isArray(refacciones) 
+        const refacciones = data.results || data
+        const refaccion = Array.isArray(refacciones)
             ? refacciones.find((r: Refaccion) => r.nombre === nombre) || refacciones[0]
             : refacciones
-        
+
         if (!refaccion) {
             throw new Error('Refaccion not found')
         }
-        
+
         return refaccion
     } catch (error) {
         console.error('Error fetching refaccion by nombre:', error)
@@ -377,14 +381,17 @@ export const getRefaccionesByCategoria = async (
         if (estado) params.append('estado', estado)
         
         const url = `${URL}/productos/categorias/${id_category}/refacciones/${params.toString() ? '?' + params.toString() : ''}`
-        
-        const response = await axios.get(url)
 
-        if (response.status !== 200) {
+        const response = await fetch(url, {
+            headers: { 'Content-Type': 'application/json' },
+            next: { revalidate: 300 },
+        })
+
+        if (!response.ok) {
             throw new Error(`Failed to fetch refacciones for categoria ${id_category}`)
         }
 
-        const data = response.data
+        const data = await response.json()
         return data
 } catch (error) {
         console.error('Error fetching refacciones by categoria:', error)
