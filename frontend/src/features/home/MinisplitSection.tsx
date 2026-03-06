@@ -78,7 +78,7 @@ export default function MinisplitSection() {
           src="/images/hero/minisplit-tecnico.webp"
           alt="Técnico certificado instalando minisplit — Refaccionaria Vega"
           fill
-          priority
+          loading="lazy"
           className="object-cover object-center"
           sizes="52vw"
         />

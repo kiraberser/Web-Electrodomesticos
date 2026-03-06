@@ -54,7 +54,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="es-MX" className={inter.variable}>
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
-        <link rel="preload" as="image" href="/images/hero/minisplit.webp" fetchPriority="high" />
       </head>
       <body className={`${inter.className} text-[#0A3981]`}>
         <CartProvider>
