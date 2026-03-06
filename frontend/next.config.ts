@@ -6,11 +6,8 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  // Disable Turbopack to fix "generate is not a function" error
-  // experimental: {
-  //   turbo: {}
-  // },
+  compress: true,
+  poweredByHeader: false,
   images: {
     minimumCacheTTL: 86400,
     formats: ['image/avif', 'image/webp'],
@@ -37,7 +34,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion'],
+    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion', 'react-hot-toast'],
   },
   async headers() {
     return [
