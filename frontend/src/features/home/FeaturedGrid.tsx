@@ -67,9 +67,8 @@ const RankedCard = memo(function RankedCard({ product, rank }: { product: Produc
               <Image
                 src={product.image}
                 alt={product.name}
-                height={640}
-                width={640}
-                sizes="144px"
+                fill
+                sizes="(min-width: 768px) 144px, 128px"
                 className="object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
               />
             </div>

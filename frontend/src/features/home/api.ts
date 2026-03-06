@@ -9,7 +9,7 @@ const URL = process.env.NEXT_PUBLIC_BASE_URL_API
 /** Fetch refacciones from API without auth (public endpoint) */
 const fetchRefacciones = cache(async (): Promise<Refaccion[]> => {
   try {
-    const response = await fetch(`${URL}/productos/refacciones/`, {
+    const response = await fetch(`${URL}/productos/refacciones/?page_size=12`, {
       headers: { 'Content-Type': 'application/json' },
       next: { revalidate: 60 },
     })
