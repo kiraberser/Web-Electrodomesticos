@@ -10,7 +10,8 @@ import { Button } from "@/shared/ui/forms/Button"
 import { Badge } from "@/shared/ui/feedback/Badge"
 import { Input } from "@/shared/ui/forms/InputField"
 import MobileMenu from "@/shared/ui/responsive/mobile-menu"
-import CartDrawer from "@/features/cart/CartDrawer"
+import dynamic from "next/dynamic"
+const CartDrawer = dynamic(() => import("@/features/cart/CartDrawer"), { ssr: false })
 import InformationBar from "@/features/home/InformationBar"
 
 import { useCart } from "@/features/cart/CartContext"
