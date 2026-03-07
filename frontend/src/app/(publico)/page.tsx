@@ -114,6 +114,9 @@ export default async function HomePage() {
   const newArrivals = apiProducts.newArrivals.length > 0 ? apiProducts.newArrivals : getNewArrivals()
 
   return (
+    <>
+      {/* Preload LCP hero — solo en homepage, Next.js hoisea este <link> al <head> */}
+      <link rel="preload" as="image" href="/images/hero/minisplit.webp" fetchPriority="high" />
     <main>
       <script
         type="application/ld+json"
@@ -168,5 +171,6 @@ export default async function HomePage() {
         <BrandsBar />
       </FadeInSection>
     </main>
+    </>
   )
 }
