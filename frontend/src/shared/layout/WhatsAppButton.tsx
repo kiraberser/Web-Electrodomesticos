@@ -16,7 +16,9 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export default function WhatsAppButton() {
   const [showTooltip, setShowTooltip] = useState(false)
-  
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   // Auto-show tooltip after 4s, once per session
   useEffect(() => {
@@ -31,6 +33,8 @@ export default function WhatsAppButton() {
   }, [])
 
   const waUrl = `https://wa.me/${PHONE}?text=${encodeURIComponent(DEFAULT_MESSAGE)}`
+
+  if (!mounted) return null
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-[9990] flex items-end gap-2 sm:gap-3">
