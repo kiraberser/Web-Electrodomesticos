@@ -377,15 +377,17 @@ const Navbar: React.FC<NavbarProps> = ({ username, isAdmin = false }) => {
                 </nav>
             </header>
 
-            {/* Mobile Menu */}
-            <MobileMenu
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
-                username={username}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                onSearchSubmit={handleSearch}
-            />
+            {/* Mobile Menu — only mounted when open to reduce DOM size */}
+            {isMenuOpen && (
+                <MobileMenu
+                    isOpen={isMenuOpen}
+                    onClose={() => setIsMenuOpen(false)}
+                    username={username}
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    onSearchSubmit={handleSearch}
+                />
+            )}
 
             {/* Cart Drawer */}
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />

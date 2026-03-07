@@ -40,19 +40,15 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
     return (
         <>
             {/* Backdrop */}
-            {isOpen && (
-                <div
-                    className="fixed inset-0 bg-black/40 z-40 md:hidden"
-                    onClick={onClose}
-                    aria-hidden="true"
-                />
-            )}
-
-            {/* Slide-in Panel */}
             <div
-                className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl transform transition-transform duration-200 ease-out md:hidden ${
-                    isOpen ? "translate-x-0" : "translate-x-full"
-                }`}
+                className="fixed inset-0 bg-black/40 z-40 md:hidden"
+                onClick={onClose}
+                aria-hidden="true"
+            />
+
+            {/* Panel */}
+            <div
+                className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl md:hidden"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Menú de navegación"
