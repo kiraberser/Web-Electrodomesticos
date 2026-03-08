@@ -22,7 +22,7 @@ import {
 export const metadata: Metadata = {
   title: 'Nosotros — Refaccionaria Vega',
   description:
-    'Más de 20 años en Martínez de la Torre, Veracruz. Conoce la historia, misión, visión y valores de Refaccionaria Vega.',
+    'Más de 40 años en Martínez de la Torre, Veracruz. Fundada en 1980 por Rafael Vega Romero. Conoce la historia, misión, visión y valores de Refaccionaria Vega.',
   alternates: {
     canonical: 'https://www.refaccionariavega.com.mx/nosotros',
   },
@@ -56,13 +56,13 @@ const valores = [
   {
     icon: Users,
     title: 'Cercanía',
-    desc: 'Somos parte de la comunidad de Martínez de la Torre. Tu vecino de confianza desde 2003.',
+    desc: 'Somos parte de la comunidad de Martínez de la Torre. Tu vecino de confianza desde 1980.',
     dark: true,
   },
   {
     icon: Star,
     title: 'Experiencia',
-    desc: 'Más de 20 años en el ramo nos dan el conocimiento para resolver cualquier falla.',
+    desc: 'Más de 40 años en el ramo nos dan el conocimiento para resolver cualquier falla.',
     dark: false,
   },
 ]
@@ -75,13 +75,18 @@ const servicios = [
   },
   {
     icon: Zap,
+    title: 'Embobinado de Motores Industriales',
+    desc: 'Servicio especializado en embobinado de motores para herramientas eléctricas y equipos de alto rendimiento. Una solución fundamental para garantizar el óptimo funcionamiento de la maquinaria.',
+  },
+  {
+    icon: Zap,
     title: 'Venta de Refacciones',
-    desc: 'Amplio inventario de piezas originales y genéricas para las principales marcas del mercado.',
+    desc: 'Amplio inventario de piezas originales y genéricas, incluyendo refacciones Koblenz y otras marcas líderes del mercado.',
   },
   {
     icon: Shield,
     title: 'Mantenimiento Preventivo',
-    desc: 'Evita fallas costosas con nuestros servicios de limpieza y mantenimiento programado.',
+    desc: 'Evita fallas costosas con nuestros servicios de limpieza y mantenimiento programado para electrodomésticos y herramientas eléctricas.',
   },
   {
     icon: Truck,
@@ -89,42 +94,37 @@ const servicios = [
     desc: 'Enviamos refacciones a cualquier punto de la república con los mejores carriers del país.',
   },
   {
-    icon: Users,
-    title: 'Asesoría Técnica',
-    desc: 'Te guiamos para elegir la refacción correcta o decidir si conviene reparar o reemplazar.',
-  },
-  {
     icon: CheckCircle,
-    title: 'Garantía en Reparaciones',
-    desc: 'Todos nuestros trabajos tienen garantía. Si falla, regresa y lo resolvemos sin costo adicional.',
+    title: 'Instalación de Minisplits',
+    desc: 'Instalación profesional de equipos de aire acondicionado tipo minisplit para hogar y negocio en la región.',
   },
 ]
 
 const historia = [
   {
-    year: '2003',
+    year: '1980',
     title: 'Los inicios',
-    desc: 'Refaccionaria Vega abre sus puertas en el centro de Martínez de la Torre con un pequeño local y la firme convicción de ayudar a las familias de la región.',
+    desc: 'Rafael Vega Romero funda Refaccionaria Vega en Martínez de la Torre, Veracruz, identificando la necesidad local de refacciones accesibles y reparación confiable de electrodomésticos, herramientas eléctricas y motores industriales.',
   },
   {
-    year: '2008',
-    title: 'Crecimiento regional',
-    desc: 'Ampliamos el catálogo de marcas y comenzamos a atender a talleres y técnicos independientes de toda la zona norte de Veracruz.',
+    year: '1990s',
+    title: 'Especialización en motores',
+    desc: 'La empresa se posiciona como referente regional en el embobinado de motores industriales, ofreciendo una solución fundamental para talleres y empresas que dependen de herramientas eléctricas y equipos de alto rendimiento.',
   },
   {
-    year: '2015',
-    title: 'Expansión nacional',
-    desc: 'Iniciamos envíos a toda la república mexicana, llegando a clientes en más de 20 estados con atención personalizada.',
+    year: '2000s',
+    title: 'Alianzas estratégicas',
+    desc: 'Consolidamos alianzas con proveedores reconocidos como Koblenz y comenzamos a colaborar con empresas de prestigio como Farmacias Similares, Empacadoras de Limón, Cruz Roja y escuelas de la región.',
   },
   {
-    year: '2022',
-    title: 'Transformación digital',
-    desc: 'Lanzamos nuestra plataforma en línea para que puedas encontrar y ordenar refacciones desde cualquier lugar del país.',
+    year: '2010s',
+    title: 'Crecimiento y expansión',
+    desc: 'Ampliamos la oferta de servicios atendiendo a clientes en toda la zona norte de Veracruz, iniciando envíos a todo México y fortaleciendo relaciones con marcas líderes del sector.',
   },
   {
     year: 'Hoy',
-    title: 'Seguimos creciendo',
-    desc: 'Más de 5,000 refacciones en catálogo, cientos de clientes satisfechos cada mes y el mismo compromiso familiar de siempre.',
+    title: 'Más de 40 años evolucionando',
+    desc: 'Seguimos adaptándonos: instalamos minisplits, fortalecemos la venta en línea y mantenemos el mismo compromiso familiar con el que Rafael Vega Romero fundó la empresa hace más de cuatro décadas.',
   },
 ]
 
@@ -151,20 +151,21 @@ export default function NosotrosPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-            Más de 20 años{' '}
+            Más de 40 años{' '}
             <span className="text-[#E38E49]">reparando lo que importa</span>
           </h1>
 
           <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
             Somos una refaccionaria familiar en Martínez de la Torre, Veracruz.
-            Desde 2003 ayudamos a miles de familias a mantener sus electrodomésticos funcionando.
+            Desde 1980 ayudamos a familias y empresas a mantener sus electrodomésticos,
+            herramientas y motores funcionando.
           </p>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-6 mt-14 max-w-xl mx-auto">
             {[
-              { num: '20+', label: 'Años de experiencia' },
-              { num: '5k+', label: 'Refacciones en catálogo' },
+              { num: '40+', label: 'Años de experiencia' },
+              { num: '1980', label: 'Año de fundación' },
               { num: '32', label: 'Estados con envío' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
