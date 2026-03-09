@@ -76,7 +76,13 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
   const slide = slides[current]
 
   return (
-    <section className="relative w-full h-[350px] md:h-[420px] lg:h-[calc(80vh-80px)] overflow-hidden bg-gray-900">
+    <section
+      className="relative w-full h-[350px] md:h-[420px] lg:h-[calc(80vh-80px)] overflow-hidden bg-gray-900"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
+    >
       <AnimatePresence initial={false} custom={direction} mode="wait">
         <motion.div
           key={slide.id}
