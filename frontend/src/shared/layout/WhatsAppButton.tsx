@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 
 const PHONE = '522323216694'
-const DEFAULT_MESSAGE = 'Hola, me gustaría obtener información sobre sus productos y refacciones en electrodomésticos.'
+const DEFAULT_MESSAGE = 'Hola, me gustaría obtener información sobre refacciones para electrodomésticos o servicio de reparación.'
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
