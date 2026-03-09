@@ -1,9 +1,14 @@
 'use server'
 
-import { searchRefaccionesForPOS, createVentaRefaccion } from '@/features/admin/ventas-api'
-import type { Refaccion } from '@/features/catalog/api'
+import {
+    searchRefaccionesForPOSFiltered,
+    createVentaRefaccion,
+    type POSSearchFilters,
+} from '@/features/admin/ventas-api'
+import { getAllMarcas, getAllCategorias } from '@/features/catalog/api'
+import type { Refaccion, Marca, Categoria } from '@/features/catalog/api'
 
-export type { Refaccion }
+export type { Refaccion, Marca, Categoria, POSSearchFilters }
 
 export interface CartItem {
     refaccion: Refaccion
@@ -18,10 +23,29 @@ export interface CreateVentasResult {
     total?: number
 }
 
-/** Busca refacciones por nombre — llamado desde el cliente */
-export async function searchRefaccionesAction(query: string): Promise<Refaccion[]> {
-    if (!query.trim() || query.trim().length < 2) return []
-    return searchRefaccionesForPOS(query.trim())
+/** Carga marcas para los selectores del POS */
+export async function getMarcasPOSAction(): Promise<Marca[]> {
+    try {
+        return await getAllMarcas()
+    } catch {
+        return []
+    }
+}
+
+/** Carga categorías para los selectores del POS */
+export async function getCategoriasPOSAction(): Promise<Categoria[]> {
+    try {
+        return await getAllCategorias()
+    } catch {
+        return []
+    }
+}
+
+/** Busca refacciones con filtros explícitos — solo se llama al presionar Buscar */
+export async function searchRefaccionesAction(filters: POSSearchFilters): Promise<Refaccion[]> {
+    const hasFilter = Object.values(filters).some((v) => v && v.trim())
+    if (!hasFilter) return []
+    return searchRefaccionesForPOSFiltered(filters)
 }
 
 /** Crea una venta por cada ítem del carrito */

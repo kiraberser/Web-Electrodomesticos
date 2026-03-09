@@ -195,6 +195,36 @@ export const searchRefaccionesForPOS = async (query: string): Promise<Refaccion[
     }
 }
 
+export interface POSSearchFilters {
+    sku?: string
+    nombre?: string
+    marca?: string
+    categoria?: string
+    estado?: string
+}
+
+/** Busca refacciones con filtros explícitos para el POS */
+export const searchRefaccionesForPOSFiltered = async (filters: POSSearchFilters): Promise<Refaccion[]> => {
+    try {
+        const params: Record<string, string> = { page_size: '30' }
+        // SKU tiene prioridad sobre nombre en el campo search
+        const searchText = filters.sku?.trim() || filters.nombre?.trim()
+        if (searchText) params.search = searchText
+        if (filters.marca) params.marca = filters.marca
+        if (filters.categoria) params.categoria = filters.categoria
+        if (filters.estado) params.estado = filters.estado
+        const response = await axios.get(`${url}/productos/refacciones/`, {
+            params,
+            headers: { Authorization: `Bearer ${await getToken()}` },
+        })
+        const data = response.data
+        return data.results ?? data
+    } catch (error: unknown) {
+        console.error('Error buscando refacciones con filtros:', error)
+        return []
+    }
+}
+
 /** Crea un registro de venta de refacción (POS) */
 export const createVentaRefaccion = async (payload: CreateVentaPayload): Promise<VentaCreada> => {
     const response = await axios.post(
