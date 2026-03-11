@@ -33,17 +33,29 @@ export default function Image() {
           }}
         />
 
-        {/* Logo text */}
+        {/* Logo box — replica del logotipo */}
         <div
           style={{
-            fontSize: 80,
-            fontWeight: 800,
-            color: '#E38E49',
-            letterSpacing: '-2px',
-            marginBottom: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#0D1166',
+            borderRadius: '16px',
+            padding: '24px 56px',
+            marginBottom: '36px',
           }}
         >
-          Refaccionaria Vega
+          <div
+            style={{
+              fontSize: 110,
+              fontWeight: 900,
+              color: '#FFFFFF',
+              letterSpacing: '10px',
+              fontFamily: 'Arial Black, sans-serif',
+            }}
+          >
+            VEGA
+          </div>
         </div>
 
         {/* Tagline */}
@@ -56,7 +68,7 @@ export default function Image() {
             lineHeight: 1.4,
           }}
         >
-          Refacciones y Electrodomésticos
+          Refacciones, Reparaciones e Instalaciones
         </div>
 
         {/* Location */}
