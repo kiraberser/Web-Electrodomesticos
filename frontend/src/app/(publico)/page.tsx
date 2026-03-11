@@ -5,6 +5,7 @@ import BrandsBar from '@/features/home/BrandsBar'
 import MinisplitSection from '@/features/home/MinisplitSection'
 import FadeInSection from '@/features/home/FadeInSection'
 import CatalogComingSoon from '@/features/home/CatalogComingSoon'
+import ServiciosStrip from '@/features/home/ServiciosStrip'
 
 const TrustBar = dynamic(
   () => import('@/features/home/TrustBar'),
@@ -173,6 +174,9 @@ export default async function HomePage() {
 
       {/* 7. Instalación de Minisplit */}
       <MinisplitSection />
+
+      {/* 8. Servicios — carousel infinito */}
+      <ServiciosStrip />
 
       {/* 9. Marcas */}
       <FadeInSection>
