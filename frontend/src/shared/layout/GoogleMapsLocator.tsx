@@ -32,7 +32,7 @@ const CONFIGURATION = {
     maxZoom: 17,
     mapId: '',
   },
-  mapsApiKey: 'YOUR_API_KEY_HERE',
+  mapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
   capabilities: {
     input: false,
     autocomplete: false,
@@ -59,7 +59,7 @@ export default function GoogleMapsLocator() {
         onLoad={handleScriptLoad}
       />
       <gmpx-api-loader
-        key="YOUR_API_KEY_HERE"
+        key={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''}
         solution-channel="GMP_QB_locatorplus_v11_c"
       />
       <gmpx-store-locator
