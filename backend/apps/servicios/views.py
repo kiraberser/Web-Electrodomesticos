@@ -51,6 +51,21 @@ class EstadisticasServiciosView(APIView):
 
     def get(self, request):
         qs = Servicio.objects.all()
+
+        # ── Filtro por mes / año ─────────────────────────────────────────────────
+        mes_param  = request.query_params.get('mes')
+        anio_param = request.query_params.get('anio')
+        try:
+            anio_int = int(anio_param) if anio_param else None
+            mes_int  = int(mes_param)  if mes_param  else None
+        except (ValueError, TypeError):
+            anio_int = mes_int = None
+
+        if anio_int:
+            qs = qs.filter(fecha__year=anio_int)
+        if mes_int:
+            qs = qs.filter(fecha__month=mes_int)
+
         total = qs.count()
         pendientes = qs.filter(estado='Pendiente').count()
         completados = qs.filter(estado__in=['Reparado', 'Entregado']).count()
@@ -97,18 +112,31 @@ class EstadisticasServiciosView(APIView):
         else:
             por_marca = [{'marca': m['marca'], 'count': m['count']} for m in marcas_qs]
 
-        # ── Tendencia semanal (últimas 8 semanas) ────────────────────────────────
-        hace_8_semanas = date.today() - timedelta(weeks=8)
-        tendencia = (
-            qs.filter(fecha__gte=hace_8_semanas)
-              .annotate(semana=TruncWeek('fecha'))
-              .values('semana')
-              .annotate(count=Count('noDeServicio'))
-              .order_by('semana')
-        )
+        # ── Tendencia: semanal (sin filtro) o semanal dentro del mes ─────────────
+        if mes_int and anio_int:
+            # Mostrar todas las semanas del mes seleccionado
+            import calendar
+            primer_dia = date(anio_int, mes_int, 1)
+            ultimo_dia = date(anio_int, mes_int, calendar.monthrange(anio_int, mes_int)[1])
+            tendencia_qs = (
+                qs.filter(fecha__range=(primer_dia, ultimo_dia))
+                  .annotate(semana=TruncWeek('fecha'))
+                  .values('semana')
+                  .annotate(count=Count('noDeServicio'))
+                  .order_by('semana')
+            )
+        else:
+            hace_8_semanas = date.today() - timedelta(weeks=8)
+            tendencia_qs = (
+                qs.filter(fecha__gte=hace_8_semanas)
+                  .annotate(semana=TruncWeek('fecha'))
+                  .values('semana')
+                  .annotate(count=Count('noDeServicio'))
+                  .order_by('semana')
+            )
         tendencia_semanal = [
             {'semana': item['semana'].strftime('%d %b'), 'count': item['count']}
-            for item in tendencia
+            for item in tendencia_qs
         ]
 
         return Response({

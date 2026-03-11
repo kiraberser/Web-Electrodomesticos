@@ -19,10 +19,16 @@ export interface ServiciosEstadisticas {
     tendencia_semanal: { semana: string; count: number }[]
 }
 
-export const getServiciosEstadisticas = async (): Promise<ServiciosEstadisticas> => {
+export const getServiciosEstadisticas = async (
+    params?: { mes?: number; anio?: number }
+): Promise<ServiciosEstadisticas> => {
     const cookieStore = await cookies()
     const token = cookieStore.get('access_cookie')?.value
-    const res = await fetch(`${URL}/servicios/estadisticas/`, {
+    const qs = new URLSearchParams()
+    if (params?.anio) qs.set('anio', String(params.anio))
+    if (params?.mes)  qs.set('mes',  String(params.mes))
+    const url = `${URL}/servicios/estadisticas/${qs.toString() ? `?${qs}` : ''}`
+    const res = await fetch(url, {
         headers: { 'Authorization': `Bearer ${token}` },
         cache: 'no-store',
     })

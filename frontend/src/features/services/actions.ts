@@ -11,6 +11,7 @@ import {
     createServiceSale,
     updateServiceNote,
     patchServiceFields,
+    getServiciosEstadisticas,
 } from "@/features/services/api"
 
 type ActionState = {
@@ -196,6 +197,17 @@ export const updateRevisionStatusAction = async (id: string, estadoPago: string)
         return { success: true, error: null }
     } catch (error: unknown) {
         return { success: false, error: getErrorMessage(error, 'Error al actualizar revisión') }
+    }
+}
+
+export const getEstadisticasAction = async (
+    params?: { mes?: number; anio?: number }
+): Promise<ActionState> => {
+    try {
+        const data = await getServiciosEstadisticas(params)
+        return { success: true, error: null, data }
+    } catch (error: unknown) {
+        return { success: false, error: getErrorMessage(error, 'Error al obtener estadísticas') }
     }
 }
 
