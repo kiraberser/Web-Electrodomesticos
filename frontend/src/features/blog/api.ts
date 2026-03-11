@@ -47,12 +47,17 @@ export const postBlog = async (newPost: CreatePostType) => {
 }
 
 export const getBlogPostBySlug = cache(async (slug: string) => {
-    const res = await fetch(`${BASE}/blog/posts/${slug}/`, {
-        next: { revalidate: 60 },
-    })
-    if (res.status === 404) notFound()
-    if (!res.ok) throw new Error('Failed to fetch blog post')
-    return res.json()
+    let res: Response
+    try {
+        res = await fetch(`${BASE}/blog/posts/${slug}/`, {
+            next: { revalidate: 60 },
+        })
+    } catch {
+        // Red caída o backend no disponible
+        notFound()
+    }
+    if (!res!.ok) notFound()
+    return res!.json()
 })
 
 export default postBlog

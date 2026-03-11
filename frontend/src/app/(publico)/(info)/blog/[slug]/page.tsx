@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { getBlogPostBySlug } from "@/features/blog/api";
 import type { Metadata } from "next";
 
@@ -60,7 +61,12 @@ export async function generateMetadata(
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
-    const post: BlogPost = await getBlogPostBySlug(slug)
+    let post: BlogPost
+    try {
+        post = await getBlogPostBySlug(slug)
+    } catch {
+        notFound()
+    }
 
     const articleSchema = {
         '@context': 'https://schema.org',
