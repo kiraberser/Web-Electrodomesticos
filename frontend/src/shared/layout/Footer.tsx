@@ -36,13 +36,16 @@ const Footer = ({ username }: { username: string | undefined }) => {
                 {company.description}
               </p>
               <div className="flex items-center gap-3 pt-1">
-                <span
-                  aria-label="Facebook (próximamente)"
-                  title="Facebook (próximamente)"
-                  className="w-9 h-9 rounded-lg bg-white/50 flex items-center justify-center cursor-not-allowed opacity-50"
+                <a
+                  href="https://www.facebook.com/people/Refaccionaria-Vega/61583743628686/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook de Refaccionaria Vega"
+                  title="Facebook de Refaccionaria Vega"
+                  className="w-9 h-9 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
                 >
-                  <Facebook className="w-4 h-4 text-[#0A3981]" aria-hidden="true" />
-                </span>
+                  <Facebook className="w-4 h-4 text-white" aria-hidden="true" />
+                </a>
                 <span
                   aria-label="Instagram (próximamente)"
                   title="Instagram (próximamente)"
