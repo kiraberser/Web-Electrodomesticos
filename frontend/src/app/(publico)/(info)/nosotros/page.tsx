@@ -22,7 +22,7 @@ import {
 export const metadata: Metadata = {
   title: 'Nosotros — Refaccionaria Vega',
   description:
-    'Más de 40 años en Martínez de la Torre, Veracruz. Fundada en 1980 por Rafael Vega Romero. Conoce la historia, misión, visión y valores de Refaccionaria Vega.',
+    'Más de 40 años en Martínez de la Torre, Veracruz. Conoce la historia, misión, visión y valores de Refaccionaria Vega, tu especialista en refacciones y reparación de electrodomésticos.',
   alternates: {
     canonical: 'https://www.refaccionariavega.com.mx/nosotros',
   },
@@ -56,7 +56,7 @@ const valores = [
   {
     icon: Users,
     title: 'Cercanía',
-    desc: 'Somos parte de la comunidad de Martínez de la Torre. Tu vecino de confianza desde 1980.',
+    desc: 'Somos parte de la comunidad de Martínez de la Torre. Tu empresa de confianza desde 1980.',
     dark: true,
   },
   {
@@ -104,27 +104,32 @@ const historia = [
   {
     year: '1980',
     title: 'Los inicios',
-    desc: 'Rafael Vega Romero funda Refaccionaria Vega en Martínez de la Torre, Veracruz, identificando la necesidad local de refacciones accesibles y reparación confiable de electrodomésticos, herramientas eléctricas y motores industriales.',
+    desc: 'Refaccionaria Vega abre sus puertas en Martínez de la Torre, Veracruz, atendiendo la necesidad local de refacciones accesibles y reparación confiable de electrodomésticos, herramientas eléctricas y motores industriales.',
   },
   {
     year: '1990s',
     title: 'Especialización en motores',
-    desc: 'La empresa se posiciona como referente regional en el embobinado de motores industriales, ofreciendo una solución fundamental para talleres y empresas que dependen de herramientas eléctricas y equipos de alto rendimiento.',
+    desc: 'La empresa se posiciona como referente regional en el embobinado de motores industriales, ofreciendo una solución esencial para talleres y empresas que dependen de herramientas eléctricas y equipos de alto rendimiento.',
   },
   {
     year: '2000s',
     title: 'Alianzas estratégicas',
-    desc: 'Consolidamos alianzas con proveedores reconocidos como Koblenz y comenzamos a colaborar con empresas de prestigio como Farmacias Similares, Empacadoras de Limón, Cruz Roja y escuelas de la región.',
+    desc: 'Consolidamos alianzas con proveedores reconocidos como Koblenz y comenzamos a colaborar con empresas de prestigio: Farmacias Similares, Empacadoras de Limón, Cruz Roja y escuelas de la región.',
   },
   {
-    year: '2010s',
-    title: 'Crecimiento y expansión',
-    desc: 'Ampliamos la oferta de servicios atendiendo a clientes en toda la zona norte de Veracruz, iniciando envíos a todo México y fortaleciendo relaciones con marcas líderes del sector.',
+    year: '2013',
+    title: 'Instalación de minisplits',
+    desc: 'Incorporamos el servicio de instalación profesional de equipos de aire acondicionado tipo minisplit para hogar y negocio, ampliando nuestra oferta técnica en la región norte de Veracruz.',
   },
   {
-    year: 'Hoy',
-    title: 'Más de 40 años evolucionando',
-    desc: 'Seguimos adaptándonos: instalamos minisplits, fortalecemos la venta en línea y mantenemos el mismo compromiso familiar con el que Rafael Vega Romero fundó la empresa hace más de cuatro décadas.',
+    year: '2020',
+    title: 'Nueva administración',
+    desc: 'En medio de la pandemia, Refaccionaria Vega inicia una nueva etapa bajo una nueva administración. Lejos de frenar operaciones, la empresa se adapta, moderniza procesos y refuerza su compromiso con la comunidad.',
+  },
+  {
+    year: '2026',
+    title: 'Envíos nacionales y plataforma digital',
+    desc: 'Damos un paso hacia el futuro: implementamos envíos a toda la república mexicana y lanzamos nuestra plataforma en línea para que clientes de cualquier estado puedan adquirir refacciones originales desde casa.',
   },
 ]
 
