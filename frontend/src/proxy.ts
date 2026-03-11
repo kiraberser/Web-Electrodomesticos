@@ -1,52 +1,50 @@
-// frontend/src/middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-function decodeJwtPayload(jwt?: string): Record<string, unknown> | null {
-    if (!jwt) return null;
-    try {
-        const part = (jwt.split('.')[1] || '').replace(/-/g, '+').replace(/_/g, '/');
-        const padded = part + '='.repeat((4 - (part.length % 4)) % 4);
-        const json = atob(padded);
-        return JSON.parse(json);
-    } catch {
-        return null;
-    }
-}
-
 function isAdminFromJWT(jwt?: string): boolean {
-    const payload = decodeJwtPayload(jwt);
-    if (!payload) return false;
-    return Boolean(
-        payload?.is_staff || payload?.is_admin || payload?.is_superuser || payload?.role === 'admin'
-    );
+    if (!jwt) return false;
+    try {
+        const base64 = jwt.split('.')[1] || '';
+        const json = Buffer.from(base64, 'base64').toString('utf8');
+        const payload = JSON.parse(json);
+        return Boolean(
+            payload?.is_staff || payload?.is_admin || payload?.is_superuser || payload?.role === 'admin'
+        );
+    } catch {
+        return false;
+    }
 }
 
 export function proxy(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
-    // Permitir la propia página de no autorizado
-    if (!pathname.startsWith('/admin') || pathname.startsWith('/admin/unauthorized')) {
-        return NextResponse.next();
-    }
+    const username = req.cookies.get('username')?.value;
+    const refreshToken = req.cookies.get('refresh_cookie')?.value;
 
-    const access = req.cookies.get('access_cookie')?.value;
-    const isAdmin = isAdminFromJWT(access);
+    // Si username existe pero refresh_cookie no → la sesión expiró o fue borrada
+    // parcialmente. Eliminamos username para que el cliente quede desautenticado.
+    const sessionDesync = !!username && !refreshToken;
 
-    if (!isAdmin) {
-        const accept = req.headers.get('accept') || '';
-        if (accept.includes('text/html')) {
-            const url = req.nextUrl.clone();
-            url.pathname = '/unauthorized';
+    // Protección de rutas /admin
+    if (pathname.startsWith('/admin')) {
+        const access = req.cookies.get('access_cookie')?.value;
+        if (!access || !isAdminFromJWT(access)) {
+            const url = new URL('/admin/unauthorized', req.url);
             url.searchParams.set('next', pathname);
-            return NextResponse.redirect(url);
+            const redirect = NextResponse.redirect(url);
+            if (sessionDesync) redirect.cookies.delete('username');
+            return redirect;
         }
-        return new NextResponse(null, { status: 401 });
     }
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+    if (sessionDesync) {
+        response.cookies.delete('username');
+    }
+    return response;
 }
 
 export const config = {
-    matcher: ['/admin', '/admin/:path*'],
+    // Aplica a todas las rutas excepto archivos estáticos e imágenes
+    matcher: ['/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };
