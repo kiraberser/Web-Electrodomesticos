@@ -1,11 +1,10 @@
 import dynamic from 'next/dynamic'
 import { slides } from '@/shared/data/carouselData'
-import { getDealProducts, getBestSellers, getNewArrivals } from '@/shared/data/products'
 import { getHomepageProducts } from '@/features/home/api'
 import BrandsBar from '@/features/home/BrandsBar'
-// import RepairBlogSection from '@/features/home/RepairBlogSection'
 import MinisplitSection from '@/features/home/MinisplitSection'
 import FadeInSection from '@/features/home/FadeInSection'
+import CatalogComingSoon from '@/features/home/CatalogComingSoon'
 
 const TrustBar = dynamic(
   () => import('@/features/home/TrustBar'),
@@ -144,6 +143,11 @@ export default async function HomePage() {
         <FadeInSection>
           <DealsSection products={deals} />
         </FadeInSection>
+      )}
+
+      {/* Catálogo próximamente — visible cuando no hay productos del API */}
+      {deals.length === 0 && bestSellers.length === 0 && (
+        <CatalogComingSoon />
       )}
 
       {/* 4. Identidad de marca */}
