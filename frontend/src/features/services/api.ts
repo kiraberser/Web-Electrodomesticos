@@ -54,8 +54,14 @@ export const getAllServices = async (page: number = 1, pageSize: number = 10, se
     if (!res.ok) throw new Error('Failed to fetch services')
     const data = await res.json()
 
+    // Map pagado boolean → estadoPago string for the UI
+    const results = data.results.map((s: Record<string, unknown>) => ({
+        ...s,
+        estadoPago: s.pagado === true ? 'Pagado' : s.pagado === false ? 'Pendiente' : 'No Aplica',
+    }))
+
     return {
-        data: data.results,
+        data: results,
         success: true,
         status: res.status,
         pagination: {

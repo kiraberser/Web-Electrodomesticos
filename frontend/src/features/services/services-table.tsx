@@ -83,7 +83,8 @@ export default function ServicesTable({
             year: "numeric",
         })
 
-    const formatPhone = (phone: string) => {
+    const formatPhone = (phone: string | null) => {
+        if (!phone) return '—'
         if (phone.length === 10) {
             return `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`
         }

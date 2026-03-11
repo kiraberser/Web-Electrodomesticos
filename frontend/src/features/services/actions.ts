@@ -189,7 +189,9 @@ export const updateServiceStatusAction = async (id: string, estado: string): Pro
 
 export const updateRevisionStatusAction = async (id: string, estadoPago: string): Promise<ActionState> => {
     try {
-        await patchServiceFields(id, { estadoPago })
+        // pagado: true = Pagado, false = Pendiente, null = No Aplica
+        const pagado = estadoPago === 'Pagado' ? true : estadoPago === 'Pendiente' ? false : null
+        await patchServiceFields(id, { pagado })
         revalidatePath('/admin/servicios')
         return { success: true, error: null }
     } catch (error: unknown) {

@@ -7,5 +7,5 @@ class ServicioSerializer(serializers.ModelSerializer):
         model = Servicio
         fields = (
             'noDeServicio', 'fecha', 'marca', 'aparato', 'telefono', 'cliente',
-            'observaciones', 'estado', 'nota'
+            'observaciones', 'estado', 'nota', 'pagado'
         )
