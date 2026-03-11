@@ -3,6 +3,7 @@ import { company } from "@/shared/data/company";
 import { categories } from "@/shared/data/category";
 import Link from "next/link";
 import Newsletter from "@/features/newsletter/Newsletter";
+import GoogleMapsLocator from "@/shared/layout/GoogleMapsLocator";
 
 const Footer = ({ username }: { username: string | undefined }) => {
   return (
@@ -257,6 +258,19 @@ const Footer = ({ username }: { username: string | undefined }) => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mapa de ubicación */}
+      <div className="border-t border-white/10">
+        <div className="container mx-auto px-4 sm:px-6 py-8">
+          <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[#E38E49]" />
+            Dónde encontrarnos
+          </h4>
+          <div className="rounded-xl overflow-hidden border border-white/10">
+            <GoogleMapsLocator />
           </div>
         </div>
       </div>
