@@ -109,9 +109,9 @@ export default async function HomePage() {
   // Fetch from API with hardcoded fallback
   const apiProducts = await getHomepageProducts()
 
-  const deals = apiProducts.deals.length > 0 ? apiProducts.deals : getDealProducts()
-  const bestSellers = apiProducts.bestSellers.length > 0 ? apiProducts.bestSellers : getBestSellers()
-  const newArrivals = apiProducts.newArrivals.length > 0 ? apiProducts.newArrivals : getNewArrivals()
+  const deals = apiProducts.deals
+  const bestSellers = apiProducts.bestSellers
+  const newArrivals = apiProducts.newArrivals
 
   return (
     <>
@@ -139,22 +139,26 @@ export default async function HomePage() {
       {/* 2. Categorías — carousel infinito */}
       <CategoryStrip />
 
-      {/* 3. Ofertas del día con countdown */}
-      <FadeInSection>
-        <DealsSection products={deals} />
-      </FadeInSection>
+      {/* 3. Ofertas del día con countdown — solo si hay productos reales */}
+      {deals.length > 0 && (
+        <FadeInSection>
+          <DealsSection products={deals} />
+        </FadeInSection>
+      )}
 
       {/* 4. Identidad de marca */}
       <SloganBanner />
 
-      {/* 5. Más vendidos — ranked grid */}
-      <FadeInSection>
-        <FeaturedGrid
-          title="Los Más Vendidos"
-          products={bestSellers}
-          viewAllHref="/categorias"
-        />
-      </FadeInSection>
+      {/* 5. Más vendidos — solo si hay productos reales */}
+      {bestSellers.length > 0 && (
+        <FadeInSection>
+          <FeaturedGrid
+            title="Los Más Vendidos"
+            products={bestSellers}
+            viewAllHref="/categorias"
+          />
+        </FadeInSection>
+      )}
 
       {/* 6. Beneficios */}
 

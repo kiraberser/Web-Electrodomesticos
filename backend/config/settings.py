@@ -115,7 +115,10 @@ PASSWORD_RESET_TIMEOUT = 3600
 # --------------------------------------------------------
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# CompressedStaticFilesStorage (sin manifest) es más robusto en Railway
+# El manifest requiere que collectstatic encuentre TODOS los archivos; sin él
+# WhiteNoise igual sirve y comprime los archivos estáticos del admin de Django.
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # --------------------------------------------------------
 # MEDIA FILES (Cloudinary en producción, local en desarrollo)
