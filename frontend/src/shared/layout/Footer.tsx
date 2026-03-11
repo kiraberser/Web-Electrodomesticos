@@ -3,7 +3,6 @@ import { company } from "@/shared/data/company";
 import { categories } from "@/shared/data/category";
 import Link from "next/link";
 import Newsletter from "@/features/newsletter/Newsletter";
-import GoogleMapsLocator from "@/shared/layout/GoogleMapsLocator";
 
 const Footer = ({ username }: { username: string | undefined }) => {
   return (
@@ -273,7 +272,16 @@ const Footer = ({ username }: { username: string | undefined }) => {
             Dónde encontrarnos
           </h4>
           <div className="rounded-xl overflow-hidden border border-white/10">
-            <GoogleMapsLocator />
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d234.22840356880644!2d-97.0494204369079!3d20.064911134228367!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85dafd72858d704d%3A0x71edb63a8123ad0a!2sRefaccionaria%20VEGA!5e0!3m2!1ses-419!2smx!4v1773268845799!5m2!1ses-419!2smx"
+              width="100%"
+              height="300"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Ubicación Refaccionaria Vega"
+            />
           </div>
         </div>
       </div>
