@@ -2,6 +2,7 @@
 
 import { DollarSign } from "lucide-react"
 import { useAdminTheme } from "@/features/admin/hooks/useAdminTheme"
+import { Wrench } from "lucide-react";
 
 export default function PaymentStatusCard({ paymentStatus, onPaymentStatusChange }: { paymentStatus: string; onPaymentStatusChange: (s: string) => void }) {
     const { dark } = useAdminTheme()
@@ -18,8 +19,8 @@ export default function PaymentStatusCard({ paymentStatus, onPaymentStatusChange
                 <h3 className={`text-lg font-semibold flex items-center ${
                     dark ? "text-gray-100" : "text-gray-900"
                 }`}>
-                    <DollarSign className={`w-5 h-5 mr-2 ${dark ? "text-yellow-400" : "text-yellow-600"}`} />
-                    Estado de Pago
+                    <Wrench className={`w-5 h-5 mr-2 ${dark ? "text-blue-400" : "text-blue-600"}`} />
+                    Estado de Revisión
                 </h3>
             </div>
             <div className="p-6">
