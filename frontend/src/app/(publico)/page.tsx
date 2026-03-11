@@ -151,10 +151,7 @@ export default async function HomePage() {
         <CatalogComingSoon />
       )}
 
-      {/* 4. Identidad de marca */}
-      <SloganBanner />
-
-      {/* 5. Más vendidos — solo si hay productos reales */}
+      {/* 4. Más vendidos — solo si hay productos reales */}
       {bestSellers.length > 0 && (
         <FadeInSection>
           <FeaturedGrid
@@ -165,18 +162,14 @@ export default async function HomePage() {
         </FadeInSection>
       )}
 
-      {/* 6. Beneficios */}
-
-      {/* 7. Blog — editorial layout (deshabilitado, pendiente datos reales) */}
-      {/* <FadeInSection>
-        <RepairBlogSection />
-      </FadeInSection> */}
-
-      {/* 7. Instalación de Minisplit */}
+      {/* 5. Instalación de Minisplit */}
       <MinisplitSection />
 
-      {/* 8. Servicios — carousel infinito */}
+      {/* 6. Servicios grid */}
       <ServiciosStrip />
+
+      {/* 7. Identidad de marca — después de servicios */}
+      <SloganBanner />
 
       {/* 9. Marcas */}
       <FadeInSection>
